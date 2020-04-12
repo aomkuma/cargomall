@@ -1,0 +1,172 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 180px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+	<div style="padding: 8px;">&nbsp;</div>
+	<div class="page-header text-center" style="font-weight: bolder; font-size: 1.3em;">
+		สรุปข้อมูลการสั่งซื้อ
+	</div>
+	<div class="row form-group">
+		<div class="col-md-6 col-sm-6 col-xs-12">
+			<div class="row">
+				<label class="col-md-3 col-sm-4 col-xs-5 text-right">
+					ชื่อลูกค้า
+				</label>
+				<div class="col-md-9 col-sm-8 col-xs-7">
+					{{UserData.firstname}} {{UserData.lastname}}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-sm-6 col-xs-12">
+			<div class="row">
+				<label class="col-md-3 col-sm-4 col-xs-5 text-right">ประเภทการขนส่ง</label>
+				<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.transport_type_txt}}</div>
+			</div>
+			<div class="row">
+				<label class="col-md-3 col-sm-4 col-xs-5 text-right">วิธีการรับสินค้า</label>
+				<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.receive_order_type_txt}}</div>
+			</div>
+			<div class="row">
+				<label class="col-md-3 col-sm-4 col-xs-5 text-right">บริษัทขนส่ง</label>
+				<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.transport_company_txt}} {{ship_option.transport_company_other}}</div>
+			</div>
+			<div class="row">
+				<label class="col-md-3 col-sm-4 col-xs-5 text-right">รายละเอียดเพิ่มเติม</label>
+				<div class="col-md-9 col-sm-8 col-xs-7">
+					{{ShippingOption.special_option_txt}}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-sm-6 col-xs-12">
+
+		</div>
+	</div>
+	<div class="row" >
+
+		<div class="col-lg-12 table-responsive">
+
+			<table class="table table-bordered table-striped">
+				<caption class="table-caption-head" style="font-size: 1em;">รายการสินค้า</caption>
+				<tr class="default">
+					<th style="text-align: center;">ลำดับ</th>
+					<th style="text-align: center; width: 8%;">รูป</th>
+					<th style="text-align: center;">ชื่อสินค้า</th>
+					<th style="text-align: center; width: 16%;">สี  / สำรอง</th>
+					<th style="text-align: center; width: 16%;">ขนาด / สำรอง </th>
+					<th style="text-align: center; width: 10%;">ราคา (บาท)</th>
+					<th style="text-align: center; width: 8%;">จำนวน</th>
+					<th style="text-align: center; width: 9%;">รวม</th>
+					<th style="text-align: center; width: 15%;">หมายเหตุ</th>
+				</tr>
+				<tr data-ng-repeat="product in ProductListStorage track by $index" style="font-size: 0.9em;">
+					<td>{{$index + 1}}</td>
+					<td><img data-ng-src="{{product.product_image}}" style="max-width: 100%;" /></td>
+					<td>
+						<a href="{{product.product_url}}" target="_blank">{{ (product.product_en_name == null || product.product_en_name == undefined)? product.product_original_name : product.product_en_name }}</a>
+						<br>
+						<span style="color: #FC9032; font-weight: bold;" data-ng-class="{'text-line-through' : product.product_promotion_price > 0 }">
+							¥{{product.product_normal_price}}
+						</span>
+						<span data-ng-show="product.product_promotion_price != 0" style="color: green;">
+							<br>
+							ราคาโปรโมชั่น ¥{{product.product_promotion_price}}
+						</span>
+						
+					</td>
+					<td data-ng-show="product.product_color_img.length > 0">
+						<div class="row">
+							<div class="col-lg-12">
+								<img data-ng-src="{{product.product_color_img_choose}}" style="max-width: 30px;" class="obj-align-child-center" /><br>
+								สีสำรอง : {{product.product_color_img_reserve}}
+							</div>
+						</div>
+					</td>
+					<td data-ng-show="product.product_color_img.length == 0 || product.product_color_img.length == null">
+						<div class="row">
+							<div class="col-lg-12">
+								<b>{{product.product_color_choose}}</b><br>
+								สีสำรอง : {{product.product_color_reserve}}
+							</div>
+							
+						</div>
+					</td>
+					<td>
+						<div class="row">
+							<div class="col-lg-12" style="word-break:normal; word-wrap:break-word;">
+								<b>{{product.product_size_choose.length == 0?'': product.product_size_choose}}</b><br>
+								ขนาดสำรอง : {{product.product_size_reserve}}
+							</div>
+						</div>
+					</td>
+					<td align="right">
+						<div class="row">
+							<div class="col-lg-12" style="word-break:normal; word-wrap:break-word;">
+								<span data-ng-class="{'text-line-through' : product.product_promotion_price > 0 }">{{ (product.product_normal_price *  $parent.exchange_rate) | number:2}}</span>
+							</div>
+							<div class="col-lg-12" data-ng-show="product.product_promotion_price > 0" style="color: green;">
+								{{ (product.product_promotion_price * $parent.exchange_rate) | number:2 }}
+							</div>
+						</div>
+						
+						
+					</td>
+					<td align="right">
+						{{product.product_qty}}
+					</td>
+					<td align="right">{{ product.product_promotion_price > 0 ? (product.product_promotion_price * $parent.exchange_rate) * product.product_qty : (product.product_normal_price *  $parent.exchange_rate) * product.product_qty | number:2}}</td>
+					<td align="center">
+						<div class="row">
+							
+							<div class="col-lg-12">
+								{{product.remark}}
+							</div>
+						</div>
+					</td>
+				</tr>
+				
+				<tfoot>
+					<tr>
+						<td colspan="7" align="right"><b style="font-size: 1.1em;">รวม</b></td>
+						<td align="right"><b style="font-size: 1.1em;">{{sumBaht | number:2}}</b></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="row form-group">
+	<label class="col-md-12 col-sm-12 col-xs-12 text-center" data-ng-show="MoneyBalance > 0" style="color: green;"><i class="fas fa-check"></i> ยอดเงินที่ใช้ได้ของคุณคือ {{UserData.money_bags.balance | number:2}} บาท</label>
+	<label class="col-md-12 col-sm-12 col-xs-12 text-center" data-ng-show="MoneyBalance == 0" style="color: red;">ยอดเงินที่ใช้ได้ของคุณคือ {{UserData.money_bags.balance | number:2}} บาท</label>
+</div>
+<div class="row form-group">
+	<label class="col-md-12 col-sm-12 col-xs-12 text-center" data-ng-show="MoneyBalance < sumBaht" style="color: red; font-weight: bolder;">ยอดเงินที่ใช้ได้ของคุณไม่เพียงพอต่อการชำระการสั่งซื้อนี้ กรุณาทำการเติมเงิน 
+	<a href="topup">คลิกที่นี่</a>
+	</label>
+</div>
+<div class="row form-group">
+	<div class="col-lg-12 text-center">
+		<!-- <button class="btn btn-default" data-ng-click="cancelOrder()">ยกเลิก</button> -->
+		<a href="shipping-options" class="btn btn-default" >ย้อนกลับ</a>
+		<a class="btn btn-info" data-ng-click="cancelOrderDialog()">ยกเลิกการสั่งซื้อ</a>
+		<button class="btn btn-primary" data-ng-click="confirmOrderDialog()" data-ng-disabled="MoneyBalance < sumBaht">ยืนยันการสั่งซื้อ</button>
+		<br>
+		<br>
+	</div>
+</div>
+<div data-ng-include src="'views/footer.html'"></div>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>

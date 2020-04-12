@@ -1,0 +1,25 @@
+<div class="modal-header">
+	<h4 class="modal-title">ถอนเงินจากกระเป๋าเงินของคุณ <b>{{MoneyBag.firstname}} {{MoneyBag.lastname}}</b></h4>
+</div>
+<div class="modal-body">
+	<div class="row form-group">
+		<label class="col-md-4">
+			ยอดเงินที่สามารถถอนได้ 
+		</label>
+		<div class="col-md-4">
+			{{ MoneyBag.money_bags.balance | number:2 }}
+		</div>
+	</div>
+	<div class="row form-group">
+		<label class="col-md-4">
+			จำนวนเงินที่ต้องการถอน
+		</label>
+		<div class="col-md-4">
+			<input type="number" class="form-control" data-ng-model="MoneyBag.money_bags.withdrawn_amount">
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">ยกเลิก</button>
+	<button class="btn btn-primary" ng-click="ok(MoneyBag)">ยืนยันการถอนเงิน</button>
+</div>

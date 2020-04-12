@@ -1,0 +1,137 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+	<div class="row" style=" padding: 8px; padding-top:20px;">
+		<div class="col-md-12 text-center">
+			<div class="page-header">
+				<span style="font-size: 1.3em; font-weight: bolder;">รายการสินค้าทั้งหมดในตะกร้า</span>
+			</div>
+		</div>
+	</div>
+	<div class="row" style=" padding: 8px; padding-top:20px;">
+		<div class="col-lg-12 table-responsive">
+
+			<table class="table table-bordered table-striped">
+				<!-- <caption class="table-caption-head">รายการสินค้าทั้งหมดในตะกร้า</caption> -->
+				<tr class="default">
+					<th style="text-align: center;">ลำดับ</th>
+					<th style="text-align: center; width: 8%;">รูป</th>
+					<th style="text-align: center;">ชื่อสินค้า</th>
+					<th style="text-align: center; width: 16%;">สี  / สำรอง</th>
+					<th style="text-align: center; width: 16%;">ขนาด / สำรอง </th>
+					<th style="text-align: center; width: 10%;">ราคา (บาท)</th>
+					<th style="text-align: center; width: 8%;">จำนวน</th>
+					<th style="text-align: center; width: 9%;">รวม</th>
+					<th style="text-align: center; width: 15%;">หมายเหตุ / ลบสินค้า</th>
+				</tr>
+				<tr data-ng-repeat="product in ProductListStorage track by $index" style="font-size: 0.9em;">
+					<td>{{$index + 1}}</td>
+					<td><img data-ng-src="{{product.product_image}}" style="max-width: 100%;" /></td>
+					<td>
+						<a href="{{product.product_url}}" target="_blank">{{ (product.product_en_name == null || product.product_en_name == undefined)? product.product_original_name : product.product_en_name }}</a>
+						<br>
+						<span style="color: #FC9032; font-weight: bold;" data-ng-class="{'text-line-through' : product.product_promotion_price > 0 }">
+							¥{{product.product_normal_price}}
+						</span>
+						<span>
+							<br>
+							<input type="number" class="form-control" data-ng-model="product.product_promotion_price" data-ng-change="calcSum()" placeholder="ราคา Promotion" data-ng-blur="autoUpdateOrder($index, product)" />
+						</span>
+						
+					</td>
+					<td data-ng-show="product.product_color_img.length > 0">
+						<div class="row">
+							<div class="col-lg-12">
+								<textarea class="form-control" data-ng-model="product.product_color_img_reserve" data-ng-blur="autoUpdateOrder($index, product)" placeholder="สีสำรอง"></textarea>
+							</div>
+							<div class="col-lg-12">
+								<img data-ng-src="{{product.product_color_img_choose}}" style="max-width: 30px;" class="obj-align-child-center" /><br>
+							</div>
+							
+						</div>
+					</td>
+					<td data-ng-show="product.product_color_img.length == 0 || product.product_color_img.length == null">
+						<div class="row">
+							<div class="col-lg-12">
+								<textarea class="form-control" data-ng-model="product.product_color_reserve" data-ng-blur="autoUpdateOrder($index, product)" placeholder="สีสำรอง"></textarea>
+							</div>
+							<div class="col-lg-12">
+								<b>{{product.product_color_choose}}</b><br>
+							</div>
+							
+						</div>
+					</td>
+					<td>
+						<div class="row">
+							<div class="col-lg-12">
+								<textarea class="form-control" data-ng-model="product.product_size_reserve" data-ng-blur="autoUpdateOrder($index, product)" placeholder="ขนาดสำรอง"></textarea>
+							</div>
+							<div class="col-lg-12" style="word-break:normal; word-wrap:break-word;">
+								<b>{{product.product_size_choose.length == 0?'': product.product_size_choose}}</b><br>
+							</div>
+						</div>
+					</td>
+					<td align="right">
+						<div class="row">
+							<div class="col-lg-12" style="word-break:normal; word-wrap:break-word;">
+								<span data-ng-class="{'text-line-through' : product.product_promotion_price > 0 }">{{ (product.product_normal_price *  $parent.exchange_rate) | number:2}}</span>
+							</div>
+							<div class="col-lg-12" data-ng-show="product.product_promotion_price > 0">
+								{{ (product.product_promotion_price * $parent.exchange_rate) | number:2 }}
+							</div>
+						</div>
+						
+						
+					</td>
+					<td><input class="form-control input-sm" type="number" data-ng-model="product.product_qty" data-ng-change="calcSum()" data-ng-blur="autoUpdateOrder($index, product)" /></td>
+					<td align="right">{{ product.product_promotion_price > 0 ? (product.product_promotion_price * $parent.exchange_rate) * product.product_qty : (product.product_normal_price *  $parent.exchange_rate) * product.product_qty | number:2}}</td>
+					<td align="center">
+						<div class="row">
+							<div class="col-lg-12">
+								<textarea class="form-control" data-ng-model="product.remark" data-ng-blur="autoUpdateOrder($index, product)"></textarea>
+							</div>
+							<div class="col-lg-12">
+								<button class="btn btn-danger btn-sm btn-block" title="ลบ" data-ng-click="dialogRemoveItem($index)"><i class="fas fa-trash"></i></button>
+							</div>
+						</div>
+					</td>
+				</tr>
+				
+				<tfoot>
+					<tr>
+						<td colspan="7" align="right"><b style="font-size: 1.1em;">รวม</b></td>
+						<td align="right"><b style="font-size: 1.1em;">{{sumBaht | number:2}}</b></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="row form-group">
+	<div class="col-lg-12 text-center">
+		<!-- <button class="btn btn-default" data-ng-click="cancelOrder()">ยกเลิก</button> -->
+		<a href="product-info" class="btn btn-info">เลือกสินค้าเพิ่มเติม</a>
+		<a href="shipping-options" class="btn btn-primary" >ถัดไป</a>
+		<br>
+		<br>
+	</div>
+</div>
+<div data-ng-include src="'views/footer.html'"></div>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>
+

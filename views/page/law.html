@@ -1,0 +1,60 @@
+<div ng-include src="'views/header.html'"></div>
+
+<div  style="margin-top:150px;">
+	<div class="row form-group" style="padding-top: 70px;">
+	  <div class="col-lg-5 col-lg-offset-1">
+	    <div class="row">
+	      <div class="col-lg-10" style="padding: 5px; font-weight: bolder; font-size: 1.3em;">
+	        <img src="../cio-files/img/pin-menu.png">
+	        กฎหมาย/ระเบียบ ที่เกี่ยวข้อง
+	      </div>
+	    </div>
+	  </div>
+	  <div class="col-lg-6">
+
+	  </div>
+	</div>
+	<div class="row form-group" style="margin-top: 20px; color: #071CA5; font-weight: bolder; font-size: 1.2em;">
+		<div class="col-lg-12 text-center">
+			{{ (DEFAULT_LANGUAGE == 'TH'?'กฎหมาย/ระเบียบ ที่เกี่ยวข้อง':'กฎหมาย/ระเบียบ ที่เกี่ยวข้อง') }}
+			<br>
+			<div style="background: url('../cio-files/img/line-bottom.png') no-repeat; height: 3px; width:480px; margin:0px auto; margin-top:20px;margin-bottom:15px;"></div>
+		</div>
+	</div>
+	<div class="row form-group" style="padding: 15px;">
+		<div class="col-lg-10 col-lg-offset-1">
+			<div class="row form-group"  ng-repeat="law in Law">
+				<div class="col-lg-12">
+					<img src="../cio-files/img/right-point.png">&nbsp;
+					<a target="_self" href="{{ '../' + law.file_path}}" download="{{law.file_name}}">{{ (DEFAULT_LANGUAGE == 'TH'?law.topic_th:law.topic_en) }}</a>
+				</div>
+				<div class="col-lg-12" style="padding-top: 5px;">
+					<span class="glyphicon glyphicon-calendar" style="color: #6A99EB; font-size: 1.5em;margin-left: 35px;"></span> {{getThaiDate(law.law_date)}}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row form-group" style="margin-top: 20px; color: #071CA5; font-weight: bolder; font-size: 1.2em;">
+		<div class="col-lg-12 text-center">
+			{{ (DEFAULT_LANGUAGE == 'TH'?'ประกาศและคำสั่ง':'ประกาศและคำสั่ง') }}
+			<br>
+			<div style="background: url('../cio-files/img/line-bottom.png') no-repeat; height: 3px; width:480px; margin:0px auto; margin-top:20px;margin-bottom:15px;"></div>
+		</div>
+	</div>
+	<div class="row form-group" style="padding: 15px;">
+		<div class="col-lg-10 col-lg-offset-1">
+			<div class="row form-group"  ng-repeat="law in LawEcho">
+				<div class="col-lg-12">
+					<img src="../cio-files/img/right-point.png">&nbsp;
+					<a target="_self" href="{{'../' + law.file_path}}" download="{{law.file_name}}">{{ (DEFAULT_LANGUAGE == 'TH'?law.topic_th:law.topic_en) }}</a>
+				</div>
+				<div class="col-lg-12"  style="padding-top: 5px;">
+					<span class="glyphicon glyphicon-calendar" style="color: #6A99EB; font-size: 1.5em; margin-left: 35px;"></span> {{ getThaiDate(law.law_date)}}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-include src="'views/footer.html'"></div>
+</div>

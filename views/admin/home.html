@@ -1,0 +1,160 @@
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group">
+	<div class="col-md-12 text-center">
+		<div class="page-header">
+			<span style="font-size: 1.3em; font-weight: bolder;">Dashboard Monitor</span>
+		</div>
+	</div>
+</div>
+<div class="row form-group">
+	<div class="col-md-4">
+		<table class="table table-bordered">
+			<caption class="text-center order-monitor">ฝากสั่งสินค้า</caption>
+			<thead>
+				<tr>
+					<th>ลูกค้า</th>
+					<th>หมายเลข order</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="data in OrderList">
+					<td>{{data.customer.user_code}}</td>
+					<td>{{data.order_no}}</td>
+					<td>
+						<a href="admin/order/detail/{{data.id}}" class="btn btn-primary"><i class="fas fa-search"></i></a>
+					</td>
+				</tr>
+			</tbody>	
+		</table>
+	</div>
+	<div class="col-md-4">
+		<table class="table table-bordered">
+			<caption class="text-center importer-monitor">นำเข้าสินค้า</caption>
+			<thead>
+				<tr>
+					<th>ลูกค้า</th>
+					<th>หมายเลข order</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="data in ImporterList">
+					<td>{{data.customer.user_code}}</td>
+					<td>{{data.tracking_no}}</td>
+					<td>
+						<a href="admin/importer/detail/{{data.id}}" class="btn btn-primary"><i class="fas fa-search"></i></a>
+					</td>
+				</tr>
+			</tbody>	
+		</table>
+	</div>
+	<div class="col-md-4">
+		<div class="row form-group">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<caption class="text-center topup-monitor">เติมเงิน</caption>
+					<thead>
+						<tr>
+							<th>ลูกค้า</th>
+							<th>ยอดเงินที่เติม (บาท)</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="data in TopupList">
+							<td>{{data.customer.user_code}}</td>
+							<td>{{data.topup_amount | number:2}}</td>
+							<td>
+								<a href="admin/topup" class="btn btn-primary"><i class="fas fa-search"></i></a>
+							</td>
+						</tr>
+					</tbody>	
+				</table>
+			</div>
+
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<caption class="text-center transfer-monitor">โอนเงิน</caption>
+					<thead>
+						<tr>
+							<th>ลูกค้า</th>
+							<th>ยอดเงินที่โอน (หยวน)</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="data in TransferList">
+							<td>{{data.customer.user_code}}</td>
+							<td>{{data.pay_amount_yuan | number:2}}</td>
+							<td>
+								<a href="admin/transfer" class="btn btn-primary"><i class="fas fa-search"></i></a>
+							</td>
+						</tr>
+					</tbody>	
+				</table>
+			</div>
+
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<caption class="text-center deposit-monitor">ฝากจ่าย</caption>
+					<thead>
+						<tr>
+							<th>ลูกค้า</th>
+							<th>ยอดเงินที่ฝากจ่าย (หยวน)</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="data in DepositList">
+							<td>{{data.customer.user_code}}</td>
+							<td>{{data.pay_amount_yuan | number:2}}</td>
+							<td>
+								<a href="admin/deposit" class="btn btn-primary"><i class="fas fa-search"></i></a>
+							</td>
+						</tr>
+					</tbody>	
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<style type="text/css">
+	caption{
+		font-weight: bolder;
+		font-size: 1.1em;
+	}
+	.order-monitor{
+		background-color: #F5E2E2;
+	}
+
+	.importer-monitor{
+		background-color: #EFE2F5;
+	}
+
+	.topup-monitor{
+		background-color: #E2E2F5;
+	}
+
+	.transfer-monitor{
+		background-color: #E2F0F5;
+	}
+
+	.deposit-monitor{
+		background-color: #E2F5E9;
+	}
+</style>
+

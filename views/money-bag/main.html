@@ -1,0 +1,85 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div class="row form-group visible-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group">
+	<div class="col-lg-12">
+		<div class="page-header text-center">
+			<label data-ng-show="UserData.money_bags.balance > 0" style="color: green; font-weight: bolder; font-size: 1.2em;"><i class="fas fa-wallet"></i> ยอดเงินในกระเป๋าคุณคือ {{UserData.money_bags.balance | number:2}} บาท</label>
+			<label data-ng-show="UserData.money_bags.balance == 0" style="color: red; font-weight: bolder;">ยอดเงินในกระเป๋าคุณคือ {{UserData.money_bags.balance}} บาท</label>
+		</div>
+	</div>
+</div>
+<div class="row form-group">
+	<div class="col-md-10 col-md-offset-1">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<span style="font-size: 1.3em; font-weight: bolder;">ประวัติการชำระเงิน</span>
+				
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-1">
+				ประเภทการชำระ
+			</label>
+			<div class="col-md-3">
+				<select class="form-control" data-ng-model="condition.pay_type">
+					<option value="">ทั้งหมด</option>
+					<option value="1">ชำระค่าสินค้าบริการ</option>
+					<option value="2">ชำระค่าขนส่ง</option>
+					<option value="3">โอนเงินไปจีน</option>
+					<option value="4">ฝากจ่าย</option>
+					<option value="5">นำเข้าสินค้า</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<button class="btn btn-info" data-ng-click="getPayList()"><i class="fas fa-search"></i></button>
+			</div>
+			
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12 table-responsive">
+				<table class="table table-striped table-hover table-bordered"> 
+					<thead>
+						<tr>
+							<th class="text-center">วันที่ชำระ</th>
+							<th class="text-center">จำนวนเงินที่ชำระ (หยวน)</th>
+							<th class="text-center">อัตราแลกเปลี่ยน</th>
+							<th class="text-center">จำนวนเงินที่ชำระ (บาท)</th>
+							<th class="text-center">ประเภทการชำระ</th>
+							<th class="text-center">สถานะ</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="data in DataList">
+							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
+							<td class="text-right">{{data.pay_amount_yuan | number:2}}</td>
+							<td class="text-right">{{data.exchange_rate | number:2}}</td>
+							<td class="text-right">{{data.pay_amount_thb | number:2}}</td>
+							<td>{{getPayType(data.pay_type)}}</td>
+							<td>{{getPayStatus(data.pay_status)}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<ul class="pull-right" uib-pagination total-items="Pagination.totalPages" ng-model="Pagination.currentPage" max-size="Pagination.limitDisplay" class="pagination-sm" items-per-page="Pagination.limitRowPerPage" boundary-links="true" force-ellipses="true"  ng-change="pageChanged()"></ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div data-ng-include src="'views/footer.html'"></div>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>

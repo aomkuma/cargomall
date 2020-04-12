@@ -1,0 +1,197 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 180px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row" style="padding: 8px;" data-ng-form="frm">
+	<div class="col col-md-10 col-md-offset-1">
+		<div class="page-header text-center">
+			<span class="table-caption-head">ข้อมูลการจัดส่งสินค้า</span>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 col-sm-6 col-xs-12">
+
+				<div class="panel panel-default">
+					<div class="panel-heading" style="font-size: 1.1em; background-color: #FF6C6C; color: #FFFFFF;"><b>ข้อมูลการขนส่งจากจีนมาไทย</b></div>
+					  <div class="panel-body" style="font-size: 1em;">
+						<div class="row">
+							
+							<div class="col-lg-9">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="transport_type_car" type="radio" value="car" data-ng-model="ship_option.transport_type" aria-label="..." required="true">&nbsp;&nbsp;&nbsp;
+									        <label for="transport_type_car">ทางรถ (ระยะเวลา 5 - 7 วัน)</label>
+										</div>
+									</div>
+									<!--<div class="col-lg-12">
+										<div class="input-group">
+									        <input type="radio" value="air" data-ng-model="ship_option.transport_type" aria-label="...">&nbsp;&nbsp;&nbsp;
+									        <label>ทางเครื่องบิน</label>
+										</div>
+									</div>-->
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="transport_type_ship" type="radio" value="sea" data-ng-model="ship_option.transport_type" aria-label="..." required="true">&nbsp;&nbsp;&nbsp;
+									        <label for="transport_type_ship">ทางเรือ (ระยะเวลา 14 - 18 วัน)</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6 col-sm-6 col-xs-12">
+				<div class="panel panel-default">
+					<div class="panel-heading" style="font-size: 1.1em; background-color: #F6D0D0; color: #000;"><b>ข้อมูลการขนส่งภายในประเทศ</b></div>
+					  <div class="panel-body" style="font-size: 1em;">
+					
+
+						<div class="row form-group">
+							<label class="col-lg-12"><h4>
+								<span class="badge" style="background-color: #EBCCCC; padding: 10px; color: #000; margin-bottom: 10px; font-size: 0.8em;">วิธีการรับสินค้า</span>
+							</h4></label>
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="receive_order_type1" type="radio" value="own" data-ng-model="ship_option.receive_order_type" aria-label="..." required="true" data-ng-click="changeAddressType()">&nbsp;&nbsp;&nbsp;
+									        <label for="receive_order_type1">รับสินค้าด้วยตนเอง</label>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="receive_order_type2" type="radio" value="current" data-ng-model="ship_option.receive_order_type" aria-label="..." data-ng-change="changeAddressType()" required="true">&nbsp;&nbsp;&nbsp;
+									        <label for="receive_order_type2">ที่อยู่ปัจจุบัน</label>
+										</div>
+									</div>
+									<label class="col-lg-12" data-ng-show="ship_option.receive_order_type == 'current'">ข้อมูลที่อยู่ผู้รับสินค้า</label>
+									<div class="col-lg-12" data-ng-show="ship_option.receive_order_type == 'current'" data-ng-repeat="address in UserData.addresses">
+										<label for="address{{$index}}">
+										<div class="row">
+											<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" >
+												<input id="address{{$index}}" type="radio" value="{{address.id}}" data-ng-model="ship_option.customer_address_id" aria-label="..." data-ng-required="ship_option.receive_order_type == 'current'">
+											</div>
+											<div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+												<label for="address{{$index}}" style="font-weight: lighter;">
+													{{ 'ADDRESS1_TXT' | translate }} {{address.address1}}&nbsp;
+													{{ 'ADDRESS2_TXT' | translate }} {{address.address2}}&nbsp;
+													{{ 'ADDRESS3_TXT' | translate }} {{address.address3}}&nbsp;
+													{{ 'ADDRESS4_TXT' | translate }} {{address.address4}}&nbsp;
+													{{ 'ADDRESS5_TXT' | translate }} {{address.address5}}&nbsp;
+													{{ 'ADDRESS6_TXT' | translate }} {{address.address6}}&nbsp;
+													{{ 'ADDRESS7_TXT' | translate }} {{address.address7}}&nbsp;
+												</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-lg-12" data-ng-show="ship_option.receive_order_type == 'current' && UserData.addresses.length == 0">
+										ไม่พบข้อมูลที่อยู่ <a data-ng-click="editProfileDialog()">คลิกที่นี่เพื่อเพิ่มข้อมูล</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row form-group"  data-ng-show="ship_option.receive_order_type == 'current'">
+							<label class="col-lg-12"><h4>
+								<span class="badge" style="background-color: #B9DEF0; padding: 10px; color: #000; margin-bottom: 10px; font-size: 0.8em;">บริษัทขนส่ง</span>
+							</h4></label>
+							<div class="col-lg-8">
+								<div class="row">
+									<!--<div class="col-lg-12">
+										<div class="input-group">
+									        <input type="radio" value="dhl" data-ng-model="ship_option.transport_company" aria-label="...">&nbsp;&nbsp;&nbsp;
+									        <label>DHL Express</label>&nbsp;&nbsp;&nbsp;
+									        <a href="http://www.dhl.co.th/th.html" target="_blank">รายละเอียด <img src="img/logo-DHL-express.jpg" border="0" style="max-width: 20%;" /></a>
+										</div>
+									</div>-->
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="transport_company2" type="radio" value="nim" data-ng-model="ship_option.transport_company" aria-label="...">&nbsp;&nbsp;&nbsp;
+									        <label for="transport_company2">Nim Express</label>&nbsp;&nbsp;&nbsp;
+									        <a href="https://www.nimexpress.com" target="_blank">รายละเอียด <img src="files/img/logo-nimexpress.jpg" border="0" style="max-width: 20%;" /></a>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="transport_company3" type="radio" value="flash" data-ng-model="ship_option.transport_company" aria-label="...">&nbsp;&nbsp;&nbsp;
+									        <label for="transport_company3">Flash Express</label>&nbsp;&nbsp;&nbsp;
+									        <a href="https://www.flashexpress.co.th/" target="_blank">รายละเอียด <img src="files/img/logo-flash.jpg" border="0" style="max-width: 20%;" /></a>
+										</div>
+									</div>
+									
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="transport_company1" type="radio" value="kerry" data-ng-model="ship_option.transport_company" aria-label="...">&nbsp;&nbsp;&nbsp;
+									        <label for="transport_company1">Kerry Express</label>&nbsp;&nbsp;&nbsp;
+									        <a href="http://th.kerryexpress.com/th/home/" target="_blank">รายละเอียด <img src="files/img/logo-kerry.png" border="0" style="max-width: 20%;" /></a>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input type="radio" id="transport_company4"  value="thailandpost" data-ng-model="ship_option.transport_company" aria-label="...">&nbsp;&nbsp;&nbsp;
+									        <label for="transport_company4">ไปรษณีย์ไทย (EMS)</label>&nbsp;&nbsp;&nbsp;
+									        <a href="http://www.thailandpost.com/" target="_blank">รายละเอียด <img src="files/img/logo-thaipost.jpg" border="0" style="max-width: 20%;" /></a>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input type="radio" value="other" data-ng-model="ship_option.transport_company" aria-label="...">&nbsp;&nbsp;&nbsp;
+									        <label>อื่นๆ</label>&nbsp;&nbsp;&nbsp;
+										</div>
+										<br>
+									</div>
+									<div class="col-lg-8" data-ng-show="ship_option.transport_company == 'other'">
+										<input class="form-control" data-ng-model="ship_option.transport_company_other" placeholder="บริษัทขนส่ง..">
+										<br>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-12"><h4>
+								<span class="badge" style="background-color: #F8F8F8; padding: 10px; color: #000; margin-bottom: 10px; font-size: 0.8em;">รายละเอียดเพิ่มเติม <font color="red">(อาจมีค่าใช้จ่ายเพิ่มเติม)</font></span>
+							</h4></label>
+							<div class="col-md-8 col-md-offset-1">
+								<div class="row">
+									<!-- <div class="col-lg-12" data-ng-repeat="special_option in special_option_list track by $index">
+										<input id="chk{{$index}}" type="checkbox" data-ng-value="special_option.value" name="special_option[]" data-ng-checked="ship_option.special_option.indexOf(special_option.value) > -1" data-ng-click="toggleSelection(special_option)" >&nbsp;&nbsp;&nbsp;
+									    <label for="chk{{$index}}">{{special_option.text}}</label>
+									</div> -->
+									<textarea class="form-control" ng-model="ship_option.special_option"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div class="row form-group">
+			<div class="col-lg-12 text-center">
+				<a href="view-orders" role="button" class="btn btn-default" >ย้อนกลับ</a>
+				<a href="product-info" class="btn btn-info">เลือกสินค้าเพิ่มเติม</a>
+				<button class="btn btn-primary" data-ng-disabled="frm.$invalid || (ship_option.receive_order_type == 'current' && ship_option.customer_address_id == null)" data-ng-click="updateShippingOptions(ship_option)">ตรวจสอบสรุปการสั่งซื้อ</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div data-ng-include src="'views/footer.html'"></div>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>

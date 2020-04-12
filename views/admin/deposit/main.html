@@ -1,0 +1,94 @@
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group">
+	<div class="col-md-12">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">ข้อมูลการฝากจ่าย</span>
+				</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-1">
+				ลูกค้า
+			</label>
+			<div class="col-md-3">
+				<!-- <select class="form-control" data-ng-model="condition.user_id" data-ng-options="data.id as ('(' + data.user_code + ') ' + data.firstname + ' ' + data.lastname) for data in UserList">
+					<option value="">ทั้งหมด</option>
+				</select> -->
+				<input type="text" class="form-control" data-ng-model="condition.keyword">
+			</div>
+			<label class="col-md-1">
+				วันที่ทำรายการ
+			</label>
+			<div class="col-md-2">
+				<input type="date" class="form-control" data-ng-model="condition.created_at"> 
+			</div>
+			<label class="col-md-1">
+				สถานะ
+			</label>
+			<div class="col-md-2">
+				<select class="form-control" data-ng-model="condition.pay_status">
+					<option value="">ทั้งหมด</option>
+					<option value="1">คำขอฝากจ่าย</option>
+					<option value="2">ยืนยันการฝากจ่าย (สำเร็จ)</option>
+					<option value="3">ยกเลิกการฝากจ่าย</option>
+				</select>
+			</div>
+			<div class="col-md-1">
+				<button class="btn btn-info" data-ng-click="getDepositList()"><i class="fas fa-search"></i></button>
+			</div>
+			
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12 table-responsive">
+				<table class="table table-striped table-hover table-bordered"> 
+					<thead>
+						<tr>
+							<th class="text-center">รหัสลูกค้า</th>
+							<th class="text-center">ชื่อ - สกุล</th>
+							<th class="text-center">เบอร์โทร</th>
+							<th class="text-center">วันที่แจ้งฝากจ่าย</th>
+							<th class="text-center">หมายเลข order</th>
+							<th class="text-center">จำนวนเงินที่ฝากจ่าย (หยวน)</th>
+							<th class="text-center">อัตราแลกเปลี่ยน</th>
+							<th class="text-center">จำนวนเงินที่หักจากกระเป๋าเงิน (บาท)</th>
+							<th class="text-center">สถานะ</th>
+							<th class="text-center">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="data in DataList">
+							<td>{{data.customer.user_code}}</td>
+							<td>{{data.customer.firstname}} {{data.customer.lastname}}</td>
+							<td>{{data.customer.mobile_no}}</td>
+							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
+							<td>{{data.order_no}}</td>
+							<td class="text-right">{{data.pay_amount_yuan | number:2}}</td>
+							<td class="text-right">{{data.exchange_rate | number:2}}</td>
+							<td class="text-right">{{data.pay_amount_thb | number:2}}</td>
+							<td>{{getDepositStatus(data.pay_status)}}</td>
+							<td>
+								<button class="btn btn-primary" data-ng-click="approveDeposit(data.id)" title="ยืนยันการฝากจ่าย" data-ng-show="data.pay_status == 1"><i class="fas fa-check"></i></button>
+								<button class="btn btn-info" data-ng-click="rejectDeposit(data.id)" title="ยกเลิกการฝากจ่าย" data-ng-show="data.pay_status == 1"><i class="fas fa-ban"></i></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<ul class="pull-right" uib-pagination total-items="Pagination.totalPages" ng-model="Pagination.currentPage" max-size="Pagination.limitDisplay" class="pagination-sm" items-per-page="Pagination.limitRowPerPage" boundary-links="true" force-ellipses="true"  ng-change="pageChanged()"></ul>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,64 @@
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group">
+	<div class="col-md-10 col-md-offset-1">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">ข้อมูลลูกค้า</span>
+				</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-1">
+				ค้นหา
+			</label>
+			<div class="col-md-3">
+				<input class="form-control" data-ng-model="condition.keyword" placeholder="รหัสลูกค้า / ชื่อ - สกุล">
+			</div>
+			
+			<div class="col-md-3">
+				<button class="btn btn-info" data-ng-click="getUserList()"><i class="fas fa-search"></i></button>
+			</div>
+			
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12 table-responsive">
+				<table class="table table-striped table-hover table-bordered"> 
+					<thead>
+						<tr>
+							<th class="text-center">รหัสลูกค้า</th>
+							<th class="text-center">ชื่อ - สกุล</th>
+							<th class="text-center">วันที่สมัคร</th>
+							<th class="text-center">ยอดเงินในกระเป๋า</th>
+							<th class="text-center">จัดการ</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="data in UserList">
+							<td>{{data.user_code}}</td>
+							<td>{{data.firstname}} {{data.lastname}}</td>
+							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
+							<td class="text-right">{{data.money_bags.balance | number:2}}</td>
+							<td class="text-center">
+								<button class="btn btn-primary" data-ng-show="data.money_bags.balance > 0" data-ng-click="withdrawnMoney(data)">ถอนเงิน</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<ul class="pull-right" uib-pagination total-items="Pagination.totalPages" ng-model="Pagination.currentPage" max-size="Pagination.limitDisplay" class="pagination-sm" items-per-page="Pagination.limitRowPerPage" boundary-links="true" force-ellipses="true"  ng-change="pageChanged()"></ul>
+			</div>
+		</div>
+	</div>
+</div>

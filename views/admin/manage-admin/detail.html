@@ -1,0 +1,101 @@
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group" data-ng-form="frm">
+	<div class="col-md-10 col-md-offset-1">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">{{ id == null?'เพิ่ม':'แก้ไข'}} Admin</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<label class="col-md-2">
+				e-mail
+			</label>
+			<div class="col-md-3">
+				<input type="email" class="form-control" data-ng-model="Data.email" maxlength="70">
+			</div>
+		</div>
+		<div class="row form-group" data-ng-show="id == null">
+			<label class="col-md-2">
+				Password
+			</label>
+			<div class="col-md-3">
+				<input type="password" class="form-control" data-ng-model="Data.password">
+			</div>
+		</div>
+
+		<div class="row form-group" data-ng-show="id != null">
+			<label class="col-md-2">
+				New Password
+			</label>
+			<div class="col-md-3">
+				<input type="password" class="form-control" data-ng-model="Data.new_password">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-2">
+				Confirm Password
+			</label>
+			<div class="col-md-3">
+				<input type="password" class="form-control" data-ng-model="Data.confirm_password">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-2">
+				ชื่อ
+			</label>
+			<div class="col-md-3">
+				<input type="text" class="form-control" data-ng-model="Data.firstname">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-2">
+				สกุล
+			</label>
+			<div class="col-md-3">
+				<input type="text" class="form-control" data-ng-model="Data.lastname">
+			</div>
+		</div>
+		<div class="row form-group" data-ng-show="UserData.role == 1">
+			<label class="col-md-2">
+				ประเภท admin
+			</label>
+			<div class="col-md-3">
+				<select class="form-control" data-ng-model="Data.role" data-ng-options="data.id as data.value for data in Role">
+				</select>
+			</div>
+		</div>
+		<div class="row form-group" data-ng-show="UserData.role == 1">
+			<label class="col-md-2">
+				สถานะการใช้งาน
+			</label>
+			<div class="col-md-3">
+				<select class="form-control" data-ng-model="Data.active_status">
+					<option value="Y">ใช้งาน</option>
+					<option value="N">ระงับการใช้งาน</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-lg-12 text-center">
+				<a href="admin/manage-admin" class="btn btn-default" data-ng-show="UserData.role == 1">กลับหน้ารายการ</a>
+				<button class="btn btn-primary" data-ng-disabled="frm.$invalid" data-ng-click="updateData(Data)">บันทึก</button>
+			</div>
+		</div>
+	</div>
+</div>

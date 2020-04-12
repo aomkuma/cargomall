@@ -1,0 +1,192 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div class="inner-overlay" ng-show="ShowDialogConfirmPay">
+	<div class="dialog-confirm-form">
+		<div class="row form-group">
+			<div class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12 text-center">
+				ต้องการทำรายการชำระเงิน ใช่หรือไม่ ?
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12 text-center">
+				<button class="btn btn-default" data-ng-click="closeConfirmPayDialog()">ยกเลิก</button>
+				<button class="btn btn-primary" data-ng-click="confirmPay(Pay)">ยืนยันการชำระเงิน</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row" style="padding: 8px; padding-top:20px;" ng-form="frm">
+	<div class="col-md-8 col-md-offset-2" ng-show="PaySuccess" style="padding-bottom:300px;">
+		<br><br>
+		<span style="color: green; font-weight: bolder;" data-ng-show="Pay.pay_type == 1 || Pay.pay_type == 2 || Pay.pay_type == 5"><i class="fas fa-check"></i> ระบบได้รับการชำระเงินแล้ว ขอบคุณที่ใช้บริการ</span>
+		<span style="color: green; font-weight: bolder;" data-ng-show="Pay.pay_type == 3 || Pay.pay_type == 4"><i class="fas fa-check"></i> ระบบได้รับข้อมูลแล้ว แอดมินจะตรวจสอบข้อมูลของคุณในไม่ช้านี้</span>
+		<br>ระบบกำลังพาคุณไปยังหน้าหลัก..
+	</div>
+	<div class="col-md-8 col-md-offset-2" ng-hide="PaySuccess">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">การชำระเงิน</span>
+				</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-3 col-sm-4 col-xs-12" style="font-weight: bolder; color: #C91313;">1 หยวน เท่ากับ {{exchange_rate | number:2}} บาท</label>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12 col-sm-12 col-xs-12" data-ng-show="UserData.money_bags.balance > 0" style="color: green; font-weight: bolder;"><i class="fas fa-check"></i> ยอดเงินที่ใช้ได้ของคุณคือ {{UserData.money_bags.balance | number:2}} บาท</label>
+			<label class="col-md-12 col-sm-12 col-xs-12" data-ng-show="UserData.money_bags.balance == 0" style="color: red; font-weight: bolder;">ยอดเงินที่ใช้ได้ของคุณคือ {{UserData.money_bags.balance}} บาท</label>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-3 col-sm-4 col-xs-12">ประเภทการชำระ</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<select class="form-control"  data-ng-model="Pay.pay_type" required="true" data-ng-change="checkPayType()">
+					<option value="">กรุณาเลือก..</option>
+					<option value="1">ชำระค่าสินค้าบริการ</option>
+					<option value="2">ชำระค่าขนส่งในไทย</option>
+					<option value="3">โอนเงินไปจีน</option>
+					<option value="4">ฝากจ่าย</option>
+					<option value="5">นำเข้าสินค้า</option>
+				</select>
+			</div>
+		</div>
+		<div  class="row form-group" data-ng-show="Pay.pay_type == 1">
+			<div class="col-md-10 table-responsive" ng-show="DataList.length > 0">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>เลือก</th>
+							<th>หมายเลข Order</th>
+							<th>วันที่ทำการสั่งซื้อ</th>
+							<th>จำนวนเงิน (หยวน)</th>
+							<th>จำนวนเงิน (บาท)</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="data in DataList track by $index">
+						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountValue(data.totalYuan, exchange_rate)"></td>
+						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.order_no}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.totalYuan | number:2}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.totalYuan * exchange_rate | number:2}}</label></td>
+					</tr>
+				</table>
+			</div>
+			<div class="col-md-10 text-center" ng-show="DataList == null || DataList.length == 0">
+				ไม่พบรายการที่ต้องชำระจ่าย
+			</div>
+		</div>
+
+		<div  class="row form-group" data-ng-show="Pay.pay_type == 2">
+			<div class="col-md-10 table-responsive" ng-show="DataList.length > 0">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>เลือก</th>
+							<th>หมายเลข Order</th>
+							<th>วันที่ทำการสั่งซื้อ</th>
+							<th>จำนวนเงินค่าขนส่ง (บาท)</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="data in DataList track by $index">
+						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountTransportValue(data.order_desc.total_china_transport_cost, data.order_desc.china_thai_transport_cost, data.order_desc.transport_company_cost)"></td>
+						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.order_no}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.totalBaht | number:2}}</label></td>
+					</tr>
+				</table>
+			</div>
+			<div class="col-md-10 text-center" ng-show="DataList == null || DataList.length == 0">
+				ไม่พบรายการที่ต้องชำระจ่าย
+			</div>
+		</div>
+
+		<div  class="row form-group" data-ng-show="Pay.pay_type == 5">
+			<div class="col-md-10 table-responsive" ng-show="DataList.length > 0">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>เลือก</th>
+							<th>หมายเลข Tracking</th>
+							<th>วันที่ทำรายการ</th>
+							<th>จำนวนเงิน (บาท)</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="data in DataList track by $index">
+						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountImporterValue(totalBaht)"></td>
+						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.tracking_no}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.totalBaht | number:2}}</label></td>
+					</tr>
+				</table>
+			</div>
+			<div class="col-md-10 text-center" ng-show="DataList == null || DataList.length == 0">
+				ไม่พบรายการที่ต้องชำระจ่าย
+			</div>
+		</div>
+
+		<div class="row form-group" data-ng-show="Pay.pay_type == 4">
+			<label class="col-md-3 col-sm-4 col-xs-12">หมายเลข order</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" type="text" data-ng-model="Pay.order_no" data-ng-required="Pay.pay_type == 4">
+			</div>
+		</div>
+
+		<div class="row form-group" data-ng-hide="Pay.pay_type == 2 || Pay.pay_type == 5">
+			<label class="col-md-3 col-sm-4 col-xs-12">ยอดเงินที่ชำระ (หยวน)</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" type="number" data-ng-model="Pay.pay_amount_yuan" data-ng-keyup="calcTHB()" data-ng-disabled="Pay.pay_type == 1 || Pay.pay_type == 2 || Pay.pay_type == 5" data-ng-required="Pay.pay_type == 3 || Pay.pay_type == 4">
+			</div>
+		</div>
+
+		<div class="row form-group" data-ng-show="Pay.pay_type == 3">
+			<label class="col-md-3 col-sm-4 col-xs-12">ชื่อบัญชีผู้โอน</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" type="text" data-ng-model="Pay.payer_name" data-ng-required="Pay.pay_type == 3">
+			</div>
+		</div>
+
+		<div class="row form-group" data-ng-show="Pay.pay_type == 3">
+			<label class="col-md-3 col-sm-4 col-xs-12">หมายเลขบัญชีปลายทาง / E-mail Alipay</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" type="text" data-ng-model="Pay.to_bank_acc_no" data-ng-required="Pay.pay_type == 3">
+			</div>
+		</div>
+
+		<div class="row form-group" data-ng-show="Pay.pay_type == 3">
+			<label class="col-md-3 col-sm-4 col-xs-12">ธนาคารบัญชีปลายทาง / Alipay</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" type="text" data-ng-model="Pay.to_bank_name" data-ng-required="Pay.pay_type == 3">
+			</div>
+		</div>
+
+		<div class="row form-group"  data-ng-hide="Pay.pay_type == 3 || Pay.pay_type == 4">
+			<label class="col-md-3 col-sm-4 col-xs-12">ยอดเงินที่ชำระ (บาท)</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" type="number" data-ng-model="Pay.pay_amount_thb" data-ng-keyup="calcCNY()" required="true"  data-ng-disabled="Pay.pay_type == 1 || Pay.pay_type == 2 || Pay.pay_type == 5">
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<label class="col-md-3 col-sm-4 col-xs-12">รายละเอียดการชำระ <span data-ng-show="Pay.pay_type == 3"> / โอน</span></label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<textarea class="form-control" data-ng-model="Pay.remark"></textarea>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<button class="btn btn-primary btn-sm"  ng-click="pay(Pay)" data-ng-disabled="frm.$invalid"><i class="far fa-money-bill-alt"></i> ชำระเงิน</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div data-ng-include src="'views/footer.html'"></div>

@@ -1,0 +1,55 @@
+<div ng-include src="'views/header.html'"></div>
+
+<div  style="margin-top:180px;">
+	<div class="row form-group" style="padding-top: 70px;">
+	  <div class="col-lg-10 col-lg-offset-1">
+	    <div class="row">
+	      <div class="col-lg-10" style="padding: 5px; font-weight: bolder; font-size: 1.3em;">
+	        <span ng-repeat="data in MenuName">
+		        <img src="../files/img/pin-menu.png">
+		        {{data.menu_name_th}}
+		    </span>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="col-lg-6">
+
+	  </div>
+	</div>
+
+	
+	<div class="row form-group">
+		<div class="col-lg-10 col-lg-offset-1 text-center" >
+			<span class="title-content">
+				<h2>{{(DEFAULT_LANGUAGE == 'TH'?Page.title_th:Page.title_en)}}</h2>
+			</span>
+		</div>
+	</div>
+	<div class="row form-group">
+		<div class="col-lg-10 col-lg-offset-1 text-center" >
+			<img src="../files/img/header_line.png" style="width: 70%;">
+		</div>
+	</div>
+	
+	<div class="row form-group">
+		<div class="col-lg-10 col-lg-offset-1" bind-html-compile="(DEFAULT_LANGUAGE == 'TH'?Page.contents:Page.contents_en)">
+
+		</div>
+	</div>
+
+	<div class="row form-group" ng-repeat="file in FileList">
+		<div class="col-lg-10 col-lg-offset-1 li-attach-file"  style="padding: 10px;">
+			<a target="_self" href="../{{file.file_path}}" download="{{file.file_name}}">
+				<img src="../files/img/attach-file.png" style="height: 2em;"> &nbsp; {{ (file.display_name !== null && file.display_name != ''?file.display_name:file.file_name) }}
+			</a>
+		</div>
+	</div>
+
+	<div ng-include src="'views/footer.html'"></div>
+</div>
+<style type="text/css">
+	h2{
+    font-family: "MAX PINJOHN V2";
+    src: url('../fonts/MAX_PINJOHN_V2.ttf') format("truetype");
+}
+</style>

@@ -1,0 +1,464 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div  style="margin-right: 0px;">
+<div class="row hidden-xs" style="margin-top:160px; background: url('files/img/bg-ship.jpg') no-repeat  bottom;background-size: 100%; opacity: .8">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="">
+
+				  <!-- Full-width images with number and caption text -->
+					<div class="mySlides text-center" style="position: relative; ">
+						<!-- <img src="files/img/bg-highlight.jpg" style="width: 100%; height: auto;" alt="" title=""> -->
+						<div style="padding:5%; width: 100%; padding-top:8%;">
+							<div class="row" >
+								<div class="col-md-2 col-sm-2 col-xs-4">
+									<a href="product-info"><img src="files/img/icon-shortcut/shopping-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-4">
+									<a href="view-orders"><img src="files/img/icon-shortcut/basket-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-4">
+									<a href="tracking/order"><img src="files/img/icon-shortcut/check-tracking-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-4">
+									<a href="topup"><img src="files/img/icon-shortcut/wallet-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-4">
+									<a href="pay/4"><img src="files/img/icon-shortcut/payment-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-4">
+									<a href="pay/3"><img src="files/img/icon-shortcut/transfer-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+								</div>
+							</div>	
+						</div>
+					</div>
+				
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+<div class="row visible-xs" style="margin-top:80px;background: url('files/img/bg-ship.jpg') no-repeat  bottom;background-size: 100%; opacity: .8">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="">
+
+				  <!-- Full-width images with number and caption text -->
+					<div class="mySlides text-center" style="position: relative;">
+						<!-- <img src="files/img/bg-highlight.jpg" style="width: 100%; height: auto;" alt="" title=""> -->
+						<div style="padding:5%; width: 100%;">
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="col-md-2 col-sm-2 col-xs-4">
+										<a href="product-info"><img src="files/img/icon-shortcut/shopping-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+									</div>
+									<div class="col-md-2 col-sm-2 col-xs-4">
+										<a href="view-orders"><img src="files/img/icon-shortcut/basket-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+									</div>
+									<div class="col-md-2 col-sm-2 col-xs-4">
+										<a href="tracking/order"><img src="files/img/icon-shortcut/check-tracking-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="col-md-2 col-sm-2 col-xs-4">
+										<a href="topup"><img src="files/img/icon-shortcut/wallet-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+									</div>
+									<div class="col-md-2 col-sm-2 col-xs-4">
+										<a href="pay/4"><img src="files/img/icon-shortcut/payment-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+									</div>
+									<div class="col-md-2 col-sm-2 col-xs-4">
+										<a href="pay/3"><img src="files/img/icon-shortcut/transfer-icon.png" style="width: 70%; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+<div class="row" style="margin-top:0px; background-color: #e8a587; padding: 8px; padding-top:20px;">
+	<div class="col-md-8 col-md-offset-2">
+		<div class="row form-group">
+			<div class="col-md-9 col-sm-8 col-xs-12">
+				<input type="text" class="form-control" data-ng-model="link_url" focus-me="focusLinkURLInput"  placeholder="ค้นหาสินค้าจาก taobao, tmall, 1688 .." style="height: 40px;" data-ng-enter="getProduct(link_url)">
+			</div>
+			<div class="col-md-3 col-sm-4 col-xs-12">
+				<button class="btn btn-login btn-block" data-ng-click="getProduct(link_url)" data-ng-disabled="link_url == null || link_url == ''" style="height: 40px;"><i class="fas fa-search"></i> {{'SEARCH_FROM_LINK' | translate}}</button>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+<div class="row" style="margin-top:0px; background: url('files/img/bg-bill.jpg') no-repeat center;background-size: 120%; padding:20px; border-bottom: 5px solid #ED2224;">
+	<div class="col-md-4 visible-lg visible-md">
+		<img src="files/img/exchange-rate-banner.png" style="height: 180px;" alt="" title="">
+	</div>
+	<div class="col-md-8 visible-lg visible-md">
+		<div class="row">
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-md">
+					<br><br>{{'ORDER_PRODUCT_TXT' | translate}}<br>
+					<b>{{exchange_rate | number:2}} THB</b>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-md">
+					<br><br>{{'TOPUP_TXT' | translate}}<br>
+					<b>{{exchange_rate_transfer | number:2}} THB</b>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-md">
+					<br><br>{{'TRANSFER_MONEY_TXT' | translate}}<br>
+					<b>{{exchange_rate_transfer | number:2}} THB</b>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-4 visible-sm">
+		<img src="files/img/exchange-rate-banner.png" style="height: 120px;" alt="" title="">
+	</div>
+	<div class="col-sm-8 visible-sm">
+		<div class="row">
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-sm">
+					<br>{{'ORDER_PRODUCT_TXT' | translate}}<br>
+					<b>{{exchange_rate | number:2}} THB</b>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-sm">
+					<br>{{'TOPUP_TXT' | translate}}<br>
+					<b>{{exchange_rate_transfer | number:2}} THB</b>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-sm">
+					<br>{{'TRANSFER_MONEY_TXT' | translate}}<br>
+					<b>{{exchange_rate_transfer | number:2}} THB</b>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-xs-12 visible-xs">
+		<img src="files/img/exchange-rate-banner.png" style="width: 100%" alt="" title="">
+	</div>
+	<div class="col-xs-12 visible-xs" style="margin-top:20px;">
+		<div class="row">
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-xs">
+					<br>{{'ORDER_PRODUCT_TXT' | translate}}<br>
+					<b>{{exchange_rate}} THB</b>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-xs">
+					<br>{{'TOPUP_TXT' | translate}}<br>
+					<b>{{exchange_rate}} THB</b>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="circle-box-xs">
+					<br>{{'TRANSFER_MONEY_TXT' | translate}}<br>
+					<b>{{exchange_rate}} THB</b>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row" style="background-color: #d7f1f5;">
+	<div class="col-md-10 col-md-offset-1 text-center">
+		<div class="row">
+			<div class="col-md-12 text-center" style="padding: 15px;">
+				<span class="rate-title">อัตราค่าขนส่งทางรถ</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 col-md-offset-0 text-center">
+				<div class="row">
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<table class="table" cellspacing="5">
+							<thead>
+								<tr><td colspan="5" class="rate-header-0">ตามน้ำหนัก (KG)</td></tr>
+								
+								<tr>
+									<td class="rate-header-1">ประเภท</td>
+									<td class="rate-header-1">น้อยกว่า 100 kg</td>
+									<td class="rate-header-1">มากกว่า 100 kg</td>
+									<td class="rate-header-1">มากกว่า 500 kg</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr data-ng-repeat="data in TransportRateData.rate_sea_kg">
+									<td class="rate-detail-price">{{data.product_desc}}</td>
+									<td class="rate-detail">{{data.rate_1 | number}}</td>
+									<td class="rate-detail">{{data.rate_2 | number}}</td>
+									<td class="rate-detail">{{data.rate_3 | number}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<table class="table" cellspacing="5">
+							<thead>
+								<tr><td colspan="5" class="rate-header-0">ตามปริมาตร (CBM)</td></tr>
+								
+								<tr>
+									<td class="rate-header-1">ประเภท</td>
+									<td class="rate-header-1">น้อยกว่า 2 CBM</td>
+									<td class="rate-header-1">มากกว่า 2 CBM</td>
+									<td class="rate-header-1">มากกว่า 5 CBM</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr data-ng-repeat="data in TransportRateData.rate_sea_cbm">
+									<td class="rate-detail-price">{{data.product_desc}}</td>
+									<td class="rate-detail">{{data.rate_1 | number}}</td>
+									<td class="rate-detail">{{data.rate_2 | number}}</td>
+									<td class="rate-detail">{{data.rate_3 | number}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-10 col-md-offset-1 text-center">
+		<div class="row">
+			<div class="col-md-12 text-center" style="padding: 15px;">
+				<span class="rate-title">อัตราค่าขนส่งทางเรือ</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 col-md-offset-0 text-center">
+				<div class="row">
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<table class="table" cellspacing="5">
+							<thead>
+								<tr><td colspan="5" class="rate-header-0">ตามน้ำหนัก (KG)</td></tr>
+								
+								<tr>
+									<td class="rate-header-1">ประเภท</td>
+									<td class="rate-header-1">น้อยกว่า 100 kg</td>
+									<td class="rate-header-1">มากกว่า 100 kg</td>
+									<td class="rate-header-1">มากกว่า 500 kg</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr data-ng-repeat="data in TransportRateData.rate_car_kg">
+									<td class="rate-detail-price">{{data.product_desc}}</td>
+									<td class="rate-detail">{{data.rate_1 | number}}</td>
+									<td class="rate-detail">{{data.rate_2 | number}}</td>
+									<td class="rate-detail">{{data.rate_3 | number}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<table class="table" cellspacing="5">
+							<thead>
+								<tr><td colspan="5" class="rate-header-0">ตามปริมาตร (CBM)</td></tr>
+								
+								<tr>
+									<td class="rate-header-1">ประเภท</td>
+									<td class="rate-header-1">น้อยกว่า 2 CBM</td>
+									<td class="rate-header-1">มากกว่า 2 CBM</td>
+									<td class="rate-header-1">มากกว่า 5 CBM</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr data-ng-repeat="data in TransportRateData.rate_car_cbm">
+									<td class="rate-detail-price">{{data.product_desc}}</td>
+									<td class="rate-detail">{{data.rate_1 | number}}</td>
+									<td class="rate-detail">{{data.rate_2 | number}}</td>
+									<td class="rate-detail">{{data.rate_3 | number}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row visible-xs" >
+	<div class="col-xs-12 text-center">
+		<span class="suggestion-title">{{'VDO_SUGGESTION_TXT' | translate}}</span>
+	</div>
+</div>
+<div class="row" style=" border-top: 5px solid #ED2224;border-bottom: 5px solid #ED2224;">
+	<div class="col-md-4 col-sm-5 hidden-xs" style="background-color: #FFF; padding-left:0px;">
+		<img src="files/img/how-to-use.png" style="width: 100%; height: 350px;" alt="" title="">
+	</div>
+	<div class="col-md-6 col-md-offset-1 col-sm-7 col-xs-12" style="background-color: #FFF; top:5px;">
+		<div class="row">
+			<div class="col-md-3">
+				<button class="btn btn-primary btn-block" data-ng-repeat="video in videoURLList" data-ng-click="setVideoUrl(video.value)">
+					{{video.display}}
+				</button>
+			</div>
+			<div class="col-md-9">
+				<ng-youtube-embed video="videoURL" autoplay="false" color="white" disablekb="true" width="100%" height="340">
+				</ng-youtube-embed>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div data-ng-include src="'views/footer.html'"></div>
+
+<script type="text/ng-template" id="purchase-detail.html">
+
+	<div class="modal-header  text-center">
+
+	</div>
+	<div class="modal-body">
+		asdasd
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="cancel()">ปิด</button>
+	</div>
+</script>
+<style type="text/css">
+
+	.img-quick-btn{
+		cursor: pointer;
+		
+	}
+
+	.img-quick-btn:hover{
+		box-shadow: 10px 10px 5px #000000;
+		-moz-box-shadow: 0px 10px 5px #000000;
+		-webkit-box-shadow: 0px 10px 5px #000000;   
+		background-color: #000; 
+		padding: 10px; 
+		border-radius: 5%;
+		width: 100%;
+	}
+
+
+	.table{
+		/*padding:10px;*/
+		border-collapse: separate;
+    	border-spacing: 0.2em;
+    	background-color: #FFFFFF;
+	}
+
+	.rate-header-0{
+		background-color: #cc6262;
+		color: #000000;
+		font-weight: bolder;
+		text-align: center;
+		font-size: 1.5em;
+	}
+
+	.rate-header-1{
+		background-color: #ED2224;
+		color : #FFFFFF;
+		text-align: center;
+	}
+
+	.rate-header-2{
+		background-color: #999;
+		color : #000000;
+		text-align: center;
+	}
+
+	.rate-detail-price{
+		background-color: #fa849c;
+		color : #000000;
+		text-align: center;
+	}
+
+	.rate-detail{
+		background-color: #ccc;
+		color : #000000;
+		text-align: center;
+	}
+
+	.suggestion-title{
+		font-weight: bolder;
+		font-size: 2.5em;
+	}
+
+	.rate-title{
+		font-weight: bolder;
+		font-size: 2em;
+		color : #ED2224;
+		text-shadow : 1px 1px 2px #2e0000;
+	}
+
+	.circle-box-md{ 
+		/*line-height: 200px;*/
+  		text-align: center;
+		height: 180px;
+		width: 180px;
+		background-color: #ED2224;
+		border-radius: 50%;
+		/*display: inline-block;*/
+		color:#FFFFFF;
+		font-size: 1.4em;
+	}
+
+	.circle-box-sm{ 
+		/*line-height: 200px;*/
+  		text-align: center;
+		height: 120px;
+		width: 120px;
+		background-color: #ED2224;
+		border-radius: 50%;
+		/*display: inline-block;*/
+		color:#FFFFFF;
+		font-size: 1.3em;
+	}
+
+	.circle-box-xs{ 
+		/*line-height: 200px;*/
+  		text-align: center;
+		height: 70px;
+		width: 70px;
+		background-color: #ED2224;
+		border-radius: 50%;
+		/*display: inline-block;*/
+		color:#FFFFFF;
+		font-size: 0.8em;
+	}
+
+	.modal-body{
+		font-size: 1.3em;
+	}
+
+	
+
+</style>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>

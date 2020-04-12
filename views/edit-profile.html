@@ -1,0 +1,123 @@
+<div class="row" ng-form="frm">
+  <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1">
+    <div class="page-header" style="margin-top:0px;">
+      <img src="files/img/small-logo.png" style="height: 18%; width: 18%;">
+      <br><br>
+      <span style="font-size: 1.3em;">{{ 'EDIT_PROFILE_TXT' | translate }}</span>
+    </div>
+    <div class="row form-group">
+      <label class="col-md-12 col-sm-12 col-xs-12" data-ng-show="UserData.money_bags.balance > 0" style="color: green; font-weight: bolder;"><i class="fas fa-money-check-alt" style="font-size: 1.5em;"></i>&nbsp; ยอดเงินในกระเป๋าของคุณมีอยู่ทั้งหมด {{UserData.money_bags.balance}} บาท</label>
+      <label class="col-md-12 col-sm-12 col-xs-12" data-ng-show="UserData.money_bags.balance == 0" style="color: red; font-weight: bolder;"><i class="fas fa-money-check-alt" style="font-size: 1.5em;"></i>&nbsp; ยอดเงินในกระเป๋าของคุณมีอยู่ทั้งหมด {{UserData.money_bags.balance}} บาท</label>
+    </div>
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'USER_CODE_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8 text-left">
+        {{UserProfile.user_code}}
+      </div>
+    </div>
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'EMAIL_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8">
+        <input type="text" class="form-control" data-ng-model="UserProfile.email" required="true">
+      </div>
+    </div>
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'NEW_PASSWORD_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8">
+        <input type="password" class="form-control" data-ng-model="UserProfile.new_password">
+      </div>
+    </div>
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'CONFIRM_PASSWORD_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8">
+        <input type="password" class="form-control" data-ng-model="UserProfile.confirm_password" ng-required="UserProfile.new_password != null && UserProfile.new_password != ''">
+      </div>
+    </div>
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'FIRSTNAME_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8">
+        <input type="text" class="form-control" data-ng-model="UserProfile.firstname" required="true">
+      </div>
+    </div>
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'LASTNAME_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8">
+        <input type="text" class="form-control" data-ng-model="UserProfile.lastname" required="true">
+      </div>
+    </div>
+    <!-- <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'IDCARD_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8">
+        <input type="text" class="form-control" data-ng-model="UserProfile.idcard" required="true"  maxlength="13">
+      </div>
+    </div> -->
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'MOBILENO_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8">
+        <input type="text" class="form-control" data-ng-model="UserProfile.mobile_no" required="true" maxlength="10">
+      </div>
+    </div>
+
+    <div class="row form-group"  ng-repeat="address in UserProfile.addresses">
+    <div class="col-md-12 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading" style="font-size: 1.3em; background-color: #FF6C6C; color: #FFFFFF;"><b>{{ 'ADDRESS_INFO_TXT' | translate }} {{$index + 1}}</b>
+          <button class="btn btn-default pull-right" data-ng-click="dialogRemoveAddress($index)" title="{{'DELETE_ADDRESS_TXT' | translate}}"><i class="fas fa-trash"></i></button>
+        </div>
+          <div class="panel-body" style="font-size: 1em;">
+            <div class="row form-group">
+              <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'ADDRESS1_TXT' | translate}}</label>
+              <div class="col-md-10 col-sm-9 col-xs-8">
+                <input type="text" class="form-control" data-ng-model="address.address1" required="true">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'ADDRESS2_TXT' | translate}}</label>
+              <div class="col-md-10 col-sm-9 col-xs-8">
+                <input type="text" class="form-control" data-ng-model="address.address2">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'ADDRESS3_TXT' | translate}}</label>
+              <div class="col-md-10 col-sm-9 col-xs-8">
+                <input type="text" class="form-control" data-ng-model="address.address3" required="true">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'ADDRESS4_TXT' | translate}}</label>
+              <div class="col-md-10 col-sm-9 col-xs-8">
+                <input type="text" class="form-control" data-ng-model="address.address4" required="true">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'ADDRESS5_TXT' | translate}}</label>
+              <div class="col-md-10 col-sm-9 col-xs-8">
+                <input type="text" class="form-control" data-ng-model="address.address5" required="true">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'ADDRESS6_TXT' | translate}}</label>
+              <div class="col-md-10 col-sm-9 col-xs-8">
+                <input type="text" class="form-control" data-ng-model="address.address6" required="true">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'ADDRESS7_TXT' | translate}}</label>
+              <div class="col-md-10 col-sm-9 col-xs-8">
+                <input type="text" class="form-control" data-ng-model="address.address7" required="true" maxlength="5">
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+    <div class="row form-group">
+      <div class="col-md-12 text-center">
+        
+        <button class="btn btn-default" ng-click="closeUserProfileDialog()">{{ 'CANCEL_TXT' | translate}}</button>
+        <button class="btn btn-info" ng-click="addAddress(UserProfile)">{{ 'ADD_ADDRESS_TXT' | translate}}</button>
+        <button class="btn btn-primary" ng-click="updateUserProfile(UserProfile)" ng-disabled="frm.$invalid">{{ 'SAVE_TXT' | translate}}</button>
+        
+      </div>
+    </div>
+</div>

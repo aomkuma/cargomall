@@ -1,0 +1,90 @@
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group">
+	<div class="col-md-10 col-md-offset-1">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">รายการแจ้งเติมเงิน</span>
+				</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-1">
+				ลูกค้า
+			</label>
+			<div class="col-md-3">
+				<!-- <select class="form-control" data-ng-model="condition.user_id" data-ng-options="data.id as ('(' + data.user_code + ') ' + data.firstname + ' ' + data.lastname) for data in UserList">
+					<option value="">ทั้งหมด</option>
+				</select> -->
+				<input type="text" class="form-control" data-ng-model="condition.keyword">
+			</div>
+			<label class="col-md-1">
+				วันที่ทำรายการ
+			</label>
+			<div class="col-md-2">
+				<input type="date" class="form-control" data-ng-model="condition.created_at"> 
+			</div>
+			<label class="col-md-1">
+				สถานะ
+			</label>
+			<div class="col-md-2">
+				<select class="form-control" data-ng-model="condition.topup_status">
+					<option value="">ทั้งหมด</option>
+					<option value="1">แจ้งเติมเงิน</option>
+					<option value="2">อนุมัติการแจ้งเติมเงิน</option>
+					<option value="3">ปฏิเสธการแจ้งเติมเงิน</option>
+				</select>
+			</div>
+			<div class="col-md-1">
+				<button class="btn btn-info" data-ng-click="getTopupList()"><i class="fas fa-search"></i></button>
+			</div>
+			
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12 table-responsive">
+				<table class="table table-striped table-hover table-bordered"> 
+					<thead>
+						<tr>
+							<th class="text-center">รหัสลูกค้า</th>
+							<th class="text-center">ชื่อ - สกุล ผู้แจ้ง</th>
+							<th class="text-center">วันที่แจ้ง</th>
+							<th class="text-center">วันที่เติมเงิน</th>
+							<th class="text-center">จำนวนเงินที่เติม</th>
+							<th class="text-center">สลิปการโอน</th>
+							<th class="text-center">สถานะ</th>
+							<th class="text-center">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="data in DataList">
+							<td>{{data.customer.user_code}}</td>													
+							<td>{{data.customer.firstname}} {{data.customer.lastname}}</td>
+							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
+							<td>{{getThaiDateTimeFromString(data.topup_date)}}</td>
+							<td class="text-right">{{data.topup_amount | number:2}}</td>
+							<td class="text-center"><a href="{{data.slip_file}}" target="_blank"><img src="{{data.slip_file}}" style="height: 100px;"></a></td>
+							<td>{{getTopupStatus(data.topup_status)}}</td>
+							<td>
+								<button class="btn btn-primary" data-ng-click="approveTopup(data.id)" title="อนุมัติ" data-ng-show="data.topup_status == 1"><i class="fas fa-check"></i></button>
+								<button class="btn btn-info" data-ng-click="rejectTopup(data.id)" title="ปฏิเสธ" data-ng-show="data.topup_status == 1"><i class="fas fa-ban"></i></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<ul class="pull-right" uib-pagination total-items="Pagination.totalPages" ng-model="Pagination.currentPage" max-size="Pagination.limitDisplay" class="pagination-sm" items-per-page="Pagination.limitRowPerPage" boundary-links="true" force-ellipses="true"  ng-change="pageChanged()"></ul>
+			</div>
+		</div>
+	</div>
+</div>

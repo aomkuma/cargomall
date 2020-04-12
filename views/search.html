@@ -1,0 +1,33 @@
+<div ng-include src="'views/header.html'"></div>
+
+<div  style="margin-top:180px;">
+	<div class="row form-group" style="padding-top: 70px;">
+	  <div class="col-lg-5 col-lg-offset-1">
+	    <div class="row">
+	      <div class="col-lg-10" style="padding: 5px; font-weight: bolder; font-size: 1.3em;">
+	        <img src="../files/img/pin-menu.png">
+	        การค้นหา
+	      </div>
+	      <div class="col-lg-12">
+	      	ผลลัพธ์การค้นหาทั้งหมด {{SearchList.length}} รายการ
+	      </div>
+	    </div>
+	  </div>
+	  <div class="col-lg-6">
+
+	  </div>
+	</div>
+	<div class="row form-group" ng-repeat="data in SearchList" style="border-bottom: 1px solid #ccc;">
+		<div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+			<a ng-show="data.file_name == undefined" href="{{data.url}}" bind-html-compile="data.title_th | htmlToPlaintext"></a>
+			<a ng-show="data.file_name != ''" target="_self" href="../{{data.url}}" download="{{data.file_name}}" class="ng-binding">{{data.title_th}}</a>
+			<br> 
+		</div>
+		<div class="col-lg-10 col-lg-offset-1 col-md-10col-md-offset-1">
+			<a href="{{data.url}}" ><span bind-html-compile="data.contents | htmlToPlaintext | cut:true:200:' ...'"></span></a>
+		</div>
+
+	</div>
+	
+	<div ng-include src="'views/footer.html'"></div>
+</div>

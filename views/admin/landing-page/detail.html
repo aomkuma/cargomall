@@ -1,0 +1,167 @@
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group" data-ng-form="frm">
+	<div class="col-md-12">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">Landing Page</span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-7">
+				<div class="row form-group">
+					<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+						ประเภท
+					</label>
+					<div class="col-md-9" id="ckeditor">
+						<select class="form-control" data-ng-model="Data.type" required="true">
+							<option value="">กรุณาเลือก..</option>
+							<option value="image">รูปภาพ</option>
+							<option value="text">ข้อความ</option>
+						</select>
+					</div>
+				</div>
+				<div data-ng-show="Data.type == 'image'">
+					<div class="row form-group">
+						<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+							รูปภาพ
+						</label>
+						<div class="col-md-9">
+							<p class="input-group" style="">
+					          <input type="text" readonly="true" class="form-control" ng-model="AttachFile.name" ng-required="Data.type == 'image' && Data.id == undefined || Data.id == null" />
+					          <span class="input-group-btn">
+					            <button class="btn btn-default" style="border-color: red;" ngf-select ng-model="AttachFile" ngf-max-size="15MB"  ngf-model-invalid="AttachFile.invalidFile" accept="image/*" ngf-pattern="'.png,.jpg,.gif'" >เลือก</button>
+					          </span>
+					        </p>
+						</div>
+					</div>
+				</div>
+				<div data-ng-show="Data.type == 'text'">
+					<div class="row form-group">
+						<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+							&nbsp;
+						</label>
+						<div class="col-md-9" id="ckeditor">
+							<button class="btn btn-info" data-ng-click="previewTemplate()">Preview</button>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+							ข้อความ
+						</label>
+						<div class="col-md-9" id="ckeditor">
+							<textarea ng-model="Data.text_desc" type="text" class="form-control" id="editor1" name="editor1"></textarea>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+							สีอักษร
+						</label>
+						<div class="col-lg-6">
+							<input colorpicker="hex" ng-model="Data.font_color" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+							สีพื้นหลัง
+						</label>
+						<div class="col-lg-6">
+							<input colorpicker="hex" ng-model="Data.background_color" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+							สีกรอบ
+						</label>
+						<div class="col-lg-6">
+							<input colorpicker="hex" ng-model="Data.border_color" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+							ขนาดกรอบ
+						</label>
+						<div class="col-lg-6">
+							<input  ng-model="Data.border_width" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+							มุมของกรอบ
+						</label>
+						<div class="col-lg-6">
+							<input  ng-model="Data.border_radius" type="text" class="form-control">
+						</div>
+					</div>
+				</div>
+				<div class="row form-group">
+					<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+						ขนาด Landing Page
+					</label>
+					<div class="col-lg-6">
+						<select  ng-model="Data.landing_size" class="form-control" required="true">
+							<option value="">กรุณาเลือก..</option>
+							<option value="small">เล็ก</option>
+							<option value="medium">กลาง</option>
+							<option value="large">ใหญ่</option>
+						</select>
+					</div>
+				</div>
+				<div class="row form-group">
+					<label class="col-md-3 col-sm-3 col-xs-12 text-right">วันที่เริ่มต้น</label>
+					<div class="col-md-4 col-sm-4 col-xs-6">
+						<input class="form-control" type="date" data-ng-model="Data.start_date" required="true">
+					</div>
+				</div>
+				<div class="row form-group">
+					<label class="col-md-3 col-sm-3 col-xs-12 text-right">วันที่สิ้นสุด</label>
+					<div class="col-md-4 col-sm-4 col-xs-6">
+						<input class="form-control" type="date" data-ng-model="Data.end_date" required="true">
+					</div>
+				</div>
+				<div class="row form-group">
+					<label class="col-md-3 col-sm-3 col-xs-12 text-right">
+						สถานะ
+					</label>
+					<div class="col-md-9" id="ckeditor">
+						<select class="form-control" data-ng-model="Data.active_status" required="true">
+							<option value="">กรุณาเลือก..</option>
+							<option value="Y">ใช้งาน</option>
+							<option value="N">ไม่ใช้งาน</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="col-md-5" data-ng-show="Data.type == 'text'"><br><br><br><br><br>
+				<div style="width: 450px; height: 300px; border: {{ Data.border_width}}px solid {{Data.border_color}}; background-color: {{Data.background_color}}; border-radius: {{Data.border_radius}}px; color: {{ Data.font_color}};display: flex;
+					  justify-content: center;
+					  align-items: center; padding:10px;"  bind-html-compile="preview"></div>
+				
+			</div> -->
+
+			<div class="col-md-5"  data-ng-show="Data.type == 'image'">
+				<img src="{{Data.image_path}}" style="width: 100%;">
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-lg-12 text-center">
+				<a href="admin/landing-page" class="btn btn-default">กลับหน้ารายการ</a>
+				<button class="btn btn-primary" data-ng-click="updateData(Data)" data-ng-disabled="frm.$invalid">บันทึกข้อมูล</button>
+			</div>
+		</div>
+	</div>
+</div>

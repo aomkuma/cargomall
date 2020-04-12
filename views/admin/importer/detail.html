@@ -1,0 +1,283 @@
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row" style=" padding: 8px; padding-top:20px;" ng-form="frm">
+	<div class="col-md-10 col-md-offset-1">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">รายละเอียดการบริการนำเข้าสินค้า</span>
+					<br><br>
+					<div class="row">
+						<div class="col-md-12 col-sm-12 hidden-xs text-center" style="font-size: 0.9em; color: #999;" >
+							<span data-ng-repeat="data in IMPORTER_STATUS track by $index" data-ng-class="{'status-timeline' : $index + 1 <= Importer.importer_status}">
+								{{ getImporterStatus(data.id) }} <label ng-show="$index < 5">-></label> 
+							</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="page-header visible-xs" style="font-weight: bolder; font-size: 1.1em;">
+			สถานะ : {{ getImporterStatus(Importer.importer_status) }}
+		</div>
+
+		<div class="row">
+			<label class="col-md-2 col-sm-2 col-xs-2 text-right">
+				ชื่อลูกค้า
+			</label>
+			<div class="col-md-2 col-sm-2 col-xs-4">
+				{{Customer.firstname}} {{Customer.lastname}}
+			</div>
+			<label class="col-md-2 col-sm-2 col-xs-2 text-right">
+				อีเมล
+			</label>
+			<div class="col-md-2 col-sm-2 col-xs-4">
+				{{Customer.email}}
+			</div>
+			<label class="col-md-2 col-sm-2 col-xs-2 text-right">
+				เบอร์ติดต่อ
+			</label>
+			<div class="col-md-2 col-sm-2 col-xs-2">
+				{{Customer.mobile_no}}
+			</div>
+		</div>
+		<hr>
+		<div class="row form-group">
+			<label class="col-md-2">	
+				หมายเลข track
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-9">
+				<input class="form-control" data-ng-model="Importer.tracking_no" maxlength="50">
+			</div>
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				เลขบิล
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" data-ng-model="Importer.bill_no" maxlength="50">
+			</div>
+		</div>
+		
+		<div class="row form-group">
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				โกดังสินค้า
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" data-ng-model="Importer.warehouse" maxlength="255">
+			</div>
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				การขนส่ง
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<select class="form-control" data-ng-model="Importer.transport_type" data-ng-change="calcPrice()">
+					<option value="">กรุณาเลือก..</option>	
+					<option value="car">ทางรถ</option>
+					<option value="sea">ทางเรือ</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				วันที่เข้าจีน
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input type="date" class="form-control" data-ng-model="Importer.china_arrival">
+			</div>
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				วันที่ออกจีน
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input type="date" class="form-control" data-ng-model="Importer.china_departure">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				วันที่เข้าไทย
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input type="date" class="form-control" data-ng-model="Importer.thai_arrival">
+			</div>
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				วันที่ออกไทย
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input type="date" class="form-control" data-ng-model="Importer.thai_departure">
+			</div>
+		</div>
+		<fieldset>
+			<legend>ข้อมูลสินค้า</legend>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					ประเภทสินค้า
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<select class="form-control" data-ng-model="Importer.product_type" data-ng-change="calcPrice()">
+						<option value="">กรุณาเลือก</option>
+						<option value="ทั่วไป">ทั่วไป</option>
+						<option value="มอก." data-ng-hide="Importer.transport_type == 'sea'">มอก.</option>
+						<option value="อย." data-ng-hide="Importer.transport_type == 'sea'">อย.</option>
+						<option value="อย.มอก." data-ng-hide="Importer.transport_type == 'car'">อย.มอก.</option>
+						<option value="สินค้าพิเศษ" data-ng-hide="Importer.transport_type == 'sea'">สินค้าพิเศษ</option>
+					</select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					น้ำหนัก (KGM)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.weight_kgm" maxlength="30" data-ng-blur="calcPrice()">
+				</div>
+				<label class="col-md-4 col-sm-4 col-xs-12" style="color: #337ab7;">	
+					ราคาคิดตามน้ำหนัก {{rateByKG | number:2}} บาท
+				</label>
+				<!-- <label class="col-md-2 col-sm-2 col-xs-12">	
+					น้ำหนักเชิงปริมาตร
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.weight_volume" maxlength="30" disabled="true">
+				</div> -->
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					คิว (CBM)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.cbm" maxlength="30" data-ng-blur="calcPrice()">
+				</div>
+				<label class="col-md-4 col-sm-4 col-xs-12" style="color: #337ab7;">	
+					ราคาคิดตามปริมาตร {{rateByCBM | number:2}} บาท
+				</label>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					กว้าง (M)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.width" maxlength="30" data-ng-blur="calcPrice()">
+				</div>
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					ยาว (M)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.longs" maxlength="30" data-ng-blur="calcPrice()">
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					สูง (M)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.height" maxlength="30" data-ng-blur="calcPrice()">
+				</div>
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					จำนวน (กล่อง)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.package_amount" maxlength="30">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>รายละเอียดค่าใช้จ่าย</legend>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					การคิดราคา
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<select class="form-control" data-ng-model="Importer.price_method" data-ng-change="setTotalPriceYuan(Importer.price_method)">
+						<option value="">กรุณาเลือก</option>
+						<option value="KG">KG</option>
+						<option value="CBM">CBM</option>
+					</select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					ค่าขนส่งจีนมาไทย (บาท)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.total_price_yuan" maxlength="30">
+				</div>
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					ค่าลังไม้ (บาท)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.package_price" maxlength="30">
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					ค่าขนส่งในไทย (บาท)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.total_price_thb" maxlength="30">
+				</div>
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					ส่วนลด (บาท)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.discount" maxlength="50">
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					บริษัทขนส่งในไทย
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<select class="form-control" data-ng-model="Importer.transport_company" data-ng-options="data.id as data.value for data in TRANSPORT_COMPANY">
+						<option value="">กรุณาเลือก..</option>
+					</select>
+				</div>
+				<label class="col-md-2 col-sm-2 col-xs-12" data-ng-show="Importer.transport_company == 'other'">	
+					ชื่อบริษัท
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12" data-ng-show="Importer.transport_company == 'other'">
+					<input class="form-control" data-ng-model="Importer.transport_company_other">
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					หมายเลข track (ขนส่งไทย)
+				</label>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<input class="form-control" data-ng-model="Importer.tracking_no_thai" maxlength="50">
+				</div>
+			</div>
+		</fieldset>
+		<div class="row form-group">
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				หมายเหตุเพิ่มเติม
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<textarea class="form-control" data-ng-model="Importer.remark"></textarea>
+			</div>
+		</div>
+		<hr>
+		<div class="row form-group">
+			<div class="col-lg-12 text-center">
+				<a href="admin/importer" class="btn btn-default">กลับหน้ารายการ</a>
+				<button class="btn btn-warning" data-ng-click="updateImporterStatus(Importer.id, Importer.importer_status, 'back')" data-ng-show="Importer.importer_status > 1">ย้อนสถานะ</button>
+				<button class="btn btn-info" data-ng-click="updateImporterStatus(Importer.id, Importer.importer_status, 'next')"  data-ng-show="Importer.importer_status < 7">อัพเดทสถานะ</button>
+				<button class="btn btn-primary" data-ng-click="updateImporter(Importer)">บันทึกข้อมูล</button>
+			</div>
+		</div>
+	</div>
+</div>
+<style type="text/css">
+	.status-timeline{
+		color: #C91313;
+		font-weight: bold;
+	}
+</style>

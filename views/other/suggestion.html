@@ -1,0 +1,295 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group">
+	<div class="col-md-12 text-center">
+		<div class="page-header">
+			<span style="font-size: 1.3em; font-weight: bolder;">แนะนำการใช้งาน</span>
+		</div>
+	</div>
+</div>
+<div class="row form-group">
+	<div class="col-md-3 col-sm-4 hidden-xs" style="background-color: #FCF2F2;">
+		<ul style="padding: 30px;">
+			<li class="main-label"><label>คู่มือการใช้งาน</label></li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'calc-transport-cost'}" data-ng-click="section = 'calc-transport-cost'">หลักการคำนวณค่าขนส่ง</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'order'}" data-ng-click="section = 'order'">วิธีฝากสั่งซื้อสินค้า</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'importer'}" data-ng-click="section = 'importer'">วิธีนำเข้าสินค้า</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'add-cargo'}" data-ng-click="section = 'add-cargo'">วิธีเพิ่มที่อยู่โกดังจีน</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'topup'}" data-ng-click="section = 'topup'">วิธีเติมเงิน</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'transfer'}" data-ng-click="section = 'transfer'">วิธีโอนเงินไปจีน</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'pay'}" data-ng-click="section = 'pay'">วิธีฝากจ่าย</li>
+		</ul>
+	</div>
+	<div class="col-xs-12 visible-xs text-center" style="background-color: #FCF2F2;">
+		<ul style="padding: 30px;">
+			<li class="main-label"><label>คู่มือการใช้งาน</label></li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'calc-transport-cost'}" data-ng-click="section = 'calc-transport-cost'">หลักการคำนวณค่าขนส่ง</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'order'}" data-ng-click="section = 'order'">วิธีฝากสั่งซื้อสินค้า</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'importer'}" data-ng-click="section = 'importer'">วิธีนำเข้าสินค้า</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'add-cargo'}" data-ng-click="section = 'add-cargo'">วิธีเพิ่มที่อยู่โกดังจีน</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'topup'}" data-ng-click="section = 'topup'">วิธีเติมเงิน</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'transfer'}" data-ng-click="section = 'transfer'">วิธีโอนเงินไปจีน</li>
+			<li class="sub-label" data-ng-class="{'active-section':section == 'pay'}" data-ng-click="section = 'pay'">วิธีฝากจ่าย</li>
+		</ul>
+	</div>
+	<div class="col-md-9 col-sm-8 col-xs-12" style="padding-top20px;">
+		<section ng-show="section == 'calc-transport-cost'">
+			<div class="row form-group">
+				<div class="col-md-12 text-center">
+					<span style="font-size: 1.3em; font-weight: bolder; color: #B00E0E;">หลักการคำนวณค่าขนส่ง</span>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-12">
+					หลักสากลของการคำนวณค่าขนส่งมีอยู่ 2 ประเภทคือคำนวณจากน้ำหนักจริงและน้ำหนังเชิงปริมาณ นำมาคูณเรทราคา จากนั้นเลือกผลลัพธ์ราคาที่มากกว่า
+					<br><br>
+					ตัวอย่างเช่น สินค้าทั่วไปขนส่งทางรถ น้ำหนัก 20  kg. ขนาด 50*50*50 (CM.) 
+					<br>
+					คำนวณจากน้ำหนักจริง (KG.)
+					<br>
+					น้ำหนัก 20 kg. * เรทราคา 35 บาท = ค่าขนส่ง 700 บาท
+					<br>
+					คำนวณจากน้ำหนักเชิงปริมาตร (CBM)
+					<br>
+						ขนาด 50*50*50 (CM.) หาร 1,000,000 = น้ำหนักเชิงปริมาตร 0.125 CBM
+						<br>
+						0.125 CBM *  เรทราคา 7000 บาท = ค่าขนส่ง 875 บาท
+					<br><br>
+					 <span style="color:#C91313;"><b>ดังนั้น ลูกค้าต้องชำระค่าขนส่ง 875 บาท</b></span>
+				</div>
+			</div>
+		</section>
+
+		<section ng-show="section == 'order'">
+			<div class="row form-group">
+				<div class="col-md-12 text-center">
+					<span style="font-size: 1.3em; font-weight: bolder; color: #B00E0E;">วิธีฝากสั่งซื้อสินค้า</span>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-12">
+					<ol>
+						<li class="li-padding">
+							วางลิ้งค์สินค้าจากเว็บไซต์ Taobao, 1688 หรือ Tmall จากนั้นกดค้นหาสินค้า<br>
+							<img src="files/img/suggestion/order/p1.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							เลือกตัวเลือกและกรอกจำนวนที่ต้องการ สามารถใส่ความต้องการเพิ่มเติมในช่องหมายเหตุได้ จากนั้นกดเพิ่มสินค้าเข้าตะกร้า<br>
+							<img src="files/img/suggestion/order/p2.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							หากท่านต้องการสั่งสินค้าเพิ่ม กดเลือกสินค้าเพิ่มเติม หากไม่ต้องการสั่งเพิ่มแล้ว กรุณาตรวจสอบรายการ จากนั้นกดถัดไป<br>
+							<img src="files/img/suggestion/order/p3.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							เลือกข้อมูลการจัดส่งที่ต้องการ จากนั้นกดตรวจสอบสรุปการสั่งซื้อ<br>
+							<img src="files/img/suggestion/order/p4.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							ตรวจสอบรายการ จากนั้นกดยืนยันการสั่งซื้อ หากยอดเงินของท่านไม่เพียงพอ กรุณากดเติมเงินเข้ากระเป๋าเงินของท่าน<br>
+							<img src="files/img/suggestion/order/p5.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							เมื่อยืนยันเสร็จแล้ว กดไปยังหน้าชำระเงิน<br>
+							<img src="files/img/suggestion/order/p6.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							ตรวจสอบรายการ จากนั้นกดชำระเงิน<br>
+							<img src="files/img/suggestion/order/p7.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							เมื่อทำรายการเสร็จสิ้นแล้ว ท่านจะสามารถตรวจสอบสถานะสินค้าได้ในเมนูบริการฝากสั่งสินค้า<br>
+							<img src="files/img/suggestion/order/p8.png" style="width: 90%;">
+						</li>
+					</ol>
+				</div>
+			</div>
+		</section>
+
+		<section ng-show="section == 'importer'">
+			<div class="row form-group">
+				<div class="col-md-12 text-center">
+					<span style="font-size: 1.3em; font-weight: bolder; color: #B00E0E;">วิธีนำเข้าสินค้า</span>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-12">
+					<ol>
+						<li class="li-padding">
+							กดเข้าเมนู บริการนำเข้าสินค้า จากนั้นกดเพิ่มข้อมูล<br>
+							<img src="files/img/suggestion/importer/p1.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							กรอกเลขแทรคกิ้งสินค้า จากนั้นกดบันทึก<br>
+							<img src="files/img/suggestion/importer/p2.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							ท่านสามารถติดตามสถานะของสินค้าได้ทางเมนูบริการนำเข้าสินค้า เมื่อสินค้าถึงไทยแล้วพนักงานจะอัปเดตข้อมูลค่าธรรมเนียมการขนส่ง โดยจะขึ้นสถานะรอการชำระค่าขนส่ง เพื่อให้ท่านทำการชำระเงิน<br>
+							<img src="files/img/suggestion/importer/p3.png" style="width: 90%;">
+						</li>
+						<li class="li-padding">
+							ทำการตรวจสอบยอด กดชำระเงิน และยืนยัน<br>
+							<img src="files/img/suggestion/importer/p4.png" style="width: 90%;">
+						</li>
+					</ol>
+				</div>
+			</div>
+		</section>
+
+		<section ng-show="section == 'add-cargo'">
+			<div class="row form-group">
+				<div class="col-md-12 text-center">
+					<span style="font-size: 1.3em; font-weight: bolder; color: #B00E0E;">วิธีเพิ่มที่อยู่โกดังจีน</span>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-12">
+					<ol>
+						<li>ไปที่หน้าข้อมูลส่วนตัวบนเว็บไซต์ Taobao, 1688 หรือ Tmall เลือก 账户设置 (Account settings) จากนั้นกด 收货地址 (Shipping Address)</li>
+						<li>
+							กรอกที่อยู่โกดังตามภาพ จากนั้นกดปุ่มสีส้ม<br>
+							<img src="files/img/suggestion/add-cargo/p2.png" style="width: 80%;">
+							<br>
+							广州泰燕 (CGM-เลขรหัสลูกค้า/วิธีขนส่ง)
+							<br><br>
+							联系电话： 020-62837119
+							<br>
+							13570353431
+							<br><br>
+							收货地址：广东省广州市白云区机场路兵房街261号七四三一兵工厂66号仓， 进大门直走到底右拐直走。
+							<br><br>
+							หมายเหตุ : รหัสลูกค้าและวิธีขนส่งต้องเขียนข้างกล่องด้วย
+							<br>
+							วิธีขนส่ง: Kสำหรับทางรถ/SEAสะหรับทางเรือ
+						</li>
+					</ol>
+				</div>
+			</div>
+		</section>
+
+		<section ng-show="section == 'topup'">
+			<div class="row form-group">
+				<div class="col-md-12 text-center">
+					<span style="font-size: 1.3em; font-weight: bolder; color: #B00E0E;">วิธีเติมเงิน</span>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-12">
+					<ol>
+						<li class="li-padding">
+							ไปที่เมนู กระเป๋าเงิน จากนั้นเลือกเมนูเติมเงิน<br>
+							<img src="files/img/suggestion/topup/p1.png" style="width: 80%;">
+						</li>
+						<li>
+							กรอกรายละเอียด เพิ่มรูปสลิป กดปุ่มเติมเงิน  และรอการอนุมัติจากพนักงาน<br>
+							<img src="files/img/suggestion/topup/p2.png" style="width: 80%;">
+						</li>
+					</ol>
+				</div>
+			</div>
+		</section>
+
+		<section ng-show="section == 'transfer'">
+			<div class="row form-group">
+				<div class="col-md-12 text-center">
+					<span style="font-size: 1.3em; font-weight: bolder; color: #B00E0E;">วิธีโอนเงินไปจีน</span>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-12">
+					<ol>
+						<li class="li-padding">
+							ไปที่เมนูกระเป๋าเงิน เลือกเมนูโอนเงินไปธนาคารจีน<br>
+							<img src="files/img/suggestion/transfer/p1.png" style="width: 80%;">
+						</li>
+						<li>
+							กรอกรายละเอียด กดชำระเงิน และยืนยันการชำระเงิน<br>
+							<img src="files/img/suggestion/transfer/p2.png" style="width: 70%;">
+						</li>
+					</ol>
+				</div>
+			</div>
+		</section>
+
+		<section ng-show="section == 'pay'">
+			<div class="row form-group">
+				<div class="col-md-12 text-center">
+					<span style="font-size: 1.3em; font-weight: bolder; color: #B00E0E;">วิธีฝากจ่าย</span>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-12">
+					<ol>
+						<li class="li-padding">
+							เมื่อกดเลือกสินค้าในเว็บไซต์ Taobao, 1688 หรือ  Tmall เสร็จแล้ว ไปที่หน้าต่างการชำระเงินแล้วกดปุ่ม朋友代付 หรือ 找人代付 ตามภาพ<br>
+							<img src="files/img/suggestion/pay/p1.png" style="width: 80%;">
+						</li>
+						<li class="li-padding">
+							กรอกอีเมล kawinnad.chatautai@outlook.com ในช่องคนจ่ายเงิน ใส่รหัสลูกค้าในช่องถัดไป จากนั้นกดปุ่มยืนยันสีเหลือง<br>
+							<img src="files/img/suggestion/pay/p2.png" style="width: 80%;">
+						</li>
+						<li class="li-padding">
+							กดดูประวัติการสั่งซื้อในเว็บไซต์ Taobao, 1688 หรือ Tmall<br>
+							<img src="files/img/suggestion/pay/p3.png" style="width: 80%;">
+						</li>
+						<li class="li-padding">
+							กดดูโลจิสติกส์<br>
+							<img src="files/img/suggestion/pay/p4.png" style="width: 80%;">
+						</li>
+						<li class="li-padding">
+							นำตัวเลขบิลจาก运单号码 และยอดเงินมากรอกในเมนูฝากจ่ายสินค้า จากนั้นกดชำระเงิน<br>
+							<img src="files/img/suggestion/pay/p5.png" style="width: 80%;">
+						</li>
+					</ol>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<div class="row form-group">
+	<div class="col-md-12 text-center">
+		<div class="page-header">
+			&nbsp;
+		</div>
+	</div>
+</div>
+<div data-ng-include src="'views/footer.html'"></div>
+<style type="text/css">
+	section{
+		font-size: 1em;
+	}
+	.main-label{
+		cursor: pointer;
+		font-size: 1.1em;
+	}
+
+	.sub-label{
+		cursor: pointer;
+	}
+	.li-padding{
+		padding-bottom: 30px;
+	}
+	.active-section{
+		color: #B00E0E;
+		font-weight: bolder;
+		font-size: 1.1em;
+	}
+</style>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>
