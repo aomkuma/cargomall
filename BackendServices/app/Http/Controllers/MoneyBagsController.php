@@ -10,6 +10,7 @@ use App\OrderDesc;
 use App\Importer;
 use App\User;
 use App\WithdrawnHistory;
+use App\RefundHistory;
 
 use App\Mail\OrderRequestMailable;
 use App\Mail\OrderTransportCostMailable;
@@ -397,7 +398,7 @@ class MoneyBagsController extends Controller
                     ->count();
 
         $list = MoneyTopup::with('customer')
-                    ->select("money_topup.*", 'user.user_code', 'user.firstname', 'user.lastname')
+                    ->select("money_topup.*", 'user.user_code', 'user.firstname', 'user.lastname', 'user.mobile_no')
                     ->join('user', 'user.id', '=', 'money_topup.user_id')
                     ->where(function($query) use ($condition){
 
@@ -785,7 +786,7 @@ class MoneyBagsController extends Controller
                             $query->where('pay_status', $condition['pay_status']);
                         }
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
-                            echo $condition['created_at'] = getDateFromString($condition['created_at']);exit;
+                            $condition['created_at'] = getDateFromString($condition['created_at']);
                             $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
                         }
                     })
@@ -836,6 +837,156 @@ class MoneyBagsController extends Controller
         }
 
         return $this->returnResponse(200, $this->data_result, response(), false);
+    }
+
+    public function refundMoney(Request $request){
+
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $admin_id = $user_data['id'];
+        $RefundData = $params['obj']['RefundData'];
+        $RefundData['id'] = trim($RefundData['id']);
+
+        $money_bag = MoneyBag::where('user_id', $RefundData['id'])->first();
+        
+        if($money_bag){
+
+            $money_bag->balance = $money_bag->balance + floatval($RefundData['money_bags']['refund_amount']);
+
+            $money_bag->save();
+
+            // update log
+            $refund_history = new RefundHistory();
+            $refund_history->id = generateID();
+            $refund_history->user_id = trim($RefundData['id']);
+            $refund_history->refund_amount = $RefundData['money_bags']['refund_amount'];
+            $refund_history->refund_by = $admin_id;
+
+            $refund_history->save();
+        }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+    }
+
+    public function getRefundList(Request $request){
+
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $condition = $params['obj']['condition'];
+        $currentPage = $params['obj']['currentPage'];
+        $limitRowPerPage = $params['obj']['limitRowPerPage'];
+
+        $currentPage = $currentPage - 1;
+
+        $limit = $limitRowPerPage;
+        $offset = $currentPage;
+        $skip = $offset * $limit;
+
+        $totalRows = RefundHistory::join('user', 'user.id', '=', 'refund_history.user_id')
+                    ->where(function($query) use ($condition){
+
+                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                            $query->orWhere( DB::raw("CONCAT(user.firstname , ' ', user.lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                        }
+
+                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                            $condition['created_at'] = getDateFromString($condition['created_at']);
+                            $query->where('refund_history.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                        }
+
+                    })
+                    ->count();
+
+        $list = RefundHistory::select("refund_history.*", 'user.user_code', 'user.firstname', 'user.lastname', 'user.mobile_no'
+                        , DB::raw('user_admin.firstname AS admin_firstname'), DB::raw('user_admin.lastname AS admin_lastname'))
+                    ->join('user', 'user.id', '=', 'refund_history.user_id')
+                    ->join('user_admin', 'user_admin.id', '=', 'refund_history.refund_by')
+                    ->where(function($query) use ($condition){
+                        
+                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                            $query->orWhere( DB::raw("CONCAT(user.firstname , ' ', user.lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                        }
+
+                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                            $condition['created_at'] = getDateFromString($condition['created_at']);
+                            $query->where('refund_history.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                        }
+
+                    })
+                    ->orderBy('refund_history.created_at', 'DESC')
+                    ->skip($skip)
+                    ->take($limit)
+                    ->get();
+
+        $this->data_result['DATA']['DataList'] = $list;
+        $this->data_result['DATA']['Total'] = $totalRows;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function getWithdrawnList(Request $request){
+
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $condition = $params['obj']['condition'];
+        $currentPage = $params['obj']['currentPage'];
+        $limitRowPerPage = $params['obj']['limitRowPerPage'];
+
+        $currentPage = $currentPage - 1;
+
+        $limit = $limitRowPerPage;
+        $offset = $currentPage;
+        $skip = $offset * $limit;
+
+        $totalRows = WithdrawnHistory::join('user', 'user.id', '=', 'withdrawn_history.user_id')
+                    ->where(function($query) use ($condition){
+
+                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                            $query->orWhere( DB::raw("CONCAT(user.firstname , ' ', user.lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                        }
+
+                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                            $condition['created_at'] = getDateFromString($condition['created_at']);
+                            $query->where('withdrawn_history.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                        }
+
+                    })
+                    ->count();
+
+        $list = WithdrawnHistory::select("withdrawn_history.*", 'user.user_code', 'user.firstname', 'user.lastname', 'user.mobile_no'
+                        , DB::raw('user_admin.firstname AS admin_firstname'), DB::raw('user_admin.lastname AS admin_lastname'))
+                    ->join('user', 'user.id', '=', 'withdrawn_history.user_id')
+                    ->join('user_admin', 'user_admin.id', '=', 'withdrawn_history.withdrawn_by')
+                    ->where(function($query) use ($condition){
+                        
+                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                            $query->orWhere( DB::raw("CONCAT(user.firstname , ' ', user.lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                        }
+
+                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                            $condition['created_at'] = getDateFromString($condition['created_at']);
+                            $query->where('withdrawn_history.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                        }
+
+                    })
+                    ->orderBy('withdrawn_history.created_at', 'DESC')
+                    ->skip($skip)
+                    ->take($limit)
+                    ->get();
+
+        $this->data_result['DATA']['DataList'] = $list;
+        $this->data_result['DATA']['Total'] = $totalRows;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
     }
 
     private function approveTopup($user_id, $topup_amount){

@@ -52,7 +52,7 @@ angular.module('app').controller('AdminTransferController', function($scope, $co
     }
 
     $scope.goToPage = function(page){
-        $scope.getOrderList();
+        $scope.getTransferList();
     }
 
     $scope.pageChanged = function() {

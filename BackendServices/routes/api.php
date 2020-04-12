@@ -44,6 +44,7 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/order/update', 'OrdersController@updateOrder');
 	Route::post('admin/order/status/update', 'OrdersController@updateOrderStatus');
 	Route::post('admin/order/upload', 'OrdersController@uploadExcel');
+	Route::post('admin/order/cancel', 'OrdersController@cancelOrder');
 
 	Route::post('admin/topup/list', 'MoneyBagsController@getRequestTopupList');
 	Route::post('admin/topup/status/update', 'MoneyBagsController@updateTopupStatus');
@@ -57,6 +58,7 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/user/list', 'UsersController@getUserList');
 	Route::post('admin/customer/list', 'UsersController@getCustomerList');
 	Route::post('admin/customer/withdrawn', 'MoneyBagsController@withdrawnMoney');
+	Route::post('admin/customer/refund', 'MoneyBagsController@refundMoney');
 
 	Route::post('admin/exchange-rate/list', 'ExchangeRatesController@getExchangeRateList');
 	Route::post('admin/exchange-rate/update', 'ExchangeRatesController@updateExchangeRate');
@@ -80,6 +82,9 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/landing-page/list', 'LandingPageController@list');
 	Route::post('admin/landing-page/get', 'LandingPageController@get');
 	Route::post('admin/landing-page/update', 'LandingPageController@update');
+
+	Route::post('admin/history/refund', 'MoneyBagsController@getRefundList');
+	Route::post('admin/history/withdrawn', 'MoneyBagsController@getWithdrawnList');	
 // });
 
 Route::post('login', 'UsersController@login');

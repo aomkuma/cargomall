@@ -1,0 +1,18 @@
+<div class="modal-header">
+	<h4 class="modal-title">คืนเงินเข้ากระเป๋าเงินของคุณ <b>{{MoneyBag.firstname}} {{MoneyBag.lastname}}</b></h4>
+</div>
+<div class="modal-body">
+	<div class="row form-group">
+		<div class="row form-group">
+		<label class="col-md-4">
+			จำนวนเงินที่ต้องการคืน
+		</label>
+		<div class="col-md-4">
+			<input type="number" class="form-control" data-ng-model="MoneyBag.money_bags.refund_amount">
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">ยกเลิก</button>
+	<button class="btn btn-primary" ng-click="ok(MoneyBag)">ยืนยันการคืนเงิน</button>
+</div>

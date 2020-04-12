@@ -16,7 +16,7 @@
 		<div class="row form-group">
 			<div class="col-md-12 text-center">
 				<div class="page-header">
-					<span style="font-size: 1.3em; font-weight: bolder;">รายการแจ้งเติมเงิน</span>
+					<span style="font-size: 1.3em; font-weight: bolder;">ข้อมูลการคืนเงินเข้ากระเป๋าลูกค้า</span>
 				</div>
 			</div>
 		</div>
@@ -36,19 +36,8 @@
 			<div class="col-md-2">
 				<input type="date" class="form-control" data-ng-model="condition.created_at"> 
 			</div>
-			<label class="col-md-1">
-				สถานะ
-			</label>
-			<div class="col-md-2">
-				<select class="form-control" data-ng-model="condition.topup_status">
-					<option value="">ทั้งหมด</option>
-					<option value="1">แจ้งเติมเงิน</option>
-					<option value="2">อนุมัติการแจ้งเติมเงิน</option>
-					<option value="3">ปฏิเสธการแจ้งเติมเงิน</option>
-				</select>
-			</div>
 			<div class="col-md-1">
-				<button class="btn btn-info" data-ng-click="getTopupList()"><i class="fas fa-search"></i></button>
+				<button class="btn btn-info" data-ng-click="getList()"><i class="fas fa-search"></i></button>
 			</div>
 			
 		</div>
@@ -60,28 +49,19 @@
 							<th class="text-center">รหัสลูกค้า</th>
 							<th class="text-center">ชื่อ - สกุล ผู้แจ้ง</th>
 							<th class="text-center">เบอร์โทร</th>
-							<th class="text-center">วันที่แจ้ง</th>
-							<th class="text-center">วันที่เติมเงิน</th>
-							<th class="text-center">จำนวนเงินที่เติม</th>
-							<th class="text-center">สลิปการโอน</th>
-							<th class="text-center">สถานะ</th>
-							<th class="text-center">Action</th>
+							<th class="text-center">วันที่ชำระ</th>
+							<th class="text-center">จำนวนเงินที่ชำระ</th>
+							<th class="text-center">แอดมินผู้ทำรายการ</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr data-ng-repeat="data in DataList">
-							<td>{{data.customer.user_code}}</td>													
-							<td>{{data.customer.firstname}} {{data.customer.lastname}}</td>
+							<td>{{data.user_code}}</td>
+							<td>{{data.firstname}} {{data.lastname}}</td>
 							<td>{{data.mobile_no}}</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
-							<td>{{getThaiDateTimeFromString(data.topup_date)}}</td>
-							<td class="text-right">{{data.topup_amount | number:2}}</td>
-							<td class="text-center"><a href="{{data.slip_file}}" target="_blank"><img src="{{data.slip_file}}" style="height: 100px;"></a></td>
-							<td>{{getTopupStatus(data.topup_status)}}</td>
-							<td>
-								<button class="btn btn-primary" data-ng-click="approveTopup(data.id)" title="อนุมัติ" data-ng-show="data.topup_status == 1"><i class="fas fa-check"></i></button>
-								<button class="btn btn-info" data-ng-click="rejectTopup(data.id)" title="ปฏิเสธ" data-ng-show="data.topup_status == 1"><i class="fas fa-ban"></i></button>
-							</td>
+							<td class="text-right">{{data.refund_amount | number:2}}</td>
+							<td>{{data.admin_firstname}} {{data.admin_lastname}}</td>
 						</tr>
 					</tbody>
 				</table>

@@ -1,18 +1,12 @@
-angular.module('app').controller('AdminOrderDetailController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, $routeParams, HTTPService, IndexOverlayFactory) {
+angular.module('app').controller('TrackingOrderDetailController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, $routeParams, HTTPService, IndexOverlayFactory) {
 	//console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
     $templateCache.removeAll();
 
     // $log.log($scope.session_storage.user_data);
     if(!checkEmptyField($scope.session_storage.user_data)){
-      // alert('คุณไม่มีสิทธิ์ใช้งานเมนูนี้');
-      window.location.replace('admin/signin');
-      // history.back();
-      return;
-    }
-
-    if(!checkEmptyField($scope.UserData.is_admin) && !$scope.UserData.is_admin){
       alert('คุณไม่มีสิทธิ์ใช้งานเมนูนี้');
+      // window.location.replace('');
       history.back();
       return;
     }
@@ -132,42 +126,6 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
             if(result.data.STATUS == 'OK'){
                 // window.location.href = 'admin/order';
                 // window.location.reload();
-            }
-            else{
-              var alertMsg = result.data.DATA;
-              alert(alertMsg);
-            }
-            IndexOverlayFactory.overlayHide();
-        });
-    }
-
-    $scope.cancelOrder = function(){
-
-      $scope.alertMessage = 'ต้องการยกเลิกรายการสั่งซื้อนี้ ใช่หรือไม่ ?';
-
-      var modalInstance = $uibModal.open({
-          animation : false,
-          templateUrl : 'views/dialog_confirm.html',
-          size : 'sm',
-          scope : $scope,
-          backdrop : 'static',
-          controller : 'ModalDialogCtrl',
-          resolve : {
-              params : function() {
-                  return {};
-              } 
-          },
-      });
-      modalInstance.result.then(function (valResult) {
-          $scope.confirmCancelOrder();
-      });
-    }
-
-    $scope.confirmCancelOrder = function(){
-        var params = {'order_id' : $scope.Order.id};
-        HTTPService.clientRequest('admin/order/cancel', params).then(function(result){
-            if(result.data.STATUS == 'OK'){
-                window.location.replace('admin/order');
             }
             else{
               var alertMsg = result.data.DATA;

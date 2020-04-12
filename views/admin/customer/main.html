@@ -40,6 +40,7 @@
 						<tr>
 							<th class="text-center">รหัสลูกค้า</th>
 							<th class="text-center">ชื่อ - สกุล</th>
+							<th class="text-center">เบอร์โทร</th>
 							<th class="text-center">วันที่สมัคร</th>
 							<th class="text-center">ยอดเงินในกระเป๋า</th>
 							<th class="text-center">จัดการ</th>
@@ -49,10 +50,12 @@
 						<tr data-ng-repeat="data in UserList">
 							<td>{{data.user_code}}</td>
 							<td>{{data.firstname}} {{data.lastname}}</td>
+							<td>{{data.mobile_no}}</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td class="text-right">{{data.money_bags.balance | number:2}}</td>
 							<td class="text-center">
 								<button class="btn btn-primary" data-ng-show="data.money_bags.balance > 0" data-ng-click="withdrawnMoney(data)">ถอนเงิน</button>
+								<button class="btn btn-default" data-ng-click="refundMoney(data)">คืนเงินเข้ากระเป๋า</button>
 							</td>
 						</tr>
 					</tbody>

@@ -47,7 +47,7 @@ angular.module('app').controller('AdminPayController', function($scope, $cookies
     }
 
     $scope.goToPage = function(page){
-        $scope.getOrderList();
+        $scope.getPayList();
     }
 
     $scope.pageChanged = function() {

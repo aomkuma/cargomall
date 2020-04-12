@@ -60,8 +60,9 @@
 						<td>{{data.tracking_no_thai}}</td>
 						<td>{{getOrderStatus(data.order_status)}}</td>
 						<td>
-							<a href="pay/1/{{data.id}}" class="btn btn-primary" data-ng-show="data.order_status == 1">ชำระเงินค่าสินค้า</a>
-							<a href="pay/2/{{data.id}}" class="btn btn-default" data-ng-show="data.order_status == 6">ชำระเงินค่าขนส่ง</a>
+							<a href="tracking/order/detail/{{data.id}}" class="btn btn-warning btn-block">รายละเอียดการสั่ง</a>
+							<a href="pay/1/{{data.id}}" class="btn btn-primary btn-block" data-ng-show="data.order_status == 1">ชำระเงินค่าสินค้า</a>
+							<a href="pay/2/{{data.id}}" class="btn btn-default btn-block" data-ng-show="data.order_status == 6">ชำระเงินค่าขนส่ง</a>
 						</td>
 					</tr>
 				</table>

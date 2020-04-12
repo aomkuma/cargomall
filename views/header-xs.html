@@ -75,13 +75,13 @@
 
             <span class="pull-right" ng-show="session_storage.token == undefined || session_storage.token == null">
               <button class="btn btn-login" data-ng-click="loginDialog()"><i class="fas fa-user"></i> {{'SIGNIN_BTN_TXT' | translate}}</button>
-              <button class="btn btn-register" data-ng-click="registerDialog()"><i class="fas fa-user-plus"></i> {{'REGISTER_BTN_TXT' | translate}}</button>
+              <button class="btn btn-login" data-ng-click="registerDialog()"><i class="fas fa-user-plus"></i> {{'REGISTER_BTN_TXT' | translate}}</button>
             </span>
             <span class="pull-right" ng-show="session_storage.token != undefined && session_storage.token != null">
               <!-- <span style="font-size: 0.7em;">&nbsp;</span> -->
               <a href="view-orders" class="btn btn-cart hidden-xs" title="{{'VIEW_ORDER_TXT' | translate}}" data-ng-show="TotalProductPiece > 0"><i class="fas fa-shopping-cart"></i> {{ TotalProductPiece }}</a>
               <button class="btn btn-login" data-ng-click="editProfileDialog()" title="{{ 'EDIT_PROFILE_TXT' | translate }}"><i class="fas fa-user-edit"></i> {{'WELCOME_USER_TXT' | translate}} {{ UserData.firstname }}</button>
-              <button class="btn btn-register" data-ng-click="signOut()" title="{{'SIGNOUT_BTN_TXT' | translate}}"><i class="fas fa-sign-out-alt"></i></button>
+              <button class="btn btn-login" data-ng-click="signOut()" title="{{'SIGNOUT_BTN_TXT' | translate}}"><i class="fas fa-sign-out-alt"></i></button>
               
             </span>
           </ul>

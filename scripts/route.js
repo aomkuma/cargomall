@@ -120,6 +120,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
+	.when("/tracking/order/detail/:order_id", {
+        templateUrl : "views/tracking/detail.html",
+        controller : "TrackingOrderDetailController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/TrackingOrderDetailController.js" ]
+				});
+			} ]
+		}
+	})
+
 	.when("/importer", {
         templateUrl : "views/importer/main.html",
         controller : "ImporterMainController",
@@ -391,6 +403,30 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
 				return $ocLazyLoad.load({
 					files : [ "scripts/controllers/admin/AdminLandingPageDetailController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/admin/history/refund", {
+        templateUrl : "views/admin/history/refund.html",
+        controller : "AdminRefundHistoryController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminRefundHistoryController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/admin/history/withdrawn", {
+        templateUrl : "views/admin/history/withdrawn.html",
+        controller : "AdminWithdrawnHistoryController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminWithdrawnHistoryController.js" ]
 				});
 			} ]
 		}

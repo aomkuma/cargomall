@@ -47,7 +47,7 @@ angular.module('app').controller('AdminDepositController', function($scope, $coo
     }
 
     $scope.goToPage = function(page){
-        $scope.getOrderList();
+        $scope.getDepositList();
     }
 
     $scope.pageChanged = function() {

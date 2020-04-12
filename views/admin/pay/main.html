@@ -61,6 +61,7 @@
 						<tr>
 							<th class="text-center">รหัสลูกค้า</th>
 							<th class="text-center">ชื่อ - สกุล ผู้แจ้ง</th>
+							<th class="text-center">เบอร์โทร</th>
 							<th class="text-center">วันที่ชำระ</th>
 							<th class="text-center">จำนวนเงินที่ชำระ</th>
 							<th class="text-center">ประเภทการชำระ</th>
@@ -70,6 +71,7 @@
 						<tr data-ng-repeat="data in DataList">
 							<td>{{data.customer.user_code}}</td>
 							<td>{{data.customer.firstname}} {{data.customer.lastname}}</td>
+							<td>{{data.customer.mobile_no}}</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td class="text-right">{{data.pay_amount_thb | number:2}}</td>
 							<td>{{getPayType(data.pay_type)}}</td>

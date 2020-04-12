@@ -89,6 +89,41 @@ angular.module('app').controller('AdminCustomerController', function($scope, $co
       }); 
     }
 
+    $scope.refundMoney = function(money_Bag){
+      $scope.MoneyBag = angular.copy(money_Bag);
+      var modalInstance = $uibModal.open({
+          animation : false,
+          templateUrl : 'views/admin/refund.html',
+          size : 'md',
+          scope : $scope,
+          backdrop : 'static',
+          controller : 'ModalDialogReturnFromOKBtnCtrl',
+          resolve : {
+              params : function() {
+                  return {};
+              } 
+          },
+      });
+      modalInstance.result.then(function (valResult) {
+          $scope.updateRefundMoney(valResult);
+      });
+    }
+
+    $scope.updateRefundMoney = function(RefundData){
+      IndexOverlayFactory.overlayShow();
+      var params = {'RefundData' : RefundData};
+      HTTPService.clientRequest('admin/customer/refund', params).then(function(result){
+        if(result.data.STATUS == 'OK'){
+          window.location.reload();
+        }else{
+          alert(result.data.DATA);
+          return false;
+        }
+
+        IndexOverlayFactory.overlayHide();
+      }); 
+    }
+
     $scope.condition = {'user_id' : null, 'pay_type' : null};
     // 1 = ชำระค่าสินค้าบริการ 2 = ชำระค่าขนส่ง, 3=โอนเงินไปจีน, 4=ฝากจ่าย, 5=นำเข้าสินค้า
     $scope.Pagination = {'totalPages' : 0, 'currentPage' : 0, 'limitRowPerPage' : 15, 'limitDisplay' : 10};

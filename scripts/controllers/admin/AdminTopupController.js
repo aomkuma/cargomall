@@ -52,7 +52,7 @@ angular.module('app').controller('AdminTopupController', function($scope, $cooki
     }
 
     $scope.goToPage = function(page){
-        $scope.getOrderList();
+        $scope.getTopupList();
     }
 
     $scope.pageChanged = function() {

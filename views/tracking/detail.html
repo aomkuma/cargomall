@@ -1,5 +1,5 @@
-<div data-ng-include src="'views/admin/header-lg.html'"></div>
-<div data-ng-include src="'views/admin/header-xs.html'"></div>
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
 <div class="row form-group visible-xs" style="height: 50px;">
   <div class="col-md-12">
     &nbsp;
@@ -10,8 +10,7 @@
     &nbsp;
   </div>
 </div>
-<form ng-disabled="Order.order_status == 9">
-<div class="row form-group" >
+<div class="row form-group">
 	<div class="col-md-10 col-md-offset-1">
 		<div class="row form-group">
 			<div class="col-md-12 text-center">
@@ -114,14 +113,7 @@
 
 				<table class="table table-bordered table-striped">
 					<caption>
-						<div class="row">
-							<label class="col-md-2 col-sm-2  col-xs-1 ">
-								หมายเลข Tracking
-							</label>
-							<div class="col-md-4 col-sm-4 col-xs-4 ">
-								<input class="form-control" type="text" data-ng-model="Order.tracking_no" placeholder="Tracking Number">
-							</div>
-						</div>
+						
 					</caption>
 					<tr class="default">
 						<th style="text-align: center;">ลำดับ</th>
@@ -204,7 +196,7 @@
 						<tr>
 							<td colspan="7" align="right"><b style="font-size: 1.1em;">ส่วนลด</b></td>
 							<td align="right">
-								<input type="number" class="form-control" data-ng-model="Order.discount" data-ng-keyup="calcSum()">
+								<b style="font-size: 1.1em;">{{Order.discount | number:2}}</b>
 							</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -219,37 +211,38 @@
 		</div>
 
 		<fieldset>
-			<legend style="color: #ED2224;">รายละเอียดค่าใช้จ่าย</legend>
+			<legend>รายละเอียดค่าใช้จ่าย</legend>
 			<div class="row form-group">
 				<label class="col-md-2">
-					ค่าขนส่งในจีน (บาท)
+					ค่าขนส่งในจีน (บาท) :
 				</label>
 				<div class="col-md-3">
-					<input class="form-control" type="number" data-ng-model="OrderDesc.total_china_transport_cost">
+					{{ OrderDesc.total_china_transport_cost | number:2 }}
 				</div>
 			</div>
 			<div class="row form-group">
 				<label class="col-md-2">
-					ค่าขนส่งจากจีนมาไทย (บาท)
+					ค่าขนส่งจากจีนมาไทย (บาท) :
 				</label>
 				<div class="col-md-3">
-					<input class="form-control" type="number" data-ng-model="OrderDesc.china_thai_transport_cost">
+					{{ OrderDesc.china_thai_transport_cost | number:2 }}
 				</div>
 			</div>
 			<div class="row form-group" data-ng-show="Order.transport_company != '' && Order.transport_company != null">
 				<label class="col-md-2">
-					ค่าขนส่งในไทย ({{Order.transport_company}})
+					ค่าขนส่งในไทย ({{Order.transport_company}}) :
 				</label>
 				<div class="col-md-3">
-					<input class="form-control" type="number" data-ng-model="OrderDesc.transport_company_cost">
+					{{ OrderDesc.transport_company_cost | number:2 }}
+					
 				</div>
 			</div>
 			<div class="row form-group" data-ng-show="Order.transport_company != '' && Order.transport_company != null">
 				<label class="col-md-2">
-					หมายเลข track (ขนส่งไทย) ({{Order.transport_company}})
+					หมายเลข track (ขนส่งไทย) ({{Order.transport_company}}) : 
 				</label>
 				<div class="col-md-3">
-					<input class="form-control" type="text" data-ng-model="Order.tracking_no_thai" maxlength="50">
+					{{ OrderDesc.tracking_no_thai }}
 				</div>
 			</div>
 		</fieldset>
@@ -337,23 +330,19 @@
 				หมายเหตุเพิ่มเติม
 			</label>
 			<div class="col-md-6">
-				<textarea class="form-control" data-ng-model="Order.remark"></textarea>
+				<textarea class="form-control" data-ng-model="Order.remark" readonly="true"></textarea>
 			</div>
 		</div>
 		<hr>
+		<div class="row form-group">
+			<div class="col-lg-12 text-center">
+				<a href="tracking/order" class="btn btn-default">กลับหน้ารายการ</a>
+				
+			</div>
+		</div>
+	</div>
+</div>
 
-	</div>
-</div>
-</form>
-<div class="row form-group">
-	<div class="col-lg-12 text-center">
-		<a href="admin/order" class="btn btn-default">กลับหน้ารายการ</a>
-		<button class="btn btn-warning" data-ng-click="updateOrderStatus(Order.id, Order.order_status, 'back')" data-ng-show="Order.order_status > 1 && Order.order_status != 9">ย้อนสถานะ order</button>
-		<button class="btn btn-info" data-ng-click="updateOrderStatus(Order.id, Order.order_status, 'next')" data-ng-show="Order.order_status < 8 && Order.order_status != 9">อัพเดทสถานะ order</button>
-		<button class="btn btn-primary" data-ng-click="updateOrder(Order, OrderDesc)" data-ng-show="Order.order_status != 9">บันทึกข้อมูล</button>
-		<button class="btn btn-default" data-ng-click="cancelOrder()" data-ng-show="Order.order_status != 9">ยกเลิกรายการสั่งซื้อนี้</button>
-	</div>
-</div>
 <style type="text/css">
 	.status-timeline{
 		color: #C91313;

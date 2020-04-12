@@ -3,7 +3,10 @@
 namespace App\Imports;
 
 use App\Order;
+use App\OrderTracking;
 use Maatwebsite\Excel\Concerns\ToModel;
+
+use DB;
 
 class OrdersImport implements ToModel
 {
@@ -31,11 +34,29 @@ class OrdersImport implements ToModel
             'bill_no'    => $row[14]
         ];
 
+        $data['tracking_no'] = trim($data['tracking_no']);
+
         if(!empty($data['tracking_no'])){
             // find by tracking_no
-            $order = Order::where('tracking_no', $data['tracking_no'])->first();
+            $order = Order::where('tracking_no', 'LIKE', DB::raw("'%" . $data['tracking_no'] . "%'"))->first();
+
             if($order){
-                $order->update($data);
+
+                // find order tracking
+                $order_tracking = OrderTracking::where('tracking_no', $data['tracking_no'])->first();
+
+                if($order_tracking){
+
+                    $order_tracking->update($data);
+
+                }else{
+
+                    $data['id'] = generateID();
+                    $data['order_id'] = $order->id;
+                    OrderTracking::create($data);
+
+                }
+                
             }
         }
         

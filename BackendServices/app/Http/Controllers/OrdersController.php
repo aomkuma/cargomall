@@ -64,7 +64,10 @@ class OrdersController extends Controller
                     }
                     if(isset($condition['order_status']) &&  !empty($condition['order_status'])){
                         $query->where('order_status', $condition['order_status']);
+                    }else{
+                        $query->where('order_status', '<>', 9);
                     }
+
                     if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                         $condition['created_at'] = getDateFromString($condition['created_at']);
                         $query->where('created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -81,7 +84,10 @@ class OrdersController extends Controller
                     }
                     if(isset($condition['order_status']) &&  !empty($condition['order_status'])){
                         $query->where('order_status', $condition['order_status']);
+                    }else{
+                        $query->where('order_status', '<>', 9);
                     }
+
                     if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                         $condition['created_at'] = getDateFromString($condition['created_at']);
                         $query->where('created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -109,6 +115,7 @@ class OrdersController extends Controller
                     ->with('orderDetails')
                     ->with('customer')
                     ->with('customerAddress')
+                    ->with('orderTrackings')
                     ->where('id', $order_id)
                     ->first();
 
@@ -354,6 +361,9 @@ class OrdersController extends Controller
         if($order){
             $order->tracking_no = $Order['tracking_no'];
             $order->tracking_no_thai = $Order['tracking_no_thai'];
+            $order->discount = $Order['discount'];
+            $order->remark = $Order['remark'];
+
             $order->save();
 
             $this->data_result['DATA'] = true;
@@ -369,6 +379,32 @@ class OrdersController extends Controller
             $order_desc->transport_company_cost = $OrderDesc['transport_company_cost'];
             $order_desc->save();
 
+        }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function cancelOrder(){
+
+        $params = Request::all();
+
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $order_id = trim($params['obj']['order_id']);
+        
+        Log::info("CANCEL_ORDER => ");
+        Log::info("By User : " . $user_data['firstname'] . ' ' . $user_data['lastname']);
+
+        $order = Order::find($order_id);
+
+        if($order){
+
+            Log::info("Order No : " . $order->order_no);
+            $order->order_status = 9;
+            $order->save();
+
+            $this->data_result['DATA'] = true;
         }
 
         return $this->returnResponse(200, $this->data_result, response(), false);
