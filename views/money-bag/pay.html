@@ -77,7 +77,7 @@
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.order_no}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.totalYuan | number:2}}</label></td>
-						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.totalYuan * exchange_rate | number:2}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: bold;">{{(data.totalYuan * exchange_rate) - data.discount | number:2}}</label></td>
 					</tr>
 				</table>
 			</div>

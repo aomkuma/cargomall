@@ -67,7 +67,7 @@ class ProductsController extends Controller
 			$itemId = $queryArray['id'];
 		}
 
-			define('CFG_SERVICE_INSTANCEKEY', 'opendemo');
+			define('CFG_SERVICE_INSTANCEKEY', '52b832ea-3eb7-40fb-a66b-dc0114876a94'/*'opendemo'*/);
 			define('CFG_REQUEST_LANGUAGE', 'en');
 			 
 			//$itemId = (isset($_REQUEST['itemId'])) ? $_REQUEST['itemId'] : 38237454486;
@@ -103,6 +103,8 @@ class ProductsController extends Controller
 			 
 			$itemInfo = $xmlObject->Result->Item;
 			
+			// print_r($xmlObject);
+			// exit;
 			$ProductLevelList = [];
 			foreach ($itemInfo->Attributes->ItemAttribute as $key => $value) {
 				// $quantity = simpleXmlToArray($value)['Quantity'];
@@ -161,19 +163,29 @@ class ProductsController extends Controller
 			$itemAttributes = array();
 			$arr_color_img = array();
 			$arr_color = array();
+			$arr_color_check = array();
 			$arr_size = array();
 			if (isset($itemInfo->Attributes->ItemAttribute)) {
 			    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
-			       
-					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification'){
+			       	echo $ItemAttribute->PropertyName;
+					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'food taste'){
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
 					 	}
 						if(isset($ItemAttribute->ValueAlias) && trim($ItemAttribute->ValueAlias) != ''){
 							$color_val = (string)$ItemAttribute->ValueAlias;
+							$vid = (string)$ItemAttribute->Attributes()->Vid;
+							// print_r($ItemAttribute);
 						}
+
 						$arr_color[] = $color_val;
+
+						$res = [];
+						$res['name'] = $color_val;
+						$res['vid'] = $vid;
+
+						$arr_color_check[] = $res;
 					 }
 					 
 					 else if(strtolower($ItemAttribute->PropertyName) == 'size'){
@@ -183,8 +195,30 @@ class ProductsController extends Controller
 			}
 			
 			$price_list_by_color = array();
-			foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
-				$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+			// print_r($itemInfo->ConfiguredItems);
+			// exit;
+			if(!empty($arr_color_check)){
+
+				foreach ($arr_color_check as $key => $value) {
+					
+					foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
+
+						$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Vid;
+						if($value['vid'] == $price_vid){
+							// echo  . "<br>";
+
+							// $res = [];
+							// $res['name'] = $value['name'];
+							// $res['price'] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+							// $res['vid'] = $vid;
+							// $price_list_by_color[] = $res;
+
+							$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+						}
+					}
+
+				}
+
 			}
 			
 			// echo '<pre>';
@@ -258,22 +292,33 @@ class ProductsController extends Controller
 			 
 			$itemInfo = $xmlObject->Result->Item;
 			
+			// print_r($itemInfo);exit;
 			$itemAttributes = array();
 			$arr_color_img = array();
 			$arr_color = array();
+			$arr_color_check = array();
 			$arr_size = array();
 			if (isset($itemInfo->Attributes->ItemAttribute)) {
 			    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 			       
-					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification'){
+					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color'){
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
 					 	}
 						if(isset($ItemAttribute->ValueAlias) && trim($ItemAttribute->ValueAlias) != ''){
 							$color_val = (string)$ItemAttribute->ValueAlias;
+							$vid = (string)$ItemAttribute->Attributes()->Vid;
+							// print_r($ItemAttribute);
 						}
+
 						$arr_color[] = $color_val;
+
+						$res = [];
+						$res['name'] = $color_val;
+						$res['vid'] = $vid;
+
+						$arr_color_check[] = $res;
 					 }
 					 
 					 else if(strtolower($ItemAttribute->PropertyName) == 'size'){
@@ -283,10 +328,34 @@ class ProductsController extends Controller
 			}
 			
 			$price_list_by_color = array();
-			foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
-				$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+			// print_r($itemInfo->ConfiguredItems);
+			// exit;
+			if(!empty($arr_color_check)){
+
+				foreach ($arr_color_check as $key => $value) {
+					
+					foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
+
+						$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Vid;
+						if($value['vid'] == $price_vid){
+							// echo  . "<br>";
+
+							// $res = [];
+							// $res['name'] = $value['name'];
+							// $res['price'] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+							// $res['vid'] = $vid;
+							// $price_list_by_color[] = $res;
+
+							$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+						}
+					}
+
+				}
+
 			}
-			
+
+			// print_r($price_list_by_color);
+			// exit;
 			// echo '<pre>';
 			// echo '<br><br>';
 			$ProductLevelList = [];
@@ -417,7 +486,7 @@ class ProductsController extends Controller
 		if (isset($itemInfo->Attributes->ItemAttribute)) {
 		    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 		       
-				if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification'){
+				if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color'){
 				 	$color_val = (string)$ItemAttribute->Value;
 				 	if(isset($ItemAttribute->ImageUrl)){
 				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 

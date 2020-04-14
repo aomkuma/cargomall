@@ -82,9 +82,9 @@
 					<div class="row form-group" ng-show="ProductDetail.product_color_img.length == 0 || ProductDetail.product_color_img.length == null">
 						<label class="col-md-3 form-control-static" style="text-align: left;">{{ 'COLOR_TXT' | translate}}</label>
 						<div class="col-md-9">
-							<label class="col-md-3" ng-repeat="color in ProductDetail.product_color track by $index"" >
+							<label class="col-md-3" ng-repeat="color in ProductDetail.product_color track by $index"" style="min-height: 100px;">
 								<div class="input-group" style="font-size: 1em; font-weight: lighter;">
-								<input type="radio" name="color" ng-model="ProductDetail.product_color_choose" ng-checked="$index==0" ng-value="color" /> {{color}}
+								<input type="radio" name="color" ng-model="ProductDetail.product_color_choose" ng-checked="$index==0" ng-value="color" data-ng-click="checkPriceByColor($index)" /> {{color}}
 								</div>
 							</label>
 						</div>
@@ -107,7 +107,7 @@
 					</div>
 					<div class="row form-group">
 						<label class="col-md-3" style="text-align: left;">{{ 'PRICE_PER_UNIT_TXT' | translate}}</label>
-						<div class="col-md-5" data-ng-show="ProductDetail.ProductLevelList.length == 0">
+						<div class="col-md-9" data-ng-show="ProductDetail.ProductLevelList.length == 0">
 							<div class="input-group">
 						      <span class="input-group-addon" style="width: 200px; text-align: left; font-size: 0.9em;">
 						        <input type="radio" value="normal" ng-model="ProductDetail.price_type" aria-label="..." ng-click="checkPriceType(ProductDetail.price_type)"> {{ 'NORMAL_PRICE_TXT' | translate }} (RMB)
@@ -120,6 +120,7 @@
 						      </span>
 						      <input type="number" value="{{ProductDetail.product_promotion_price}}" ng-model="ProductDetail.product_promotion_price" class="form-control input-sm" ng-disabled="ProductDetail.price_type=='normal'">
 						    </div>
+						    <span style="color: orange;">กรณีระบบไม่ขึ้นราคาโปรโมชั่น กรุณาเลือกและกรอกที่ "ราคาโปรโมชั่น"</span>
 						</div>
 
 						<div class="col-md-9" data-ng-show="ProductDetail.ProductLevelList.length > 0">
@@ -135,17 +136,18 @@
 							<div class="row form-group">
 								<div class="col-md-12">
 									<div class="input-group">
-						      <span class="input-group-addon" style="width: 200px; text-align: left; font-size: 0.9em;">
-						        <input type="radio" value="normal" ng-model="ProductDetail.price_type" aria-label="..." ng-click="checkPriceType(ProductDetail.price_type)"> {{ 'NORMAL_PRICE_TXT' | translate }} (RMB)
-						      </span>
-						      <input type="number" ng-value="{{ProductDetail.product_normal_price}}" ng-model="ProductDetail.product_normal_price" class="form-control input-sm" readonly="readonly">
-						    </div>
-							<div class="input-group">
-						      <span class="input-group-addon" style="width: 200px; text-align: left; font-size: 0.9em;">
-						        <input type="radio"  value="promotion" ng-model="ProductDetail.price_type" aria-label="..." ng-click="checkPriceType(ProductDetail.price_type)"> {{ 'PROMOTION_PRICE_TXT' | translate }} (RMB)
-						      </span>
-						      <input type="number" value="{{ProductDetail.product_promotion_price}}" ng-model="ProductDetail.product_promotion_price" class="form-control input-sm" ng-disabled="ProductDetail.price_type=='normal'">
-						    </div>
+								      <span class="input-group-addon" style="width: 200px; text-align: left; font-size: 0.9em;">
+								        <input type="radio" value="normal" ng-model="ProductDetail.price_type" aria-label="..." ng-click="checkPriceType(ProductDetail.price_type)"> {{ 'NORMAL_PRICE_TXT' | translate }} (RMB)
+								      </span>
+								      <input type="number" ng-value="{{ProductDetail.product_normal_price}}" ng-model="ProductDetail.product_normal_price" class="form-control input-sm" readonly="readonly">
+								    </div>
+									<div class="input-group">
+								      <span class="input-group-addon" style="width: 200px; text-align: left; font-size: 0.9em;">
+								        <input type="radio"  value="promotion" ng-model="ProductDetail.price_type" aria-label="..." ng-click="checkPriceType(ProductDetail.price_type)"> {{ 'PROMOTION_PRICE_TXT' | translate }} (RMB)
+								      </span>
+								      <input type="number" value="{{ProductDetail.product_promotion_price}}" ng-model="ProductDetail.product_promotion_price" class="form-control input-sm" ng-disabled="ProductDetail.price_type=='normal'">
+								    </div>
+								    <span style="color: orange;">กรณีระบบไม่ขึ้นราคาโปรโมชั่น กรุณาเลือกและกรอกที่ "ราคาโปรโมชั่น"</span>
 								</div>
 							</div>
 							<div class="row form-group">

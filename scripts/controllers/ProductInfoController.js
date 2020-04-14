@@ -11,18 +11,13 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
     $templateCache.removeAll();
 
     $scope.ProductDetail = sessionStorage.getItem('product_info');
-    if($scope.ProductDetail != null && $scope.ProductDetail != ''){
-      $scope.ProductDetail = angular.fromJson($scope.ProductDetail);
-      $log.log($scope.ProductDetail);
-      if(!checkEmptyField($scope.ProductDetail['price_type'])){
-        $scope.ProductDetail['price_type'] = 'normal';
-        // $log.log($scope.ProductDetail.ProductLevelList);
-      }
 
-      if($scope.ProductDetail.ProductLevelList && $scope.ProductDetail.ProductLevelList.length > 0){
-        $scope.ProductDetail.product_normal_price = 0;
+
+    $scope.checkPriceByColor = function(index){
+      if($scope.ProductDetail.price_list_by_color.length > 0){
+        // $log.log($scope.ProductDetail.price_list_by_color[index]);
+        $scope.ProductDetail.product_normal_price = parseFloat($scope.ProductDetail.price_list_by_color[index]);
       }
-      
     }
 
     $scope.changePrice = function(index, pic_color_url){
@@ -90,6 +85,22 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
       
       window.location.href = 'view-orders';
 
+    }
+
+    if($scope.ProductDetail != null && $scope.ProductDetail != ''){
+      $scope.ProductDetail = angular.fromJson($scope.ProductDetail);
+      $log.log($scope.ProductDetail);
+      if(!checkEmptyField($scope.ProductDetail['price_type'])){
+        $scope.ProductDetail['price_type'] = 'normal';
+        // $log.log($scope.ProductDetail.ProductLevelList);
+      }
+
+      if($scope.ProductDetail.ProductLevelList && $scope.ProductDetail.ProductLevelList.length > 0){
+        $scope.ProductDetail.product_normal_price = 0;
+      }
+
+      $scope.checkPriceByColor(0);
+      
     }
 
 });

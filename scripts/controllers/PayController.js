@@ -92,16 +92,23 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
           $scope.DataList[i].totalYuan += parseFloat($scope.DataList[i].order_details[j].product_price_yuan) * parseFloat($scope.DataList[i].order_details[j].product_choose_amount); 
         }
         if($scope.DataList[i].id == $scope.Pay.to_ref_id){
-          $scope.setPayAmountValue($scope.DataList[i].totalYuan, $scope.exchange_rate);
+
+          if(!$scope.DataList[i].discount){
+              $scope.DataList[i].discount = 0;
+          }else{
+              $scope.DataList[i].discount = parseFloat($scope.DataList[i].discount);
+          }
+          
+          $scope.setPayAmountValue($scope.DataList[i].totalYuan, $scope.exchange_rate, $scope.DataList[i].discount);
         }
       }
       
       $scope.ShowChooseToPay = true;
     }
 
-    $scope.setPayAmountValue = function(totalYuan, exchange_rate){
+    $scope.setPayAmountValue = function(totalYuan, exchange_rate, discount){
       $scope.Pay.pay_amount_yuan = parseFloat(totalYuan);
-      $scope.Pay.pay_amount_thb = parseFloat((parseFloat(totalYuan) * parseFloat(exchange_rate)).toFixed(2));
+      $scope.Pay.pay_amount_thb = parseFloat((parseFloat(totalYuan) * parseFloat(exchange_rate) - parseFloat(discount)).toFixed(2));
       $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
       $log.log($scope.SelectedPayBaht);
     }
