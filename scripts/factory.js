@@ -66,7 +66,7 @@ app.factory('IndexOverlayFactory', function(){
     return indexVar;
 });
 
-app.factory('HTTPService', ['$http', '$q', '$localStorage', 'Upload', function($http, $q, $localStorage, Upload){
+app.factory('HTTPService', ['$http', '$q', '$cookies', 'Upload', function($http, $q, $cookies, Upload){
 
     return {
 
@@ -96,8 +96,12 @@ app.factory('HTTPService', ['$http', '$q', '$localStorage', 'Upload', function($
 
         clientRequest : function(action, obj) {
             // $scope.$storage = $localStorage;
-            var user_session = angular.fromJson($localStorage);//angular.fromJson(sessionStorage.getItem('user_session'));
+            var user_session = angular.fromJson($cookies.get('user_session'));//angular.fromJson($localStorage);//angular.fromJson(sessionStorage.getItem('user_session'));
             // console.log(user_session);
+
+            if(user_session == undefined){
+                user_session = {'user_session' : {'token' : null}, 'token' : null};
+            }
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + user_session.token;
             return $http.post(serviceUrl + action,{"obj":obj, 'user_session' : user_session, 'token' : user_session.token})
                 .then(
@@ -124,7 +128,7 @@ app.factory('HTTPService', ['$http', '$q', '$localStorage', 'Upload', function($
 
         uploadRequest : function(action, obj) {
             // $scope.$storage = $localStorage;
-            var user_session = angular.fromJson($localStorage);//angular.fromJson(sessionStorage.getItem('user_session'));
+            var user_session = angular.fromJson($cookies.get('user_session'));//angular.fromJson($localStorage);//angular.fromJson(sessionStorage.getItem('user_session'));
             // console.log(user_session);
             return Upload.upload({
                 url: serviceUrl + action,

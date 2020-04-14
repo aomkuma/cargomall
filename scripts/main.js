@@ -105,7 +105,7 @@ app.run(function($rootScope, $templateCache) {
    });
 });
 
-angular.module('app').controller('AppController', ['$cookies','$scope', '$filter', '$uibModal', '$templateCache', '$localStorage', '$log', 'IndexOverlayFactory', 'HTTPService', function($cookies, $scope, $filter, $uibModal,$templateCache, $localStorage, $log, IndexOverlayFactory, HTTPService) {
+angular.module('app').controller('AppController', ['$cookies','$scope', '$filter', '$uibModal', '$templateCache', '$localStorage', '$log', '$cookies', 'IndexOverlayFactory', 'HTTPService', function($cookies, $scope, $filter, $uibModal,$templateCache, $localStorage, $log, $cookies, IndexOverlayFactory, HTTPService) {
 	$templateCache.removeAll();
   $scope.overlay = IndexOverlayFactory;
 
@@ -182,18 +182,21 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
   $scope.exchange_rate = 0.000;
   $scope.exchange_rate_transfer = 0.000;
 
-  $scope.session_storage = $localStorage;
-  
-  if(checkEmptyField($scope.session_storage.user_data)){
-    $scope.UserData = angular.fromJson(atob($scope.session_storage.user_data));
-    // $log.log($scope.UserData); 
-  }
+  $scope.session_storage = angular.fromJson($cookies.get('user_session'));
 
-  if(checkEmptyField($scope.session_storage.product_list_storage)){
-    $scope.ProductListStorage = angular.fromJson($scope.session_storage.product_list_storage);
-    $scope.TotalProductPiece = 0;
-    for(var i = 0; i < $scope.ProductListStorage.length; i++){
-      $scope.TotalProductPiece++;//parseInt($scope.ProductListStorage[i].product_qty);
+  if($scope.session_storage != undefined){
+    console.log($scope.session_storage);
+    if(checkEmptyField($scope.session_storage.user_data)){
+      $scope.UserData = angular.fromJson(atob($scope.session_storage.user_data));
+      $log.log($scope.UserData); 
+    }
+
+    if(checkEmptyField($scope.session_storage.product_list_storage)){
+      $scope.ProductListStorage = angular.fromJson($scope.session_storage.product_list_storage);
+      $scope.TotalProductPiece = 0;
+      for(var i = 0; i < $scope.ProductListStorage.length; i++){
+        $scope.TotalProductPiece++;//parseInt($scope.ProductListStorage[i].product_qty);
+      }
     }
   }
 
@@ -341,12 +344,8 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
       HTTPService.clientRequest('login', params).then(function(result){
         if(result.data.STATUS == 'OK'){
           $scope.closeLoginDialog();
-
-          var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-          if (!isMobile) {
-            $localStorage.$default({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData});
-          }
-          
+          // $localStorage.$default({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData});
+          $cookies.put('user_session' , JSON.stringify({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData}));
           // $scope.UserDara = result.data.DATA.UserData;
           window.location.reload();
         }else{
@@ -462,9 +461,10 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     IndexOverlayFactory.overlayShow();
     var params = {'text' : 'logout'};
     HTTPService.clientRequest('logout', params).then(function(result){
-      $localStorage.$reset();
-      sessionStorage.setItem('product_info', null);
-      sessionStorage.removeItem('product_info');
+      // $localStorage.$reset();
+      // sessionStorage.setItem('product_info', null);
+      // sessionStorage.removeItem('product_info');
+      $cookies.remove('user_session');
       if(result.data.STATUS == 'OK'){
         setTimeout(function(){
             // window.location.reload(); 

@@ -329,7 +329,7 @@ class MoneyBagsController extends Controller
                         }
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
-                            $query->where('created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
                         }
                     })
                     ->count();
@@ -348,10 +348,10 @@ class MoneyBagsController extends Controller
                         }
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
-                            $query->where('created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
                         }
                     })
-                    ->orderBy('created_at', 'DESC')
+                    ->orderBy('money_use.created_at', 'DESC')
                     ->skip($skip)
                     ->take($limit)
                     ->get();
