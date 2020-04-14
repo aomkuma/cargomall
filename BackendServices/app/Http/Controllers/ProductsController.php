@@ -6,11 +6,60 @@ use Request;
 
 use Mockery;
 
+use App\CartSession;
+
 use JoggApp\GoogleTranslate\GoogleTranslate;
 use JoggApp\GoogleTranslate\GoogleTranslateClient;
 
 class ProductsController extends Controller
 {
+
+	public function updateCartSession(){
+		$params = Request::all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_id = ''.$user_data['id'];
+        $cart_desc = $params['obj']['cart_desc'];
+
+        if($cart_desc != null){
+	        $cart = CartSession::where('user_id', $user_id)->first();
+
+	        if($cart){
+	        	$cart->cart_desc = $cart_desc;
+	        	$cart->save();
+
+	        }else{
+	        	$cart = new CartSession();
+	        	$cart->user_id = $user_id;
+	        	$cart->cart_desc = $cart_desc;
+	        	$cart->created_by = $user_id;
+
+	        	$cart->save();
+
+	        }
+	    }else{
+	    	CartSession::where('user_id', $user_id)->delete();
+	    }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+	}
+
+	public function getCartSession(){
+
+		$params = Request::all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_id = ''.$user_data['id'];
+
+        $cart = CartSession::where('user_id', $user_id)->first();
+
+        if($cart){
+	        $this->data_result['DATA'] = $cart->cart_desc;
+		}
+		else{
+			$this->data_result['DATA'] = null;	
+		}
+        return $this->returnResponse(200, $this->data_result, response(), false);
+	}
 
 	private function translateWord($keyword){
 		// return $keyword;

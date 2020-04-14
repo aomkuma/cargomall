@@ -74,8 +74,8 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
       if(!checkEmptyField($scope.product_list_storage)){
         $scope.ProductDetailList = [];
       }else{
-
-        $scope.ProductDetailList = angular.fromJson($cookies.get('product_list_storage'));
+        $scope.ProductDetailList = $scope.product_list_storage;
+      //   $scope.ProductDetailList = angular.fromJson($cookies.get('product_list_storage'));
       }
 
       $scope.ProductDetail.exchange_rate = $scope.$parent.exchange_rate;
@@ -83,9 +83,19 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
       $scope.ProductDetailList.push(ProductDetail);
       $log.log($scope.ProductDetailList);
       // $localStorage.product_list_storage = JSON.stringify($scope.ProductDetailList);
-      $cookies.put('product_list_storage', JSON.stringify($scope.ProductDetailList));
+      // $cookies.put('product_list_storage', JSON.stringify($scope.ProductDetailList));
+      // $log.log($cookies.get('product_list_storage'));
+      // window.location.href = 'view-orders';
+      IndexOverlayFactory.overlayShow();
+      
+      var params = {'cart_desc' : JSON.stringify($scope.ProductDetailList)};
+      HTTPService.clientRequest('cart/update', params).then(function(result){
 
-      window.location.href = 'view-orders';
+        if(result.data.STATUS == 'OK'){
+          window.location.href = 'view-orders';
+        }
+        IndexOverlayFactory.overlayHide();
+      });
 
     }
 

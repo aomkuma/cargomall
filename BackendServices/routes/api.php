@@ -114,6 +114,9 @@ Route::post('importer/list/by-user', 'ImportersController@listByUser');
 Route::post('importer/get', 'ImportersController@get');
 Route::post('importer/update', 'ImportersController@update');
 
+Route::post('cart/get', 'ProductsController@getCartSession');
+Route::post('cart/update', 'ProductsController@updateCartSession');
+
 Route::group(['middleware' => ['before' => 'jwt.auth']], function() {
 
 	

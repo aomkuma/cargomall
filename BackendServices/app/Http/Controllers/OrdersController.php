@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use App\Order;
 use App\OrderDesc;
 use App\OrderDetail;
-
+use App\CartSession;
 use Request;
 
 use DB;
@@ -167,6 +167,9 @@ class OrdersController extends Controller
 
     	$user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
         $user_data['id'] = ''.$user_data['id'];
+
+        $user_id = $user_data['id'];
+
     	$ProductList = $params['obj']['ProductList'];
     	$ShippingOptions = $params['obj']['ShippingOptions'];
     	// print_r($user_data['id']);exit;
@@ -275,6 +278,8 @@ class OrdersController extends Controller
     		$order_detail->save();
 
     	}
+
+        $cart = CartSession::where('user_id', $user_id)->delete();
 
         $this->data_result['DATA']['OrderID'] = $order_id;
     	$this->data_result['DATA']['OrderNumber'] = $order_no;

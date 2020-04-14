@@ -10,19 +10,7 @@ angular.module('app').controller('SummaryOrderController', function($scope, $coo
   
     $templateCache.removeAll();
 
-    $scope.calcSum = function (){
-        $scope.sumBaht = 0;
-        angular.forEach($scope.ProductListStorage, function(value, key) {
-            $log.log(value.product_size_choose);
-            if(parseFloat(value.product_promotion_price) > 0){
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
-            }else{
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
-            }
-        });
-
-        $log.log($scope.MoneyBalance, $scope.sumBaht);
-    };
+    
 
     $scope.ship_option = angular.fromJson($cookies.get('shipping_options'));
     $log.log($scope.ship_option);

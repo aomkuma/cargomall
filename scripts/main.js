@@ -191,14 +191,8 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
       $log.log($scope.UserData); 
     }
 
-    $scope.product_list_storage = angular.fromJson($cookies.get('product_list_storage'));
-    if(checkEmptyField($scope.product_list_storage)){
-      $scope.ProductListStorage = angular.fromJson($scope.product_list_storage);
-      $scope.TotalProductPiece = 0;
-      for(var i = 0; i < $scope.ProductListStorage.length; i++){
-        $scope.TotalProductPiece++;//parseInt($scope.ProductListStorage[i].product_qty);
-      }
-    }
+    // $scope.product_list_storage = angular.fromJson($cookies.get('product_list_storage'));
+    
   }else{
     $scope.session_storage = {user_data : null};
   }
@@ -309,16 +303,67 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     // $localStorage.product_list_storage = JSON.stringify($scope.ProductListStorage);
     $cookies.put('product_list_storage', JSON.stringify($scope.ProductListStorage));
 
-    if($scope.ProductListStorage.length > 0){
-      window.location.reload();
-    }else{
-      window.location.replace('');
-    }
+    var params = {'cart_desc' : JSON.stringify($scope.ProductListStorage)};
+    HTTPService.clientRequest('cart/update', params).then(function(result){
+
+      if(result.data.STATUS == 'OK'){
+        if($scope.ProductListStorage.length > 0){
+          window.location.reload();
+        }else{
+          window.location.replace('');
+        }
+      }
+      IndexOverlayFactory.overlayHide();
+    });
+    
   }
+
+  $scope.ProductListStorage = null;
+  $scope.getCartSession = function(){
+    // var params = {'' : link_url};
+    HTTPService.clientRequest('cart/get', null).then(function(result){
+      if(result.data.STATUS == 'OK'){
+        $log.log(result.data.DATA);
+
+        $scope.product_list_storage = angular.fromJson(result.data.DATA);
+
+        if(checkEmptyField($scope.product_list_storage)){
+          $scope.ProductListStorage = angular.fromJson($scope.product_list_storage);
+          $scope.TotalProductPiece = 0;
+          for(var i = 0; i < $scope.ProductListStorage.length; i++){
+            $scope.TotalProductPiece++;//parseInt($scope.ProductListStorage[i].product_qty);
+          }
+
+          $scope.calcSum();
+        }
+
+        // sessionStorage.setItem('product_info' , JSON.stringify(result.data.DATA));
+        // window.location.href = 'product-info';
+      }else{
+        var alertMsg = result.data.DATA;
+        alert(alertMsg);
+      }
+      IndexOverlayFactory.overlayHide();
+    });
+  }
+
+  $scope.calcSum = function (){
+        $scope.sumBaht = 0;
+        angular.forEach($scope.ProductListStorage, function(value, key) {
+            $log.log(value.product_size_choose);
+            if(parseFloat(value.product_promotion_price) > 0){
+                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
+            }else{
+                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
+            }
+        });
+
+        $log.log($scope.MoneyBalance, $scope.sumBaht);
+    };
 
   $scope.getProduct = function(link_url){
 
-    if(!checkEmptyField($localStorage.user_data)){
+    if(!checkEmptyField($scope.session_storage.user_data)){
       alert('กรุณาลงชื่อเข้าใช้งานระบบก่อนทำการสั่งซื้อสินค้า');
       return false;
     }
@@ -431,12 +476,25 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
   }
 
   $scope.cancelOrder = function(){
-    IndexOverlayFactory.overlayShow();
-    // $localStorage.product_list_storage = null;
-    // $localStorage.shipping_options = null;
 
     $cookies.remove('product_list_storage');
     $cookies.remove('shipping_options');
+    IndexOverlayFactory.overlayShow();
+    // $localStorage.product_list_storage = null;
+    // $localStorage.shipping_options = null;
+    var params = {'cart_desc' : null};
+    HTTPService.clientRequest('cart/update', params).then(function(result){
+
+      if(result.data.STATUS == 'OK'){
+        // if($scope.ProductListStorage.length > 0){
+        //   window.location.reload();
+        // }else{
+          window.location.replace('');
+        // }
+      }
+      IndexOverlayFactory.overlayHide();
+    });
+    
 
     window.location.replace('');
   }
@@ -446,7 +504,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     $scope.closeConfirmOrderDialog();
     IndexOverlayFactory.overlayShow();
 
-    var ProductList = angular.fromJson($cookies.get('product_list_storage'));
+    var ProductList = angular.fromJson($scope.product_list_storage);
     var ShippingOptions = angular.fromJson($cookies.get('shipping_options'));
 
     var params = {'ProductList': ProductList, 'ShippingOptions' : ShippingOptions};
@@ -573,6 +631,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
   $log.log('user data', $scope.UserData);
   if(checkEmptyField($scope.UserData) && !checkEmptyField($scope.UserData.is_admin)){
     $scope.getMoneyBagBalance();  
+    $scope.getCartSession();
   }
 
   setInterval(function(){
