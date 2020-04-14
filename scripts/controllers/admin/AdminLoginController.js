@@ -8,7 +8,9 @@ angular.module('app').controller('AdminLoginController',function($scope, $cookie
       HTTPService.clientRequest('admin/login', params).then(function(result){
         if(result.data.STATUS == 'OK'){
           // $scope.closeLoginDialog();
-          $localStorage.$default({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData});
+          // $localStorage.$default({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData});
+          $cookies.put('user_session' , JSON.stringify({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData}));
+          
           // $scope.UserDara = result.data.DATA.UserData;
           window.location.replace('admin/home');
         }else{

@@ -108,7 +108,7 @@ app.run(function($rootScope, $templateCache) {
 angular.module('app').controller('AppController', ['$cookies','$scope', '$filter', '$uibModal', '$templateCache', '$localStorage', '$log', '$cookies', 'IndexOverlayFactory', 'HTTPService', function($cookies, $scope, $filter, $uibModal,$templateCache, $localStorage, $log, $cookies, IndexOverlayFactory, HTTPService) {
 	$templateCache.removeAll();
   $scope.overlay = IndexOverlayFactory;
-
+  $localStorage.$reset();
   // var CurDateTime = new Date();
   // $scope.CURDATETIME = CurDateTime.getYear() + CurDateTime.getMonth() + CurDateTime.getDate() + CurDateTime.getHours() +CurDateTime.getMinutes() + CurDateTime.getSeconds() ;    
   $scope.ORDER_STATUS = [{'id' : 1, 'value' : 'รอการชำระเงินค่าสินค้า'},
@@ -199,6 +199,8 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
         $scope.TotalProductPiece++;//parseInt($scope.ProductListStorage[i].product_qty);
       }
     }
+  }else{
+    $scope.session_storage = {user_data : null};
   }
 
   $scope.displayOverlay = function(){
