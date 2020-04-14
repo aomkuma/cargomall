@@ -24,7 +24,7 @@ angular.module('app').controller('SummaryOrderController', function($scope, $coo
         $log.log($scope.MoneyBalance, $scope.sumBaht);
     };
 
-    $scope.ship_option = angular.fromJson($localStorage.shipping_options);
+    $scope.ship_option = angular.fromJson($cookies.get('shipping_options'));
     $log.log($scope.ship_option);
     $scope.ShippingOption = {'transport_type_txt' : '', 'receive_order_type_txt' : '', 'transport_company_txt' : '', 'special_option_txt' : []};
     if($scope.ship_option.transport_type == 'car'){

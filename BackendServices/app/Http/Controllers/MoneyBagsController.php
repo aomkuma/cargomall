@@ -75,6 +75,7 @@ class MoneyBagsController extends Controller
 
     public function getAccountBalance(Request $request){
         $params = $request->all();
+        $token = $params['user_session']['token'];
         $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
         $user_id = ''.$user_data['id'];
 
@@ -87,7 +88,8 @@ class MoneyBagsController extends Controller
                         ->where('id', $user_id)
                         ->first();
 
-        $this->data_result['DATA'] = base64_encode($UserData);
+        $this->data_result['DATA']['token'] = $token;
+        $this->data_result['DATA']['UserData'] = base64_encode($UserData);
 
         // $this->data_result['DATA'] = $balance;
 

@@ -66,23 +66,25 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
 
     $scope.addCart = function(ProductDetail){
       
-      if(!checkEmptyField($localStorage.user_data)){
+      if(!checkEmptyField($scope.session_storage.user_data)){
         alert('กรุณาลงชื่อเข้าใช้งานระบบก่อนทำการสั่งซื้อสินค้า');
         return false;
       }
 
-      if(!checkEmptyField($scope.session_storage.product_list_storage)){
+      if(!checkEmptyField($scope.product_list_storage)){
         $scope.ProductDetailList = [];
       }else{
-        $scope.ProductDetailList = angular.fromJson($localStorage.product_list_storage);
+
+        $scope.ProductDetailList = angular.fromJson($cookies.get('product_list_storage'));
       }
 
       $scope.ProductDetail.exchange_rate = $scope.$parent.exchange_rate;
 
       $scope.ProductDetailList.push(ProductDetail);
       $log.log($scope.ProductDetailList);
-      $localStorage.product_list_storage = JSON.stringify($scope.ProductDetailList);
-      
+      // $localStorage.product_list_storage = JSON.stringify($scope.ProductDetailList);
+      $cookies.put('product_list_storage', JSON.stringify($scope.ProductDetailList));
+
       window.location.href = 'view-orders';
 
     }

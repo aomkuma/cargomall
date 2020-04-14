@@ -191,6 +191,7 @@ class UsersController extends Controller
     {
         //
         $params = Request::all();
+        $token = $params['user_session']['token'];
         $UserProfile = $params['obj']['UserProfileObj'];
 
         $UserProfile['id'] = ''.$UserProfile['id'];
@@ -237,7 +238,8 @@ class UsersController extends Controller
                         ->where('id', $UserProfile['id'])
                         ->first();
 
-            $this->data_result['DATA'] = base64_encode($UserData);
+            $this->data_result['DATA']['token'] = $token;
+            $this->data_result['DATA']['UserData'] = base64_encode($UserData);
 
         }else{
 
@@ -251,6 +253,7 @@ class UsersController extends Controller
 
     public function removeAddress(){
         $params = Request::all();
+        $token = $params['user_session']['token'];
         $address_id = ''.$params['obj']['address_id'];
         $user_id = ''.$params['obj']['user_id'];
 
@@ -258,7 +261,8 @@ class UsersController extends Controller
         UserAddress::find($address_id)->delete();
         $UserData = User::with('addresses')->where('id', $user_id)->first();
 
-        $this->data_result['DATA'] = base64_encode($UserData);
+        $this->data_result['DATA']['token'] = $token;
+        $this->data_result['DATA']['UserData'] = base64_encode($UserData);
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 

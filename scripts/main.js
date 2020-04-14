@@ -191,8 +191,9 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
       $log.log($scope.UserData); 
     }
 
-    if(checkEmptyField($scope.session_storage.product_list_storage)){
-      $scope.ProductListStorage = angular.fromJson($scope.session_storage.product_list_storage);
+    $scope.product_list_storage = angular.fromJson($cookies.get('product_list_storage'));
+    if(checkEmptyField($scope.product_list_storage)){
+      $scope.ProductListStorage = angular.fromJson($scope.product_list_storage);
       $scope.TotalProductPiece = 0;
       for(var i = 0; i < $scope.ProductListStorage.length; i++){
         $scope.TotalProductPiece++;//parseInt($scope.ProductListStorage[i].product_qty);
@@ -294,15 +295,17 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     $scope.UserData.money_bags.balance = new_balance;
     $log.log( btoa($scope.UserData));return;
     $localStorage.user_data = btoa($scope.UserData);
+
     // $scope.UserData = angular.copy(angular.fromJson(atob(result.data.DATA)));
         
   }
 
   $scope.removeItem = function(index){
     // alert(index);
-    $scope.ProductListStorage = angular.fromJson($scope.session_storage.product_list_storage);
+    $scope.ProductListStorage = angular.fromJson($scope.product_list_storage);
     $scope.ProductListStorage.splice(index, 1);
-    $localStorage.product_list_storage = JSON.stringify($scope.ProductListStorage);
+    // $localStorage.product_list_storage = JSON.stringify($scope.ProductListStorage);
+    $cookies.put('product_list_storage', JSON.stringify($scope.ProductListStorage));
 
     if($scope.ProductListStorage.length > 0){
       window.location.reload();
@@ -391,8 +394,9 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
       if(result.data.STATUS == 'OK'){
 
-        $localStorage.user_data = (result.data.DATA);
-        $scope.UserData = angular.copy(angular.fromJson(atob(result.data.DATA)));
+        // $localStorage.user_data = (result.data.DATA);
+        $cookies.put('user_session' , JSON.stringify({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData}));
+        $scope.UserData = angular.copy(angular.fromJson(atob(result.data.DATA.UserData)));
         $scope.closeUserProfileDialog();
         // window.location.reload();
 
@@ -412,7 +416,8 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
       if(result.data.STATUS == 'OK'){
         $scope.UserProfile.addresses.splice(RemoveAddressIndex, 1);
 
-        $localStorage.user_data = (result.data.DATA);
+        // $localStorage.user_data = (result.data.DATA);
+        $cookies.put('user_session' , JSON.stringify({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData}));
 
       }else{
         var alertMsg = result.data.DATA;
@@ -425,8 +430,12 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.cancelOrder = function(){
     IndexOverlayFactory.overlayShow();
-    $localStorage.product_list_storage = null;
-    $localStorage.shipping_options = null;
+    // $localStorage.product_list_storage = null;
+    // $localStorage.shipping_options = null;
+
+    $cookies.remove('product_list_storage');
+    $cookies.remove('shipping_options');
+
     window.location.replace('');
   }
 
@@ -435,14 +444,18 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     $scope.closeConfirmOrderDialog();
     IndexOverlayFactory.overlayShow();
 
-    var ProductList = angular.fromJson($localStorage.product_list_storage);
-    var ShippingOptions = angular.fromJson($localStorage.shipping_options);
+    var ProductList = angular.fromJson($cookies.get('product_list_storage'));
+    var ShippingOptions = angular.fromJson($cookies.get('shipping_options'));
 
     var params = {'ProductList': ProductList, 'ShippingOptions' : ShippingOptions};
     HTTPService.clientRequest('order/confirm', params).then(function(result){
       if(result.data.STATUS == 'OK'){
-        $localStorage.product_list_storage = null;
-        $localStorage.shipping_options = null;
+        // $localStorage.product_list_storage = null;
+        // $localStorage.shipping_options = null;
+
+        $cookies.remove('product_list_storage');
+        $cookies.remove('shipping_options');
+
         $scope.OrderID = result.data.DATA.OrderID;
         $scope.OrderNumber = result.data.DATA.OrderNumber;
         
@@ -462,9 +475,13 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     var params = {'text' : 'logout'};
     HTTPService.clientRequest('logout', params).then(function(result){
       // $localStorage.$reset();
-      // sessionStorage.setItem('product_info', null);
-      // sessionStorage.removeItem('product_info');
+      sessionStorage.setItem('product_info', null);
+      sessionStorage.removeItem('product_info');
+      
       $cookies.remove('user_session');
+      $cookies.remove('product_list_storage');
+      $cookies.remove('shipping_options');
+
       if(result.data.STATUS == 'OK'){
         setTimeout(function(){
             // window.location.reload(); 
@@ -482,7 +499,10 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     IndexOverlayFactory.overlayShow();
     var params = {'text' : 'logout'};
     HTTPService.clientRequest('admin/logout', params).then(function(result){
-      $localStorage.$reset();
+      // $localStorage.$reset();
+
+      $cookies.remove('user_session');
+
       if(result.data.STATUS == 'OK'){
         setTimeout(function(){
             // window.location.reload(); 
@@ -522,8 +542,9 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     
     HTTPService.clientRequest('user/money-bag/balance', null).then(function(result){
     if(result.data.STATUS == 'OK'){
-        $localStorage.user_data = (result.data.DATA);
-        $scope.UserData = angular.copy(angular.fromJson(atob(result.data.DATA)));
+        // $localStorage.user_data = (result.data.DATA);
+        $cookies.put('user_session' , JSON.stringify({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData}));
+        $scope.UserData = angular.copy(angular.fromJson(atob(result.data.DATA.UserData)));
     }
     });
   }

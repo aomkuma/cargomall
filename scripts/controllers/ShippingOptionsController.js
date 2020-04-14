@@ -34,7 +34,10 @@ angular.module('app').controller('ShippingOptionsController', function($scope, $
   };
 
   $scope.updateShippingOptions = function(ship_option){
-    $localStorage.shipping_options = JSON.stringify(ship_option);
+    // $localStorage.shipping_options = JSON.stringify(ship_option);
+
+    $cookies.put('shipping_options', JSON.stringify(ship_option));
+
     console.log($localStorage.shipping_options);
     window.location.href = 'summary-orders';
   }
@@ -43,8 +46,9 @@ angular.module('app').controller('ShippingOptionsController', function($scope, $
                                 ,{"value":"test_product","text":"ต้องการให้ตรวจสอบ/ทดสอบสินค้า"}
                               ];
   $scope.ship_option = {'customer_address_id' : null};
-  if(checkEmptyField($localStorage.shipping_options)){
-    $scope.ship_option = angular.fromJson($localStorage.shipping_options);
+  
+  if(checkEmptyField($cookies.get('shipping_options'))){
+    $scope.ship_option = angular.fromJson($cookies.get('shipping_options'));
     // $log.log($scope.UserData.firstname);  
   }
 
