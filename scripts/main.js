@@ -341,7 +341,12 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
       HTTPService.clientRequest('login', params).then(function(result){
         if(result.data.STATUS == 'OK'){
           $scope.closeLoginDialog();
-          $localStorage.$default({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData});
+
+          var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+          if (!isMobile) {
+            $localStorage.$default({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData});
+          }
+          
           // $scope.UserDara = result.data.DATA.UserData;
           window.location.reload();
         }else{
