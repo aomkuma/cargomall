@@ -27,13 +27,15 @@ angular.module('app').controller('AdminCustomerController', function($scope, $co
         if(result.data.STATUS == 'OK'){
           
           $scope.UserList =  result.data.DATA.DataList;
+          $scope.Pagination.totalPages = result.data.DATA.Total;
+                
         }
         IndexOverlayFactory.overlayHide();
       });
     }
 
     $scope.goToPage = function(page){
-        $scope.getOrderList();
+        $scope.getUserList();
     }
 
     $scope.pageChanged = function() {
@@ -126,7 +128,7 @@ angular.module('app').controller('AdminCustomerController', function($scope, $co
 
     $scope.condition = {'user_id' : null, 'pay_type' : null};
     // 1 = ชำระค่าสินค้าบริการ 2 = ชำระค่าขนส่ง, 3=โอนเงินไปจีน, 4=ฝากจ่าย, 5=นำเข้าสินค้า
-    $scope.Pagination = {'totalPages' : 0, 'currentPage' : 0, 'limitRowPerPage' : 15, 'limitDisplay' : 10};
+    $scope.Pagination = {'totalPages' : 0, 'currentPage' : 0, 'limitRowPerPage' : 50, 'limitDisplay' : 10};
 
     $scope.getUserList();
 
