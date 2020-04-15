@@ -127,8 +127,14 @@ class OrdersController extends Controller
     public function listByUser(){
 
         $params = Request::all();
-        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
-        $user_data['id'] = ''.$user_data['id'];
+
+        $user_data = [];
+        if(isset($params['user_session']['user_data'])){
+            $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+            $user_data['id'] = ''.$user_data['id'];
+        }else{
+            $user_data['id'] = null;
+        }
         $condition = $params['obj']['condition'];
 
         $list = Order::with('orderDesc')
