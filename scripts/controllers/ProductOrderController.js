@@ -23,18 +23,18 @@ angular.module('app').controller('ProductOrderController', function($scope, $coo
         $localStorage.product_list_storage = JSON.stringify($scope.ProductListStorage);
     }
 
-    $scope.calcSum = function (){
-        $scope.sumBaht = 0;
-        angular.forEach($scope.ProductListStorage, function(value, key) {
-            $log.log(value.product_size_choose);
-            if(parseFloat(value.product_promotion_price) > 0){
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
-            }else{
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
-            }
-        });
-    };
+    // $scope.calcSum = function (){
+    //     $scope.sumBaht = 0;
+    //     angular.forEach($scope.ProductListStorage, function(value, key) {
+    //         $log.log(value.product_size_choose);
+    //         if(parseFloat(value.product_promotion_price) > 0){
+    //             $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
+    //         }else{
+    //             $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
+    //         }
+    //     });
+    // };
 
-    $scope.calcSum();
+    // $scope.calcSum();
 
 });
