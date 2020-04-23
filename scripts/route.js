@@ -12,6 +12,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
+	.when("/forgot-pass/:data_key", {
+        templateUrl : "views/update-forgot-pass.html",
+        controller : "ForgotPassController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/ForgotPassController.js" ]
+				});
+			} ]
+		}
+	})
+
 	.when("/home", {
         templateUrl : "views/main/main.html",
         controller : "HomeController",

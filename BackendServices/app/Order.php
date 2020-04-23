@@ -37,7 +37,7 @@ class Order extends Model
 
     public function customerAddress()
     {
-        return $this->hasOne('App\UserAddress','id','user_id');
+        return $this->hasOne('App\UserAddress','id','customer_address_id');
     }
 
     public function orderTrackings()

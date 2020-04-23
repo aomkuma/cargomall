@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Order;
 use App\OrderDesc;
 use App\OrderDetail;
+use App\OrderTracking;
 use App\CartSession;
 use Request;
 
@@ -389,6 +390,15 @@ class OrdersController extends Controller
             $order_desc->china_thai_transport_cost = $OrderDesc['china_thai_transport_cost'];
             $order_desc->transport_company_cost = $OrderDesc['transport_company_cost'];
             $order_desc->save();
+
+        }
+
+        foreach ($Order['order_trackings'] as $key => $value) {
+            $order_tracking = OrderTracking::find($value['id']);
+            if($order_tracking){
+                $order_tracking->product_type = $value['product_type'];
+                $order_tracking->save();
+            }
 
         }
 

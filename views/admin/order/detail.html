@@ -330,6 +330,25 @@
 					{{item.bill_no}}
 				</div>
 			</div>
+			<div class="row form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">	
+					ประเภทสินค้า
+				</label>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<select class="form-control" data-ng-model="item.product_type" data-ng-change="calcPrice(item)">
+						<option value="">กรุณาเลือก</option>
+						<option value="ทั่วไป">ทั่วไป</option>
+						<option value="มอก." data-ng-hide="Order.transport_type == 'sea'">มอก.</option>
+						<option value="อย." data-ng-hide="Order.transport_type == 'sea'">อย.</option>
+						<option value="อย.มอก." data-ng-hide="Order.transport_type == 'car'">อย.มอก.</option>
+						<option value="สินค้าพิเศษ" data-ng-hide="Order.transport_type == 'sea'">สินค้าพิเศษ</option>
+					</select>
+				</div>
+				<label class="col-md-4 col-sm-4 col-xs-12" style="color: #337ab7;">	
+					ราคาคิดตามน้ำหนัก {{item.rateByKG | number:2}} บาท<br>
+					ราคาคิดตามปริมาตร {{item.rateByCBM | number:2}} บาท
+				</label>
+			</div>
 		</fieldset>
 		<hr>
 		<div class="row form-group">

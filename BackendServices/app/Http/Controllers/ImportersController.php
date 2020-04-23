@@ -43,8 +43,8 @@ class ImportersController extends Controller
         $offset = $currentPage;
         $skip = $offset * $limit;
 
-        $totalRows = Importer::with('customer')
-                    ->where(function($query) use ($condition){
+        $totalRows = Importer::
+                    where(function($query) use ($condition){
 
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('tracking_no', $condition['keyword']);
@@ -56,7 +56,12 @@ class ImportersController extends Controller
                     })
                     ->count();
 
-        $list = Importer::with('customer')
+        $list = Importer::
+                    // with('customer')
+                    with(array('customer'=>function($query){
+                            $query->with('addresses');
+                        }
+                    ))
                     ->where(function($query) use ($condition){
 
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
@@ -115,7 +120,12 @@ class ImportersController extends Controller
         $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
         $importer_id = $params['obj']['importer_id'];
 
-        $data = Importer::with('customer')
+        $data = Importer::with(array('customer'=>function($query){
+                            // $query->with('addresses');
+                        }
+                    ))
+                ->with('customerAddress')
+                // ->join('user_address', 'user_address.id', '=', 'importer.customer_address_id')
                 ->where('id', $importer_id)->first();
 
         $this->data_result['DATA'] = $data;

@@ -17,21 +17,25 @@ class OrdersImport implements ToModel
     */
     public function model(array $row)
     {
-
-        $cbm = number_format((floatval($row[11]) * floatval($row[10]) * floatval($row[9]) * floatval($row[6])), 2);
+        $row[12] = floatval(trim($row[12]));
+        if(empty($row[12])){
+            $cbm = number_format((floatval($row[11]) * floatval($row[10]) * floatval($row[9]) * floatval($row[6])), 2);
+        }else{
+            $cbm = $row[12];
+        }
         $data = [
             //
-            'tracking_no'     => $row[0],
-            'china_arrival_date'    => $row[1],
-            'cargo'    => $row[5], 
-            'package_amount'    => $row[6],
-            'weight_kg'    => $row[8],
-            'longs'    => $row[9],
-            'widths'    => $row[10],
-            'heights'    => $row[11],
+            'tracking_no'     => trim($row[0]),
+            'china_arrival_date'    => trim($row[1]),
+            'cargo'    => trim($row[5]), 
+            'package_amount'    => trim($row[6]),
+            'weight_kg'    => trim($row[8]),
+            'longs'    => trim($row[9]),
+            'widths'    => trim($row[10]),
+            'heights'    => trim($row[11]),
             'cbm'    => $cbm/*$row[12]*/,
-            'china_departure_date'    => $row[13],
-            'bill_no'    => $row[14]
+            'china_departure_date'    => trim($row[13]),
+            'bill_no'    => trim($row[14])
         ];
 
         $data['tracking_no'] = trim($data['tracking_no']);
@@ -52,7 +56,7 @@ class OrdersImport implements ToModel
                 }else{
 
                     $data['id'] = generateID();
-                    $data['order_id'] = $order->id;
+                    $data['order_id'] = trim($order->id);
                     OrderTracking::create($data);
 
                 }

@@ -170,6 +170,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
   
   $scope.LandingPage = null;
   $scope.ShowLoginDialog = false;
+  $scope.ShowForgotPassDialog = false;
   $scope.ShowRegisterDialog = false;
   $scope.ShowEditProfileDialog = false;
   $scope.ShowDialogRemoveItem = false;
@@ -246,6 +247,49 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     $scope.ShowLoginDialog = false;
   }
 
+  $scope.showForgotPassDialog = function(){
+    $scope.closeLoginDialog();
+    $scope.ShowForgotPassDialog = true;
+  }
+
+  $scope.forgotPass = function(email){
+
+    IndexOverlayFactory.overlayShow();
+    var params = {'email' : email};
+    HTTPService.clientRequest('forgot-pass/request', params).then(function(result){
+
+      if(result.data.STATUS == 'OK'){
+        alert(result.data.DATA);
+        $scope.closeForgotPassDialog();
+      }
+      else{
+        alert(result.data.DATA);
+      }
+      IndexOverlayFactory.overlayHide();
+    });    
+    // $scope.ShowForgotPassDialog = true;
+  }
+
+  $scope.confirmForgotPass = function(ForgotPass){
+
+    IndexOverlayFactory.overlayShow();
+    var params = {'email' : email};
+    HTTPService.clientRequest('forgot-pass/update', params).then(function(result){
+
+      if(result.data.STATUS == 'OK'){
+        $scope.ForgotPass = {};
+        closeForgotPassDialog();
+      }
+
+      IndexOverlayFactory.overlayHide();
+    });    
+    // $scope.ShowForgotPassDialog = true;
+  }
+
+  $scope.closeForgotPassDialog = function(){
+    $scope.ShowForgotPassDialog = false;
+  }
+
   $scope.closeDialogRemoveAddress = function(){
     $scope.ShowDialogRemoveAddress = false;
   }
@@ -279,6 +323,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.closeUserProfileDialog = function(){
     $scope.ShowEditProfileDialog = false;
+    window.location.reload();
     // window.location.reload();
   }
 
@@ -445,7 +490,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
         $cookies.put('user_session' , JSON.stringify({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData}));
         $scope.UserData = angular.copy(angular.fromJson(atob(result.data.DATA.UserData)));
         $scope.closeUserProfileDialog();
-        // window.location.reload();
+        
 
       }else{
         var alertMsg = result.data.DATA;

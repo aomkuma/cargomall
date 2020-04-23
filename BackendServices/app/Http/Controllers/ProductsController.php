@@ -16,29 +16,35 @@ class ProductsController extends Controller
 
 	public function updateCartSession(){
 		$params = Request::all();
-        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
-        $user_id = ''.$user_data['id'];
-        $cart_desc = $params['obj']['cart_desc'];
 
-        if($cart_desc != null){
-	        $cart = CartSession::where('user_id', $user_id)->first();
+		if(isset($params['user_session']['user_data'])){
+	        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+	        $user_id = ''.$user_data['id'];
+	        $cart_desc = $params['obj']['cart_desc'];
 
-	        if($cart){
-	        	$cart->cart_desc = $cart_desc;
-	        	$cart->save();
+	        if($cart_desc != null){
+		        $cart = CartSession::where('user_id', $user_id)->first();
 
-	        }else{
-	        	$cart = new CartSession();
-	        	$cart->user_id = $user_id;
-	        	$cart->cart_desc = $cart_desc;
-	        	$cart->created_by = $user_id;
+		        if($cart){
+		        	$cart->cart_desc = $cart_desc;
+		        	$cart->save();
 
-	        	$cart->save();
+		        }else{
+		        	$cart = new CartSession();
+		        	$cart->user_id = $user_id;
+		        	$cart->cart_desc = $cart_desc;
+		        	$cart->created_by = $user_id;
 
-	        }
-	    }else{
-	    	CartSession::where('user_id', $user_id)->delete();
-	    }
+		        	$cart->save();
+
+		        }
+		    }else{
+		    	CartSession::where('user_id', $user_id)->delete();
+		    }
+		}else{
+			$this->data_result['STATUS'] = 'ERROR';
+			$this->data_result['DATA'] = 'Cannot fetch user data';
+		}
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 
@@ -152,7 +158,7 @@ class ProductsController extends Controller
 			 
 			$itemInfo = $xmlObject->Result->Item;
 			
-			// print_r($xmlObject);
+			// print_r($itemInfo);
 			// exit;
 			$ProductLevelList = [];
 			foreach ($itemInfo->Attributes->ItemAttribute as $key => $value) {
@@ -164,7 +170,7 @@ class ProductsController extends Controller
 				// $detail = ['quantity' => $quantity, 'price' => $price, 'description' => $description];
 				// $ProductLevelList[] = $detail;
 				$description = '';
-				if($value->PropertyName == 'specification'){
+				if($value->PropertyName == 'specification' || strpos(strtolower($value->PropertyName), 'size') !== false){
 
 					$description = ((array) $value->Value)[0];
 
@@ -274,7 +280,7 @@ class ProductsController extends Controller
 			// echo '<br><br>';
 			// $ProductLevelList = [];
 			$price_range_list = [];
-			$product_result = array('product_url'=>$link_url
+			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
 									,'product_image'=>(string)$itemInfo->MainPictureUrl
 									,'product_color_img'=>$arr_color_img
@@ -409,7 +415,7 @@ class ProductsController extends Controller
 			// echo '<br><br>';
 			$ProductLevelList = [];
 			$price_range_list = [];
-			$product_result = array('product_url'=>$link_url
+			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
 									,'product_image'=>(string)$itemInfo->MainPictureUrl
 									,'product_color_img'=>$arr_color_img
@@ -468,7 +474,7 @@ class ProductsController extends Controller
 		}
 		 
 		$itemInfo = $xmlObject->Result->Item;
-		// print_r($itemInfo->QuantityRanges->Range);exit;
+		// print_r($itemInfo);exit;
 		$price_range_list = [];
 		$cnt = 0;
 
@@ -535,7 +541,7 @@ class ProductsController extends Controller
 		if (isset($itemInfo->Attributes->ItemAttribute)) {
 		    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 		       
-				if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color'){
+				if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'model'){
 				 	$color_val = (string)$ItemAttribute->Value;
 				 	if(isset($ItemAttribute->ImageUrl)){
 				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
@@ -560,7 +566,7 @@ class ProductsController extends Controller
 		// echo '<pre>';
 		// echo '<br><br>';
 		
-		$product_result = array('product_url'=>$link_url
+		$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 								,'product_original_name'=>(string)$itemInfo->Title
 								,'product_image'=>(string)$itemInfo->MainPictureUrl
 								,'product_color_img'=>$arr_color_img

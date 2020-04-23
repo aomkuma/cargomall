@@ -31,6 +31,26 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
         $scope.sumBaht = $scope.sumBaht - parseFloat($scope.Order.discount);
     };
 
+    $scope.loadTransportRateData = function(){
+
+        IndexOverlayFactory.overlayShow();
+        var params = null;
+        HTTPService.clientRequest('admin/transport-rate/list', params).then(function(result){
+            if(result.data.STATUS == 'OK'){
+                $scope.TransportRateData = result.data.DATA;
+            }else{
+              var alertMsg = result.data.DATA;
+              alert(alertMsg);
+            }
+
+            for(var i = 0; i < $scope.Order.order_trackings.length; i++){
+              $scope.calcPrice($scope.Order.order_trackings[i]);
+            }
+            
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+
     $scope.loadData = function(){
 
         IndexOverlayFactory.overlayShow();
@@ -64,6 +84,8 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
                 if(checkEmptyField($scope.OrderDesc.transport_company_cost)){
                     $scope.OrderDesc.transport_company_cost = parseFloat($scope.OrderDesc.transport_company_cost);
                 }
+
+                $scope.loadTransportRateData();
 
                 $scope.setShippingOption();
 
@@ -175,6 +197,72 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
             }
             IndexOverlayFactory.overlayHide();
         });
+    }
+
+    $scope.calcPrice = function(item){
+      // var item = item;//angular.copy($scope.Order);
+
+      if(checkEmptyField(item.product_type)){
+        var transport_rate_kg = null;
+        var transport_rate_cbm = null;
+        if($scope.Order.transport_type == 'sea'){
+          // calc by kg 
+
+          // find by prod desc
+          var index = $scope.findProductRate($scope.TransportRateData.rate_car_kg , item.product_type);
+          // alert(index);
+          transport_rate_kg = $scope.TransportRateData.rate_car_kg[index];
+
+          index = $scope.findProductRate($scope.TransportRateData.rate_car_cbm , item.product_type);
+          transport_rate_cbm = $scope.TransportRateData.rate_car_cbm[index];
+          // $scope.TransportRateData.rate_sea_kg 
+          // calc by cbm
+
+        }else if($scope.Order.transport_type == 'car'){
+          var index = $scope.findProductRate($scope.TransportRateData.rate_sea_kg , item.product_type);
+          transport_rate_kg = $scope.TransportRateData.rate_sea_kg[index];
+
+          index = $scope.findProductRate($scope.TransportRateData.rate_sea_cbm , item.product_type);
+          transport_rate_cbm = $scope.TransportRateData.rate_sea_cbm[index];
+        }
+
+        // calc kg
+        var weight_kgm = 0;
+        var cbm = 0;
+        if(checkEmptyField(item.weight_kg)){
+          weight_kgm = parseFloat(item.weight_kg);
+        }
+        if(checkEmptyField(item.cbm)){
+          cbm = parseFloat(item.cbm);
+        }
+
+        if(cbm < 2){
+          item['rateByCBM'] = cbm * transport_rate_cbm.rate_1;
+        }else if(cbm >= 2 && cbm < 5){
+          item['rateByCBM'] = cbm * transport_rate_cbm.rate_2;
+        }else{
+          item['rateByCBM'] = cbm * transport_rate_cbm.rate_3;
+        }
+
+        if(weight_kgm < 100){
+          item['rateByKG'] = weight_kgm * transport_rate_kg.rate_1;
+        }else if(weight_kgm >= 100 && cbm < 500){
+          item['rateByKG'] = weight_kgm * transport_rate_kg.rate_2;
+        }else{
+          item['rateByKG'] = weight_kgm * transport_rate_kg.rate_3;
+        }
+        $log.log($scope.rateByCBM , $scope.rateByKG);
+      }
+    }
+
+    $scope.findProductRate = function(transport_rate, product_type){
+      $log.log(transport_rate);
+      for(var i = 0; i < transport_rate.length; i++){
+        if(transport_rate[i].product_desc == product_type){
+          // $log.log(transport_rate[i].product_desc , product_type);
+          return i;
+        }
+      }
     }
 
     $scope.order_id = $routeParams.order_id;

@@ -11,6 +11,13 @@ use App\User;
 use App\UserSession;
 use App\UserAddress;
 use App\MoneyBag;
+use App\ForgotPassUrl;
+
+
+use App\Mail\ForgotPassMail;
+
+use Mail;
+
 
 use Request;
 
@@ -24,6 +31,79 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function forgotPassRequest(){
+        $params = Request::all();
+        $data = [];
+        $data['email'] = $params['obj']['email'];
+        // find user
+        $user = User::where('email', $data['email'])->first();
+        if($user){
+
+            $data_key = generateID();
+            $data['user_id'] = $user->id;
+            $data['url'] = env('APP_URL') . '/forgot-pass/' . $data_key;
+            $data['data_key'] = $data_key;
+            $data['active_status'] = 'Y';
+
+            $req = ForgotPassUrl::create($data)->id; 
+
+            $data['firstname'] = $user['firstname'];
+            $data['lastname'] = $user['lastname'];
+
+            Mail::to($data['email'])->send(new ForgotPassMail($data));
+
+        }else{
+            $this->data_result['STATUS'] = 'ERROR';
+            $this->data_result['DATA'] = 'ไม่พบอีเมลนี้ในระบบ กรุณาตรวจสอบความถูกต้อง';
+            return $this->returnResponse(200, $this->data_result, response(), false);
+            exit();
+        }
+
+        
+        $this->data_result['DATA'] = 'ระบบได้จัดส่ง URL สำหรับเข้ากรอกรหัสผ่านใหม่ไปยัง email ของท่านเรียบร้อยแล้ว';
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function forgotPassCheck(){
+
+        $params = Request::all();
+        
+        $data_key = $params['obj']['data_key'];
+        // find user
+        $data = ForgotPassUrl::where('data_key', $data_key)->where('active_status', 'Y')->first();
+        if(empty($data)){
+            $this->data_result['STATUS'] = 'ERROR';
+            $this->data_result['DATA'] = 'Link ไม่ถูกต้อง';
+            return $this->returnResponse(200, $this->data_result, response(), false);
+            exit();
+        }
+
+        $this->data_result['DATA']['email'] = $data['email'];
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function forgotPassUpdate(){
+        
+        $params = Request::all();
+        $email = $params['obj']['email'];
+        $new_password = $params['obj']['password'];
+        $data_key = $params['obj']['data_key'];
+
+        // find user
+        $check = ForgotPassUrl::where('data_key', $data_key)->update(['active_status' => 'N']);
+        
+        // update user password
+        $password = Hash::make($new_password);
+
+        User::where('email', $email)->update(['password' => $password]);
+        
+        $this->data_result['DATA'] = true;
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
 
     public function testAuth(){
         $this->data_result['DATA'] = 'Auth Pass !';

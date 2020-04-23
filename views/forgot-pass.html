@@ -1,0 +1,22 @@
+<div class="row" ng-form="frm">
+  <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1">
+    <div class="page-header">
+      <img src="files/img/small-logo.png" style="height: 18%; width: 18%;">
+      <h3>กรอกอีเมลสำหรับลืมรหัสผ่าน</h3>
+    </div>
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'EMAIL_TXT' | translate}}</label>
+      <div class="col-md-10 col-sm-9 col-xs-8">
+        <input type="text" class="form-control" data-ng-model="ForgotPass.email" required="true">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        
+        <button class="btn btn-default" ng-click="closeForgotPassDialog()">{{ 'CANCEL_TXT' | translate}}</button>
+        <button class="btn btn-primary" ng-click="forgotPass(ForgotPass.email)" data-ng-disabled="frm.$invalid">ยืนยัน</button>
+        
+      </div>
+    </div>
+  </div>
+</div>

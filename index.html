@@ -50,10 +50,10 @@
 
 		<script src="scripts/node_modules/angular-socialshare/dist/angular-socialshare.min.js"></script>
 		
-		<script src='scripts/main.js?version=7asd1928379sd87s9d8729387987as9d89afd9g88'></script>
-		<script src='scripts/route.js?version=7asd1928379sd87s9d8729387987as9d89afd9g88'></script>
-		<script src='scripts/factory.js?version=7asd1928379sd87s9d8729387987as9d89afd9g88'></script>
-		<script src='scripts/util.js?version=7asd1928379sd87s9d8729387987as9d89afd9g88'></script>
+		<script src='scripts/main.js?version=119238719823798172391729387918237'></script>
+		<script src='scripts/route.js?version=2119238719823798172391729387918237'></script>
+		<script src='scripts/factory.js?version=3119238719823798172391729387918237'></script>
+		<script src='scripts/util.js?version=4119238719823798172391729387918237'></script>
 
 		<script src="scripts/ckeditor_sdk/vendor/ckeditor/ckeditor.js"></script>
 		<script src="scripts/ckeditor_sdk/samples/assets/picoModal-2.0.1.min.js"></script>
@@ -110,6 +110,15 @@
 		<div class="overlay" data-ng-show="overlay.overlay" style="padding-top: 0px; z-index: 1000001;">
 			<div class="loader"></div>
 		</div>
+
+		
+		<div class="overlay" data-ng-show="ShowForgotPassDialog" style="padding-top: 0px;">
+			<div class="login-form">
+				<div data-ng-include src="'views/forgot-pass.html'"></div>
+			</div>
+			
+		</div>
+
 		<div class="overlay" data-ng-show="ShowLoginDialog" style="padding-top: 0px;">
 			<div class="login-form hidden-xs">
 				<div data-ng-include src="'views/login.html'"></div>

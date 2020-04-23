@@ -1,0 +1,53 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row" style="padding: 8px; padding-top:20px;" ng-form="frm">
+	<div class="col-md-6 col-md-offset-3">
+		<div class="page-header text-center">
+			<span style="font-size: 1.3em; font-weight: bolder;">ตั้งค่าลืมรหัสผ่าน</span>
+		</div>
+		
+		<div class="row form-group">
+	      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'EMAIL_TXT' | translate}}</label>
+	      <div class="col-md-10 col-sm-9 col-xs-8">
+	        <input type="text" class="form-control" data-ng-model="Data.email" required="true" readonly="true">
+	      </div>
+	    </div>
+	    <div class="row form-group">
+	      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'PASSWORD_TXT' | translate}}</label>
+	      <div class="col-md-10 col-sm-9 col-xs-8">
+	        <input type="password" class="form-control" data-ng-model="Data.password" required="true">
+	      </div>
+	    </div>
+	    <div class="row form-group">
+	      <label class="col-md-2 col-sm-3 col-xs-4 text-left">{{'CONFIRM_PASSWORD_TXT' | translate}}</label>
+	      <div class="col-md-10 col-sm-9 col-xs-8">
+	        <input type="password" class="form-control" data-ng-model="Data.confirm_password" required="true">
+	      </div>
+	    </div>
+	    <div class="row form-group">
+	      <label class="col-md-12 text-center">
+		    <button class="btn btn-primary" ng-click="updateData(Data)" ng-disabled="frm.$invalid">ยืนยันรหัสผ่านใหม่</button>
+	        </label>
+	    </div>
+	</div>
+</div>
+
+<div data-ng-include src="'views/footer.html'"></div>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>

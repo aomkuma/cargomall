@@ -41,7 +41,7 @@
 		&nbsp;
 	</div>
 </div>
-<div class="row" ng-show="ProductDetail != undefined && ProductDetail != null">
+<div class="row" ng-show="ProductDetail != undefined && ProductDetail != null" data-ng-form="form">
 	<div class="col col-md-10 col-md-offset-1">
 		<div class="panel panel-default">
 		<div class="panel-heading" style="font-size: 1.3em; background-color: #FF6C6C; color: #FFFFFF;"><b>{{ 'SEARCH_RESULT_TXT' | translate }}</b></div>
@@ -200,7 +200,7 @@
 					<div class="row form-group">
 						<div class="col-md-9 text-center">
 							<button class="btn btn-default btn-sm" onclick="window.location.href=''"> {{ 'CANCEL_TXT' | translate }}</button>
-							<button class="btn btn-primary btn-sm"  ng-click="addCart(ProductDetail)" data-ng-disabled="ProductDetail.product_normal_price == 0"><i class="fas fa-cart-plus"></i> {{ 'ADD_TO_CART' | translate }}</button>
+							<button class="btn btn-primary btn-sm"  ng-click="addCart(ProductDetail)" data-ng-disabled="form.$invalid || ProductDetail.product_normal_price == 0"><i class="fas fa-cart-plus"></i> {{ 'ADD_TO_CART' | translate }}</button>
 						</div>
 					</div>
 

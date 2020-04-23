@@ -53,6 +53,23 @@
 				{{Customer.mobile_no}}
 			</div>
 		</div>
+		<div class="row">
+			<label class="col-md-2 col-sm-2 col-xs-2 text-right">
+				ที่อยู่
+			</label>
+			<div class="col-md-10 col-sm-10 col-xs-10">
+				<p >
+					{{ 'ADDRESS1_TXT' | translate }} {{Importer.customer_address.address1}}&nbsp;
+					{{ 'ADDRESS2_TXT' | translate }} {{Importer.customer_address.address2}}&nbsp;
+					{{ 'ADDRESS3_TXT' | translate }} {{Importer.customer_address.address3}}&nbsp;
+					{{ 'ADDRESS4_TXT' | translate }} {{Importer.customer_address.address4}}&nbsp;
+					{{ 'ADDRESS5_TXT' | translate }} {{Importer.customer_address.address5}}&nbsp;
+					{{ 'ADDRESS6_TXT' | translate }} {{Importer.customer_address.address6}}&nbsp;
+					{{ 'ADDRESS7_TXT' | translate }} {{Importer.customer_address.address7}}&nbsp;
+				</p>
+			</div>
+			
+		</div>
 		<hr>
 		<div class="row form-group">
 			<label class="col-md-2">	

@@ -89,6 +89,9 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 
 Route::post('login', 'UsersController@login');
 Route::post('register', 'UsersController@register');
+Route::post('forgot-pass/request', 'UsersController@forgotPassRequest');
+Route::post('forgot-pass/check', 'UsersController@forgotPassCheck');
+Route::post('forgot-pass/update', 'UsersController@forgotPassUpdate');
 
 Route::post('landing-page/show', 'LandingPageController@show');
 Route::post('exchange-rate/get', 'ExchangeRatesController@getCurrentExchangeRate');

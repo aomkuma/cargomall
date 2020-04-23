@@ -72,6 +72,7 @@ angular.module('app').controller('ImporterDetailController', function($scope, $c
 	        		$scope.Importer.thai_departure = makeDateTime($scope.Importer.thai_departure);
 	        	}
 
+            $scope.Importer.customer_address_id = ''+$scope.Importer.customer_address_id;
 	        	$scope.loadTransportRateData();
 	        }else{
 	          var alertMsg = result.data.DATA;
