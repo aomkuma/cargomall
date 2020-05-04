@@ -61,8 +61,10 @@
 				<table class="table table-striped table-hover table-bordered"> 
 					<thead>
 						<tr>
+							<th class="text-center">รหัสลูกค้า</th>
 							<th class="text-center">ชื่อ - สกุล</th>
 							<th class="text-center">เบอร์โทร</th>
+							<th class="text-center">วันที่สร้าง</th>
 							<th class="text-center">หมายเลข Tracking</th>
 							<th class="text-center">ค่าลังไม้ (หยวน)</th>
 							<th class="text-center">ค่าขนส่งในจีน (หยวน)</th>
@@ -74,8 +76,10 @@
 					</thead>
 					<tbody>
 						<tr data-ng-repeat="data in DataList">
+							<td>{{data.customer.user_code}}</td>
 							<td>{{data.customer.firstname}} {{data.customer.lastname}}</td>
 							<td>{{data.customer.mobile_no}}</td>
+							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td>{{data.tracking_no}}</td>
 							<td class="text-right">{{data.package_price | number:2}}</td>
 							<td class="text-right">{{data.total_price_yuan | number:2}}</td>

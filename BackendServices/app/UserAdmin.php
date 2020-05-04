@@ -15,6 +15,9 @@ class UserAdmin extends Authenticatable implements JWTSubject
 
     protected $table = 'user_admin';
     protected $primaryKey = 'id';
+    protected $keyType = 'string';
+    public $incrementing = false;
+    
     protected $fillable = [
         'id', 'firstname', 'lastname', 'email', 'password', 'role', 'active_status', 'created_at', 'updated_at'
     ];

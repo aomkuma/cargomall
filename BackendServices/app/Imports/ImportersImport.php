@@ -21,7 +21,7 @@ class ImportersImport implements ToModel
 
         $data = [
             //
-            'tracking_no'     => $row[0],
+            'tracking_no'     => trim($row[0]),
             'china_arrival'    => $china_arrival,
             'cargo'    => $row[5], 
             'package_amount'    => $row[6],

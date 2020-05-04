@@ -6,7 +6,7 @@
 	use App\ExchangeRateTransfer;
 
 	function generateID(){
-		return rand(1000000000,9999999999) . date('Ym');
+		return rand(1000000000,8999999999) . date('Ym');
 	}
 
 	function generateOrderNo(){

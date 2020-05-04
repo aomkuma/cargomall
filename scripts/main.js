@@ -132,8 +132,8 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.TRANSPORT_COMPANY = [{'id' : 'nim', 'value' : 'Nim Express'},
                       {'id' : 'flash' , 'value' : 'Flash Express'},
-                      {'id' : 'kerry' , 'value' : 'Kerry'},
-                      {'id' : 'thailandpost' , 'value' : 'ไปรษณีย์ไทย (EMS)'},
+                      // {'id' : 'kerry' , 'value' : 'Kerry'},
+                      // {'id' : 'thailandpost' , 'value' : 'ไปรษณีย์ไทย (EMS)'},
                       {'id' : 'other' , 'value' : 'อื่นๆ'}
                     ];
 

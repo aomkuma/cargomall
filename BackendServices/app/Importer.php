@@ -9,6 +9,9 @@ class Importer extends Model
     //
     protected $table = 'importer';
     protected $primaryKey = 'id';
+    protected $keyType = 'string';
+    public $incrementing = false;
+    
     protected $fillable = [
         'id', 'user_id', 'customer_address_id', 'tracking_no', 'tracking_no_thai', 'bill_no', 'warehouse', 'width', 'longs', 'height', 'weight_kgm', 'weight_volume', 'cbm', 'transport_type', 'product_type', 'china_arrival', 'china_departure', 'thai_arrival', 'thai_departure', 'price_method', 'total_price_thb', 'total_price_yuan', 'package_price', 'discount', 'package_amount', 'transport_company', 'transport_company_other', 'remark', 'importer_status', 'created_at', 'updated_at'
     ];

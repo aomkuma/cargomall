@@ -72,8 +72,8 @@
 						<label class="col-md-3 form-control-static" style="text-align: left;">{{ 'COLOR_TXT' | translate}}
 						</label>
 						<div class="col-md-9">
-							<label class="col-md-3" style="height: 40px;" ng-repeat="color_img in ProductDetail.product_color_img track by $index" >
-								<input type="radio" name="color_img" ng-model="ProductDetail.product_color_img_choose" ng-checked="$index==0" ng-value="color_img" ng-click="changePrice($index, color_img)" />
+							<label class="col-md-3" style="min-height: 100px;" ng-repeat="color_img in ProductDetail.product_color_img track by $index" >
+								<input type="radio" name="color_img" ng-model="ProductDetail.product_color_img_choose"  ng-value="color_img" ng-click="changePrice($index, color_img)" />
 								<img ng-src="{{color_img}}" border="0" style="max-width: 30px; border:#999 1px solid" alt="{{color_img}}" ng-show="color_img.startsWith('http')" />
 								<span ng-show="!color_img.startsWith('http')" >{{color_img}}</span>
 							</label>

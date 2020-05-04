@@ -221,12 +221,19 @@ class ProductsController extends Controller
 			$arr_color_check = array();
 			$arr_size = array();
 			if (isset($itemInfo->Attributes->ItemAttribute)) {
+				// $cnt_color_img = 0;
 			    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
-			       	echo $ItemAttribute->PropertyName;
+			       	// echo $ItemAttribute->PropertyName;
 					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'food taste'){
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
+					 		// $arr_color_img[$cnt_color_img]['name'] = (string)$ItemAttribute->ValueAlias;
+					 		// $cnt_color_img++;
+					 	}else{
+					 		$arr_color_img[] = (string)$ItemAttribute->ValueAlias; 
+					 		// $arr_color_img[$cnt_color_img]['name'] = (string)$ItemAttribute->ValueAlias;
+					 		// $cnt_color_img++;
 					 	}
 						if(isset($ItemAttribute->ValueAlias) && trim($ItemAttribute->ValueAlias) != ''){
 							$color_val = (string)$ItemAttribute->ValueAlias;
@@ -279,6 +286,10 @@ class ProductsController extends Controller
 			// echo '<pre>';
 			// echo '<br><br>';
 			// $ProductLevelList = [];
+			$product_color_choose = '';
+			if(empty($arr_color_img) && !empty($arr_color)){
+				$product_color_choose = $arr_color[0];
+			}
 			$price_range_list = [];
 			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
@@ -292,7 +303,7 @@ class ProductsController extends Controller
 									,'product_promotion_price'=>0
 									,'merchant_name'=>$itemInfo->VendorName
 									,'product_color_img_choose'=>empty($arr_color_img)?[]:$arr_color_img[0]
-									,'product_color_choose'=>trim(empty($arr_color)?'':$arr_color[0])
+									,'product_color_choose'=>$product_color_choose
 									,'product_size_choose'=>empty($arr_size)?[]:$arr_size[0]
 									,'price_list_by_color'=>$price_list_by_color
 									,'ProductLevelList' => $ProductLevelList

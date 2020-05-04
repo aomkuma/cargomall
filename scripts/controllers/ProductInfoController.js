@@ -25,11 +25,13 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
       if($scope.ProductDetail.price_list_by_color !== undefined && parseFloat($scope.ProductDetail.price_list_by_color[index]) > 0){
         $scope.ProductDetail.product_normal_price = parseFloat($scope.ProductDetail.price_list_by_color[index]);
       }
-      if($scope.ProductDetail.price_list_by_color !== undefined && pic_color_url != ''){
+      if($scope.ProductDetail.price_list_by_color !== undefined && pic_color_url.startsWith('http')){
         $scope.ProductDetail.product_image = pic_color_url;
         console.log('result ',$scope.ProductDetail.product_image);
+      }else{
+        $scope.ProductDetail.product_image = $scope.ProductImage; 
       }
-      $scope.ProductDetail.product_image = pic_color_url;
+      // $scope.ProductDetail.product_image = pic_color_url;
    };
 
    $scope.setSelectedPrice = function(price, description){
@@ -80,6 +82,13 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
 
       $scope.ProductDetail.exchange_rate = $scope.$parent.exchange_rate;
 
+      if($scope.ProductDetail.product_color_img_choose != '' && !$scope.ProductDetail.product_color_img_choose.startsWith('http')){
+        $scope.ProductDetail.product_color_choose = angular.copy($scope.ProductDetail.product_color_img_choose);
+        $scope.ProductDetail.product_color_img_choose = '';
+      }else if($scope.ProductDetail.product_color_img_choose != ''&& $scope.ProductDetail.product_color_img_choose.startsWith('http')){
+        $scope.ProductDetail.product_color_choose = '';
+      }
+
       $scope.ProductDetailList.push(ProductDetail);
       $log.log($scope.ProductDetailList);
       // $localStorage.product_list_storage = JSON.stringify($scope.ProductDetailList);
@@ -101,6 +110,7 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
 
     if($scope.ProductDetail != null && $scope.ProductDetail != ''){
       $scope.ProductDetail = angular.fromJson($scope.ProductDetail);
+      $scope.ProductImage = angular.copy($scope.ProductDetail.product_image);
       $log.log($scope.ProductDetail);
       if(!checkEmptyField($scope.ProductDetail['price_type'])){
         $scope.ProductDetail['price_type'] = 'normal';

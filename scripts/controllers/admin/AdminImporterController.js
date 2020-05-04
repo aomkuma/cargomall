@@ -41,7 +41,7 @@ angular.module('app').controller('AdminImporterController', function($scope, $co
     }
 
     $scope.goToPage = function(page){
-        $scope.getOrderList();
+        $scope.getImporterList();
     }
 
     $scope.pageChanged = function() {
