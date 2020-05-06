@@ -195,7 +195,9 @@ class OrdersController extends Controller
         }
 
     	$order_id = generateID();
-    	$order_no = generateOrderNo();
+
+        $max_running = Order::count() + 1;
+    	$order_no = generateOrderNo($max_running);
 
     	$order = new Order();
     	$order->id = $order_id;
@@ -397,6 +399,8 @@ class OrdersController extends Controller
             $order_tracking = OrderTracking::find($value['id']);
             if($order_tracking){
                 $order_tracking->product_type = $value['product_type'];
+                $order_tracking->transport_cost_china = $value['transport_cost_china'];
+                $order_tracking->transport_cost_thai = $value['transport_cost_thai'];
                 $order_tracking->save();
             }
 

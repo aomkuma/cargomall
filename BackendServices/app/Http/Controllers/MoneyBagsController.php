@@ -834,6 +834,9 @@ class MoneyBagsController extends Controller
             $withdrawn_history->user_id = trim($WithdrawnData['id']);
             $withdrawn_history->withdrawn_amount = $WithdrawnData['money_bags']['withdrawn_amount'];
             $withdrawn_history->withdrawn_by = $admin_id;
+            if(isset($WithdrawnData['money_bags']['remark'])){
+                $withdrawn_history->remark = $WithdrawnData['money_bags']['remark'];
+            }
 
             $withdrawn_history->save();
         }
@@ -864,6 +867,9 @@ class MoneyBagsController extends Controller
             $refund_history->user_id = trim($RefundData['id']);
             $refund_history->refund_amount = $RefundData['money_bags']['refund_amount'];
             $refund_history->refund_by = $admin_id;
+            if(isset($RefundData['money_bags']['remark'])){
+                $refund_history->remark = $RefundData['money_bags']['remark'];
+            }
 
             $refund_history->save();
         }

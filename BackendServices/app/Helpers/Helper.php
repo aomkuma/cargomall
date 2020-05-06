@@ -9,12 +9,14 @@
 		return rand(1000000000,8999999999) . date('Ym');
 	}
 
-	function generateOrderNo(){
-		$rand_1 = rand(0, 999);
-		$rand_1 = str_pad($rand_1, 3,'0', STR_PAD_LEFT);
-		$rand_2 = rand(0, 99);
-		$rand_2 = str_pad($rand_1, 2,'0', STR_PAD_LEFT);
-		return 'CGM' . $rand_1 . date('y') . $rand_2 . date('md');
+	function generateOrderNo($max_running){
+		// $rand_1 = rand(0, 999);
+		// $rand_1 = str_pad($rand_1, 3,'0', STR_PAD_LEFT);
+		// $rand_2 = rand(0, 99);
+		// $rand_2 = str_pad($rand_1, 2,'0', STR_PAD_LEFT);
+		// return 'CGM' . $rand_1 . date('y') . $rand_2 . date('md');
+		$running =  str_pad($max_running, 6,'0', STR_PAD_LEFT);
+		return 'CGM' . date('Ymd') . $running;
 	}
 
 	function getDateFromString($d){

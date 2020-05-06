@@ -85,6 +85,16 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
                     $scope.OrderDesc.transport_company_cost = parseFloat($scope.OrderDesc.transport_company_cost);
                 }
 
+                for(var i = 0; i < $scope.Order.order_trackings.length; i++){
+                  if(checkEmptyField($scope.Order.order_trackings[i].transport_cost_china)){
+                    $scope.Order.order_trackings[i].transport_cost_china = parseFloat($scope.Order.order_trackings[i].transport_cost_china);
+                  }
+
+                  if(checkEmptyField($scope.Order.order_trackings[i].transport_cost_thai)){
+                    $scope.Order.order_trackings[i].transport_cost_thai = parseFloat($scope.Order.order_trackings[i].transport_cost_thai);
+                  }
+                }
+
                 $scope.loadTransportRateData();
 
                 $scope.setShippingOption();

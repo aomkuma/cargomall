@@ -172,7 +172,7 @@
 		<div class="row form-group"  data-ng-hide="Pay.pay_type == 3 || Pay.pay_type == 4">
 			<label class="col-md-3 col-sm-4 col-xs-12">ยอดเงินที่ชำระ (บาท)</label>
 			<div class="col-md-4 col-sm-4 col-xs-12">
-				<input class="form-control" type="number" data-ng-model="Pay.pay_amount_thb" data-ng-keyup="calcCNY()" required="true"  data-ng-disabled="Pay.pay_type == 1 || Pay.pay_type == 2 || Pay.pay_type == 5">
+				<input class="form-control" type="number" data-ng-model="Pay.pay_amount_thb" data-ng-keyup="calcCNY()" required="true"  data-ng-disabled="Pay.pay_type == 1 || Pay.pay_type == 2 || Pay.pay_type == 5" min="1">
 			</div>
 		</div>
 
@@ -183,8 +183,17 @@
 			</div>
 		</div>
 		<div class="row form-group">
+			<label class="col-md-12 col-sm-12 col-xs-12 text-center" data-ng-show="UserData.money_bags.balance < Pay.pay_amount_thb" style="color: red; font-weight: bolder;">ยอดเงินที่ใช้ได้ของคุณไม่เพียงพอต่อการชำระการสั่งซื้อนี้ กรุณาทำการเติมเงิน 
+			<a href="topup">คลิกที่นี่</a>
+			</label>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12 col-sm-12 col-xs-12 text-center" data-ng-show="Pay.pay_amount_thb == 0" style="color: red; font-weight: bolder;">ยอดเงินบาทต้องมีค่ามากกว่า 0 บาท
+			</label>
+		</div>
+		<div class="row form-group">
 			<div class="col-md-12 text-center">
-				<button class="btn btn-primary btn-sm"  ng-click="pay(Pay)" data-ng-disabled="frm.$invalid"><i class="far fa-money-bill-alt"></i> ชำระเงิน</button>
+				<button class="btn btn-primary btn-sm"  ng-click="pay(Pay)" data-ng-disabled="frm.$invalid || Pay.pay_amount_thb > UserData.money_bags.balance"><i class="far fa-money-bill-alt"></i> ชำระเงิน</button>
 			</div>
 		</div>
 	</div>

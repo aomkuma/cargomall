@@ -349,6 +349,20 @@
 					ราคาคิดตามปริมาตร {{item.rateByCBM | number:2}} บาท
 				</label>
 			</div>
+			<div class="row form-group">
+				<label class="col-md-2">
+					ค่าขนส่งจีน
+				</label>
+				<div class="col-md-3">
+					<input class="form-control" type="number" data-ng-model="item.transport_cost_china">
+				</div>
+				<label class="col-md-2">
+					ค่าขนส่งไทย
+				</label>
+				<div class="col-md-3">
+					<input class="form-control" type="number" data-ng-model="item.transport_cost_thai">
+				</div>
+			</div>
 		</fieldset>
 		<hr>
 		<div class="row form-group">

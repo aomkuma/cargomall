@@ -114,7 +114,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
   $scope.ORDER_STATUS = [{'id' : 1, 'value' : 'รอการชำระเงินค่าสินค้า'},
                       {'id' : 2, 'value' : 'ชำระเงินค่าสินค้าแล้ว'},
                       {'id' : 3, 'value' : 'ดำเนินการสั่งซื้อสินค้า'},
-                      {'id' : 4, 'value' : 'สินค้าถึงโกดังจีน'},
+                      {'id' : 4, 'value' : 'สินค้าออกจากโกดังจีน'},
                       {'id' : 5, 'value' : 'สินค้าถึงโกดังไทย'},
                       {'id' : 6, 'value' : 'รอการชำระค่าขนส่ง'},
                       {'id' : 7, 'value' : 'รอการจัดส่งสินค้า'},
@@ -123,7 +123,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
                     ];
 
   $scope.IMPORTER_STATUS = [{'id' : 1, 'value' : 'คำขอบริการนำเข้าสินค้า'},
-                      {'id' : 2, 'value' : 'สินค้าถึงโกดังจีน'},
+                      {'id' : 2, 'value' : 'สินค้าออกจากโกดังจีน'},
                       {'id' : 3, 'value' : 'สินค้าถึงโกดังไทย'},
                       {'id' : 4, 'value' : 'รอการชำระค่าขนส่ง'},
                       {'id' : 5, 'value' : 'รอการจัดส่งสินค้า'},

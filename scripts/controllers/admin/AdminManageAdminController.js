@@ -38,7 +38,7 @@ angular.module('app').controller('AdminManageAdminController', function($scope, 
     }
 
     $scope.goToPage = function(page){
-        $scope.getOrderList();
+        $scope.getAdminList();
     }
 
     $scope.pageChanged = function() {

@@ -13,6 +13,6 @@ class RefundHistory extends Model
 	public $incrementing = false;
     
     protected $fillable = [
-        'id', 'user_id', 'refund_amount', 'refund_by', 'created_at', 'updated_at'
+        'id', 'user_id', 'refund_amount', 'refund_by', 'remark', 'created_at', 'updated_at'
     ];
 }

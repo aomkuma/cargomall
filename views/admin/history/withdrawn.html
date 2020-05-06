@@ -52,16 +52,18 @@
 							<th class="text-center">วันที่ชำระ</th>
 							<th class="text-center">จำนวนเงินที่ชำระ</th>
 							<th class="text-center">แอดมินผู้ทำรายการ</th>
+							<th class="text-center">หมายเหตุ</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr data-ng-repeat="data in DataList">
+						<tr data-ng-repeat="data in DataList" title="{{data.remark}}">
 							<td>{{data.user_code}}</td>
 							<td>{{data.firstname}} {{data.lastname}}</td>
 							<td>{{data.mobile_no}}</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td class="text-right">{{data.withdrawn_amount | number:2}}</td>
 							<td>{{data.admin_firstname}} {{data.admin_lastname}}</td>
+							<td>{{ data.remark }}</td>
 						</tr>
 					</tbody>
 				</table>

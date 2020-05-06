@@ -13,6 +13,6 @@ class WithdrawnHistory extends Model
 	public $incrementing = false;
     
     protected $fillable = [
-        'id', 'user_id', 'withdrawn_amount', 'withdrawn_by', 'created_at', 'updated_at'
+        'id', 'user_id', 'withdrawn_amount', 'withdrawn_by', 'remark', 'created_at', 'updated_at'
     ];
 }
