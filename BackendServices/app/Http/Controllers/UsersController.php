@@ -294,6 +294,7 @@ class UsersController extends Controller
             }
 
             $UserProfile['updated_at'] = Carbon::now();
+            $UserProfile['mobile_no'] = trim(str_replace('-', '', $UserProfile['mobile_no']));
             $result = User::find($UserProfile['id'])->update($UserProfile);
 
             // Update user addresses
@@ -334,7 +335,10 @@ class UsersController extends Controller
     public function removeAddress(){
         $params = Request::all();
         $token = $params['user_session']['token'];
-        $address_id = ''.$params['obj']['address_id'];
+        $address_id = '';
+        if(isset($params['obj']['address_id'])){
+            $address_id = ''.$params['obj']['address_id'];
+        }
         $user_id = ''.$params['obj']['user_id'];
 
 
