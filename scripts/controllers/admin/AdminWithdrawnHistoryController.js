@@ -38,7 +38,7 @@ angular.module('app').controller('AdminWithdrawnHistoryController', function($sc
     }
 
     $scope.goToPage = function(page){
-        $scope.getOrderList();
+        $scope.getList();
     }
 
     $scope.pageChanged = function() {

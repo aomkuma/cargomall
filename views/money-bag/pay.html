@@ -40,8 +40,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="row form-group">
+		<div class="row form-group" data-ng-show="Pay.pay_type == 1 || Pay.pay_type == 2 || Pay.pay_type == 5">
 			<label class="col-md-3 col-sm-4 col-xs-12" style="font-weight: bolder; color: #C91313;">1 หยวน เท่ากับ {{exchange_rate | number:2}} บาท</label>
+		</div>
+		<div class="row form-group" data-ng-show="Pay.pay_type == 3 || Pay.pay_type == 4">
+			<label class="col-md-3 col-sm-4 col-xs-12" style="font-weight: bolder; color: #C91313;">1 หยวน เท่ากับ {{exchange_rate_transfer | number:2}} บาท</label>
 		</div>
 		<div class="row form-group">
 			<label class="col-md-12 col-sm-12 col-xs-12" data-ng-show="UserData.money_bags.balance > 0" style="color: green; font-weight: bolder;"><i class="fas fa-check"></i> ยอดเงินที่ใช้ได้ของคุณคือ {{UserData.money_bags.balance | number:2}} บาท</label>
@@ -149,7 +152,7 @@
 		</div>
 
 		<div class="row form-group" data-ng-show="Pay.pay_type == 3">
-			<label class="col-md-3 col-sm-4 col-xs-12">ชื่อบัญชีผู้โอน</label>
+			<label class="col-md-3 col-sm-4 col-xs-12">ชื่อบัญชีผู้รับ</label>
 			<div class="col-md-4 col-sm-4 col-xs-12">
 				<input class="form-control" type="text" data-ng-model="Pay.payer_name" data-ng-required="Pay.pay_type == 3">
 			</div>

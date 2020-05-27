@@ -16,13 +16,21 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
     }
 
     $scope.calcCNY = function(){
-      $scope.Pay.pay_amount_yuan = parseFloat($scope.Pay.pay_amount_thb) / $scope.exchange_rate;
+      if($scope.Pay.pay_type == 1 || $scope.Pay.pay_type == 2 || $scope.Pay.pay_type == 5){
+        $scope.Pay.pay_amount_yuan = parseFloat($scope.Pay.pay_amount_thb) / $scope.exchange_rate;
+      }else{
+        $scope.Pay.pay_amount_yuan = parseFloat($scope.Pay.pay_amount_thb) / $scope.exchange_rate_transfer;
+      }
       $scope.Pay.pay_amount_yuan = parseFloat($scope.Pay.pay_amount_yuan.toFixed(2));
       
     }
 
     $scope.calcTHB = function(){
-      $scope.Pay.pay_amount_thb = parseFloat($scope.Pay.pay_amount_yuan) * $scope.exchange_rate;
+      if($scope.Pay.pay_type == 1 || $scope.Pay.pay_type == 2 || $scope.Pay.pay_type == 5){
+        $scope.Pay.pay_amount_thb = parseFloat($scope.Pay.pay_amount_yuan) * $scope.exchange_rate;
+      }else{
+        $scope.Pay.pay_amount_thb = parseFloat($scope.Pay.pay_amount_yuan) * $scope.exchange_rate_transfer;
+      }
       $scope.Pay.pay_amount_thb = parseFloat($scope.Pay.pay_amount_thb.toFixed(2));
     }
 

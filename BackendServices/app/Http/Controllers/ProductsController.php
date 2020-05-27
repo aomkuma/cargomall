@@ -160,6 +160,7 @@ class ProductsController extends Controller
 			
 			// print_r($itemInfo);
 			// exit;
+
 			$ProductLevelList = [];
 			foreach ($itemInfo->Attributes->ItemAttribute as $key => $value) {
 				// $quantity = simpleXmlToArray($value)['Quantity'];
@@ -224,29 +225,35 @@ class ProductsController extends Controller
 				// $cnt_color_img = 0;
 			    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 			       	// echo $ItemAttribute->PropertyName;
+			       	$vid = null;
 					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'food taste'){
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
 					 		// $arr_color_img[$cnt_color_img]['name'] = (string)$ItemAttribute->ValueAlias;
 					 		// $cnt_color_img++;
-					 	}else{
+					 	}else if(isset($ItemAttribute->ValueAlias)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ValueAlias; 
 					 		// $arr_color_img[$cnt_color_img]['name'] = (string)$ItemAttribute->ValueAlias;
 					 		// $cnt_color_img++;
 					 	}
-						if(isset($ItemAttribute->ValueAlias) && trim($ItemAttribute->ValueAlias) != ''){
+						if(/*isset($ItemAttribute->ValueAlias) && */((string)$ItemAttribute->ValueAlias) != ''){
 							$color_val = (string)$ItemAttribute->ValueAlias;
 							$vid = (string)$ItemAttribute->Attributes()->Vid;
 							// print_r($ItemAttribute);
+						}else{
+							$color_val = (string)$ItemAttribute->Value;
+							$vid = (string)$ItemAttribute->Attributes()->Vid;
 						}
 
 						$arr_color[] = $color_val;
 
 						$res = [];
 						$res['name'] = $color_val;
-						$res['vid'] = $vid;
-
+						$res['vid'] = '';
+						if($vid !== null){
+							$res['vid'] = $vid;
+						}
 						$arr_color_check[] = $res;
 					 }
 					 
@@ -291,6 +298,7 @@ class ProductsController extends Controller
 				$product_color_choose = $arr_color[0];
 			}
 			$price_range_list = [];
+			
 			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
 									,'product_image'=>(string)$itemInfo->MainPictureUrl

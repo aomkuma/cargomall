@@ -14,7 +14,7 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
 
 
     $scope.checkPriceByColor = function(index){
-      if($scope.ProductDetail.price_list_by_color.length > 0){
+      if($scope.ProductDetail.price_list_by_color.length > 0 && $scope.ProductDetail.price_list_by_color[index] > 0){
         // $log.log($scope.ProductDetail.price_list_by_color[index]);
         $scope.ProductDetail.product_normal_price = parseFloat($scope.ProductDetail.price_list_by_color[index]);
       }
@@ -35,7 +35,10 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
    };
 
    $scope.setSelectedPrice = function(price, description){
-    $scope.ProductDetail.product_normal_price = parseFloat(price);
+    price = parseFloat(price);
+    if(price > 0){
+      $scope.ProductDetail.product_normal_price = (price);
+    }
     $scope.ProductDetail.remark = description;
    }
 
@@ -117,9 +120,9 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
         // $log.log($scope.ProductDetail.ProductLevelList);
       }
 
-      if($scope.ProductDetail.ProductLevelList && $scope.ProductDetail.ProductLevelList.length > 0){
-        $scope.ProductDetail.product_normal_price = 0;
-      }
+      // if($scope.ProductDetail.ProductLevelList && $scope.ProductDetail.ProductLevelList.length > 0){
+        // $scope.ProductDetail.product_normal_price = 0;
+      // }
 
       $scope.checkPriceByColor(0);
       

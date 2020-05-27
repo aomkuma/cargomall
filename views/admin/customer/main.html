@@ -41,6 +41,7 @@
 							<th class="text-center">รหัสลูกค้า</th>
 							<th class="text-center">ชื่อ - สกุล</th>
 							<th class="text-center">เบอร์โทร</th>
+							<th class="text-center">ที่อยู่</th>
 							<th class="text-center">วันที่สมัคร</th>
 							<th class="text-center">ยอดเงินในกระเป๋า</th>
 							<th class="text-center">จัดการ</th>
@@ -51,6 +52,17 @@
 							<td>{{data.user_code}}</td>
 							<td>{{data.firstname}} {{data.lastname}}</td>
 							<td>{{data.mobile_no}}</td>
+							<td>
+								<p data-ng-repeat="addr in data.addresses">
+									{{'ADDRESS1_TXT' | translate}} {{addr.address1}} 
+									{{'ADDRESS2_TXT' | translate}} {{addr.address2}} 
+									{{'ADDRESS3_TXT' | translate}} {{addr.address3}}<br>
+									{{'ADDRESS4_TXT' | translate}} {{addr.address4}} 
+									{{'ADDRESS5_TXT' | translate}} {{addr.address5}} 
+									{{'ADDRESS6_TXT' | translate}} {{addr.address6}}<br>
+									{{'ADDRESS7_TXT' | translate}} {{addr.address7}}
+								</p>
+							</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td class="text-right">{{data.money_bags.balance | number:2}}</td>
 							<td class="text-center">

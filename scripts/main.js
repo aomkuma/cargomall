@@ -397,13 +397,13 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
         angular.forEach($scope.ProductListStorage, function(value, key) {
             $log.log(value.product_size_choose);
             if(parseFloat(value.product_promotion_price) > 0){
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
+                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
             }else{
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
+                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
             }
         });
-
-        $log.log($scope.MoneyBalance, $scope.sumBaht);
+        $scope.sumBaht = parseFloat($scope.sumBaht.toFixed(2));
+        // $log.log($scope.MoneyBalance, $scope.sumBaht);
     };
 
   $scope.getProduct = function(link_url){

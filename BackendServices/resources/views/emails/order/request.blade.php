@@ -143,7 +143,7 @@
 	</tfoot>
 </table>
 
-@component('mail::button', ['url' => 'http://aomkuma.com/tracking/order' ])
+@component('mail::button', ['url' => 'https://cargomall.co.th/tracking/order' ])
 ท่านสามารถตรวจสอบสถานะสินค้าได้ที่นี่
 @endcomponent
 

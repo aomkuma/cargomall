@@ -149,6 +149,7 @@ class UsersController extends Controller
                     ->count();
 
         $list = User::with('moneyBags')
+                    ->with('addresses')
                     ->where(function($query) use ($condition){
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));

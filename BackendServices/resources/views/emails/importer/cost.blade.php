@@ -13,7 +13,7 @@
 <br><br>
 ยอดเงินคงเหลือในกระเป๋าของคุณคือ {{ $money_bag->balance }} บาท
 
-@component('mail::button', ['url' => 'http://aomkuma.com/importer' ])
+@component('mail::button', ['url' => 'https://cargomall.co.th/importer' ])
 ท่านสามารถตรวจสอบสถานะของบริการนำเข้าสินค้าได้ที่นี่
 @endcomponent
 
