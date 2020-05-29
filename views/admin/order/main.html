@@ -25,7 +25,7 @@
 				ค้นหา
 			</label>
 			<div class="col-md-3">
-				<input type="text" class="form-control" data-ng-model="condition.keyword" placeholder="ค้นหาจากเลข order, เลข tracking สินค้า">
+				<input type="text" class="form-control" data-ng-model="condition.keyword" placeholder="ค้นหาจาก รหัสลูกค้า, เลข order, เลข tracking สินค้า">
 			</div>
 			<label class="col-md-1">
 				สถานะ
@@ -73,7 +73,7 @@
 					</thead>
 					<tbody>
 						<tr data-ng-repeat="data in DataList">
-							<td>{{data.customer.user_code + ' ' + data.id}}</td>
+							<td>{{data.customer.user_code}}</td>
 							<td>{{data.order_no}}</td>
 							<td>{{data.tracking_no}}</td>
 							<td class="text-right">{{data.net_price | number:2}}</td>

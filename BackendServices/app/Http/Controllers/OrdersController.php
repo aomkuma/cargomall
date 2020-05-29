@@ -58,10 +58,12 @@ class OrdersController extends Controller
         $skip = $offset * $limit;
 
         $totalRows = Order::with('orderDesc')
+                ->join('user' , 'user.id', '=', 'order.user_id')
                 ->where(function($query) use ($condition){
                     if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                         $query->where('order_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         $query->orWhere('tracking_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                        $query->orWhere('user_code' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                     }
                     if(isset($condition['order_status']) &&  !empty($condition['order_status'])){
                         $query->where('order_status', $condition['order_status']);
@@ -76,12 +78,15 @@ class OrdersController extends Controller
                 })
                 ->count();
 
-        $list = Order::with('orderDesc')
+        $list = Order::select('order.*')
+                ->with('orderDesc')
                 ->with('customer')
+                ->join('user' , 'user.id', '=', 'order.user_id')
                 ->where(function($query) use ($condition){
                     if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                         $query->where('order_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         $query->orWhere('tracking_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                        $query->orWhere('user_code' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                     }
                     if(isset($condition['order_status']) &&  !empty($condition['order_status'])){
                         $query->where('order_status', $condition['order_status']);
