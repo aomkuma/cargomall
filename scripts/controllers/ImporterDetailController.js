@@ -35,7 +35,7 @@ angular.module('app').controller('ImporterDetailController', function($scope, $c
     $scope.loadTransportRateData = function(){
 
         IndexOverlayFactory.overlayShow();
-        var params = {'rate_level' : $scope.Customer.user_level};
+        var params = {'rate_level' : $scope.UserData.user_level};
         HTTPService.clientRequest('admin/transport-rate/get', params).then(function(result){
             if(result.data.STATUS == 'OK'){
                 $scope.TransportRateData = result.data.DATA;
