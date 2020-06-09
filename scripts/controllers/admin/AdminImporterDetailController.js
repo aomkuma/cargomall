@@ -18,8 +18,8 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
     $scope.loadTransportRateData = function(){
 
         IndexOverlayFactory.overlayShow();
-        var params = null;
-        HTTPService.clientRequest('admin/transport-rate/list', params).then(function(result){
+        var params = {'rate_level' : $scope.Customer.user_level};
+        HTTPService.clientRequest('admin/transport-rate/get', params).then(function(result){
             if(result.data.STATUS == 'OK'){
                 $scope.TransportRateData = result.data.DATA;
             }else{

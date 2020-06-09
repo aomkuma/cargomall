@@ -27,7 +27,9 @@ angular.module('app').controller('AdminCustomerController', function($scope, $co
         if(result.data.STATUS == 'OK'){
           
           $scope.UserList =  result.data.DATA.DataList;
+          $scope.LevelList =  result.data.DATA.LevelList;
           $scope.Pagination.totalPages = result.data.DATA.Total;
+          $scope.TotalBalance = result.data.DATA.TotalBalance;
                 
         }
         IndexOverlayFactory.overlayHide();
@@ -125,6 +127,22 @@ angular.module('app').controller('AdminCustomerController', function($scope, $co
         IndexOverlayFactory.overlayHide();
       }); 
     }
+
+    $scope.updateUserLevel = function(data){
+      IndexOverlayFactory.overlayShow();
+      var params = {'Data' : data};
+      HTTPService.clientRequest('admin/customer/update/level', params).then(function(result){
+        if(result.data.STATUS == 'OK'){
+          // window.location.reload();
+        }else{
+          alert(result.data.DATA);
+          return false;
+        }
+
+        IndexOverlayFactory.overlayHide();
+      }); 
+    }
+    
 
     $scope.condition = {'user_id' : null, 'pay_type' : null};
     // 1 = ชำระค่าสินค้าบริการ 2 = ชำระค่าขนส่ง, 3=โอนเงินไปจีน, 4=ฝากจ่าย, 5=นำเข้าสินค้า

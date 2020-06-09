@@ -221,7 +221,9 @@
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<td colspan="7" align="right"><b style="font-size: 1.1em;">รวม</b></td>
+							<td colspan="5" align="right"><b style="font-size: 1.1em;">จำนวนสินค้ารวม</b></td>
+							<td align="right"><b style="font-size: 1.1em;">{{sumAmount | number:0}}</b></td>
+							<td align="right"><b style="font-size: 1.1em;">ราคารวม</b></td>
 							<td align="right"><b style="font-size: 1.1em;">{{sumBaht | number:2}}</b></td>
 							<td>&nbsp;</td>
 						</tr>
@@ -240,7 +242,7 @@
 					<input class="form-control" type="number" data-ng-model="OrderDesc.total_china_transport_cost">
 				</div>
 			</div>
-			<div class="row form-group">
+			<!-- <div class="row form-group">
 				<label class="col-md-2">
 					ค่าขนส่งจากจีนมาไทย (บาท)
 				</label>
@@ -263,7 +265,7 @@
 				<div class="col-md-3">
 					<input class="form-control" type="text" data-ng-model="Order.tracking_no_thai">
 				</div>
-			</div>
+			</div> -->
 		</fieldset>
 		<div class="row form-group">
 			<label class="col-md-12" style="color: #ED2224;"> 
@@ -271,7 +273,7 @@
 			</label>
 		</div>
 		<fieldset data-ng-repeat="item in Order.order_trackings">
-			<legend>{{ item.tracking_no }}</legend>
+			<legend style="color:{{item.payment_status == true?'green' : 'red'}};">{{ item.tracking_no }} ( {{item.payment_status == true?'ชำระแล้ว' : 'ยังไม่ได้ชำระ'}} )</legend>
 			<div class="row form-group">
 				<label class="col-md-2">
 					วันที่สินค้าถึงโกดังจีน
@@ -363,6 +365,20 @@
 			</div>
 			<div class="row form-group">
 				<label class="col-md-2">
+					เลขแทรคไทย
+				</label>
+				<div class="col-md-3">
+					<input class="form-control" type="text" data-ng-model="item.tracking_no_thai">
+				</div>
+				<label class="col-md-2">
+					ค่าขนส่งในจีน
+				</label>
+				<div class="col-md-3">
+					<input class="form-control" type="number" data-ng-model="item.import_fee">
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2">
 					ค่าขนส่งจากจีนมาไทย
 				</label>
 				<div class="col-md-3">
@@ -394,6 +410,7 @@
 	<div class="col-lg-12 text-center">
 		<a href="admin/order" class="btn btn-default">กลับหน้ารายการ</a>
 		<button class="btn btn-warning" data-ng-click="updateOrderStatus(Order.id, Order.order_status, 'back')" data-ng-show="Order.order_status > 1 && Order.order_status != 9">ย้อนสถานะ order</button>
+		<button class="btn btn-default" data-ng-click="sendTransportPaymentSMS()" data-ng-show="Order.order_status == 6">ส่ง SMS แจ้งชำระค่าขนส่ง</button>
 		<button class="btn btn-info" data-ng-click="updateOrderStatus(Order.id, Order.order_status, 'next')" data-ng-show="Order.order_status < 8 && Order.order_status != 9">อัพเดทสถานะ order</button>
 		<button class="btn btn-primary" data-ng-click="updateOrder(Order, OrderDesc)" data-ng-show="Order.order_status != 9">บันทึกข้อมูล</button>
 		<button class="btn btn-default" data-ng-click="cancelOrder()" data-ng-show="Order.order_status != 9">ยกเลิกรายการสั่งซื้อนี้</button>

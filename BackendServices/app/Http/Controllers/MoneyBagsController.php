@@ -7,6 +7,7 @@ use App\MoneyBag;
 use App\MoneyUse;
 use App\Order;
 use App\OrderDesc;
+use App\OrderTracking;
 use App\Importer;
 use App\User;
 use App\WithdrawnHistory;
@@ -141,7 +142,7 @@ class MoneyBagsController extends Controller
     public function pay(Request $request){
 
         $params = $request->all();
-
+        // exit;
         $Data = $params['obj']['Data'];
         $Data['user_id'] = ''.$Data['user_id'];
         $Data['to_ref_id'] = trim($Data['to_ref_id']);
@@ -207,7 +208,7 @@ class MoneyBagsController extends Controller
                     $order_desc = OrderDesc::where('order_id', $Data['to_ref_id'])->first();
                     
                     if($order_desc){
-                        $order_desc->china_ex_rate = getLastChinaRate();
+                        $order_desc->china_ex_rate = getLastChinaRate()['exchange_rate'];
                         $order_desc->save();
                         
                     }
@@ -223,7 +224,7 @@ class MoneyBagsController extends Controller
                                 ->first();
                     
                     if($order_data->orderDesc->china_ex_rate == 0){
-                        $order_data->orderDesc->china_ex_rate = getLastChinaRate();
+                        $order_data->orderDesc->china_ex_rate = getLastChinaRate()['exchange_rate'];
                     }
 
                     $email_to = $order_data->customer->email;
@@ -236,12 +237,23 @@ class MoneyBagsController extends Controller
 
             if($Data['pay_type'] == '2'){
 
+
                 // update order status to 7 (Already pay)
                 $order = Order::find($Data['to_ref_id']);
 
                 if($order){
-                    $order->order_status = 7;
-                    $order->save();
+
+                    // update payment_status in order_tracking
+                    $order_tracking = OrderTracking::where('tracking_no', $Data['to_ref_id_2'])
+                                    ->where('order_id', $Data['to_ref_id'])
+                                    ->first();
+                    // print_r($order_tracking );exit;
+                    if($order_tracking){
+                        $order_tracking->payment_status = 1;
+                        $order_tracking->save();
+                    }
+                    // $order->order_status = 7;
+                    // $order->save();
 
                     $order_data = Order::with('customer')
                                 ->where('id', $Data['to_ref_id'])
@@ -337,6 +349,7 @@ class MoneyBagsController extends Controller
                     ->count();
 
         $list = MoneyUse::with('customer')
+                    ->select("money_use.*")
                     ->join('user', 'user.id', '=', 'money_use.user_id')
                     ->where('user_id', $user_id)
                     ->where(function($query) use ($condition){

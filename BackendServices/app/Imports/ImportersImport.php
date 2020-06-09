@@ -38,6 +38,9 @@ class ImportersImport implements ToModel
             // find by tracking_no
             $importer = Importer::where('tracking_no', $data['tracking_no'])->first();
             if($importer){
+                if($importer->importer_status == 1){
+                    $data['importer_status'] = 2;
+                }
                 $importer->update($data);
             }
         }

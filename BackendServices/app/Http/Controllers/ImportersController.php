@@ -133,6 +133,20 @@ class ImportersController extends Controller
         return $this->returnResponse(200, $this->data_result, response(), false);
     }
 
+
+    public function delete(Request $request){
+        
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $importer_id = $params['obj']['id'];
+
+        $result = Importer::find($importer_id)->delete();
+
+        $this->data_result['DATA'] = $result;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+    }
+
     public function update(Request $request){
         
         $params = $request->all();

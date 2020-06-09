@@ -56,7 +56,7 @@
 				<select class="form-control"  data-ng-model="Pay.pay_type" required="true" data-ng-change="checkPayType()">
 					<option value="">กรุณาเลือก..</option>
 					<option value="1">ชำระค่าสินค้าบริการ</option>
-					<option value="2">ชำระค่าขนส่งในไทย</option>
+					<option value="2">ชำระค่าขนส่ง</option>
 					<option value="3">โอนเงินไปจีน</option>
 					<option value="4">ฝากจ่าย</option>
 					<option value="5">นำเข้าสินค้า</option>
@@ -76,7 +76,7 @@
 						</tr>
 					</thead>
 					<tr ng-repeat="data in DataList track by $index">
-						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountValue(data.totalYuan, exchange_rate)"></td>
+						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountValue(data.totalYuan, exchange_rate, data.discount)"></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.order_no}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.totalYuan | number:2}}</label></td>
@@ -96,13 +96,15 @@
 						<tr>
 							<th>เลือก</th>
 							<th>หมายเลข Order</th>
+							<th>หมายเลข Track</th>
 							<th>วันที่ทำการสั่งซื้อ</th>
 							<th>จำนวนเงินค่าขนส่ง (บาท)</th>
 						</tr>
 					</thead>
-					<tr ng-repeat="data in DataList track by $index">
-						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountTransportValue(data.order_desc.total_china_transport_cost, data.order_desc.china_thai_transport_cost, data.order_desc.transport_company_cost)"></td>
+					<tr ng-repeat="data in DataList track by $index" data-ng-click="setPayAmountTransportValue(data.tracking_no, data.import_fee, data.transport_cost_china, data.transport_cost_thai)">
+						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.tracking_no}}" data-ng-click="setPayAmountTransportValue(data.tracking_no, data.import_fee, data.transport_cost_china, data.transport_cost_thai)"></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.order_no}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.tracking_no}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.totalBaht | number:2}}</label></td>
 					</tr>
@@ -125,7 +127,7 @@
 						</tr>
 					</thead>
 					<tr ng-repeat="data in DataList track by $index">
-						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountImporterValue(totalBaht)"></td>
+						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountImporterValue(data.totalBaht)"></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.tracking_no}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.totalBaht | number:2}}</label></td>

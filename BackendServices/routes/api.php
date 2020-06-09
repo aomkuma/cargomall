@@ -45,6 +45,8 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/order/status/update', 'OrdersController@updateOrderStatus');
 	Route::post('admin/order/upload', 'OrdersController@uploadExcel');
 	Route::post('admin/order/cancel', 'OrdersController@cancelOrder');
+	Route::post('admin/order/sms/transport-payment', 'OrdersController@sendTransportPaymentSMS');
+	
 
 	Route::post('admin/topup/list', 'MoneyBagsController@getRequestTopupList');
 	Route::post('admin/topup/status/update', 'MoneyBagsController@updateTopupStatus');
@@ -54,11 +56,13 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/importer/list', 'ImportersController@list');
 	Route::post('admin/importer/status/update', 'ImportersController@updateImporterStatus');
 	Route::post('admin/importer/upload', 'ImportersController@uploadExcel');
+	Route::post('admin/importer/delete', 'ImportersController@delete');
 	
 	Route::post('admin/user/list', 'UsersController@getUserList');
 	Route::post('admin/customer/list', 'UsersController@getCustomerList');
 	Route::post('admin/customer/withdrawn', 'MoneyBagsController@withdrawnMoney');
 	Route::post('admin/customer/refund', 'MoneyBagsController@refundMoney');
+	Route::post('admin/customer/update/level', 'UsersController@updateUserLevel');
 
 	Route::post('admin/exchange-rate/list', 'ExchangeRatesController@getExchangeRateList');
 	Route::post('admin/exchange-rate/update', 'ExchangeRatesController@updateExchangeRate');
@@ -77,7 +81,9 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/deposit/status/update', 'MoneyBagsController@updateDepositStatus');
 
 	Route::post('admin/transport-rate/list', 'TransportRatesController@list');
+	Route::post('admin/transport-rate/get', 'TransportRatesController@get');
 	Route::post('admin/transport-rate/update', 'TransportRatesController@update');
+	Route::post('admin/transport-rate/update/rate-level', 'TransportRatesController@updateRateLevel');
 
 	Route::post('admin/landing-page/list', 'LandingPageController@list');
 	Route::post('admin/landing-page/get', 'LandingPageController@get');
@@ -111,6 +117,7 @@ Route::post('pay/inform', 'MoneyBagsController@pay');
 Route::post('pay/history', 'MoneyBagsController@payHistory');
 
 Route::post('order/list/by-user', 'OrdersController@listByUser');
+Route::post('order/list/by-user-status', 'OrdersController@listByUserAndStatus');
 Route::post('order/transport-company/update', 'OrdersController@updateTransportCompany');
 
 Route::post('importer/list/by-user', 'ImportersController@listByUser');

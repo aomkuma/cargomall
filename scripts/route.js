@@ -384,6 +384,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
+	.when("/admin/transport-rate/detail/:rate_level?", {
+        templateUrl : "views/admin/transport-rate/detail.html",
+        controller : "AdminTransportRateDetailController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminTransportRateDetailController.js" ]
+				});
+			} ]
+		}
+	})
+
 	.when("/admin/customer", {
         templateUrl : "views/admin/customer/main.html",
         controller : "AdminCustomerController",

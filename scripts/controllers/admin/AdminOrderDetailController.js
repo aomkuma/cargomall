@@ -19,6 +19,7 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
 
     $scope.calcSum = function (){
         $scope.sumBaht = 0;
+        $scope.sumAmount = 0;
         angular.forEach($scope.ProductList, function(value, key) {
             $log.log(value.product_size_choose);
             if(parseFloat(value.product_promotion_price) > 0){
@@ -26,6 +27,8 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
             }else{
                 $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_price_yuan) * parseFloat($scope.OrderDesc.china_ex_rate)) * parseFloat(value.product_choose_amount)));
             }
+
+            $scope.sumAmount += parseFloat(value.product_choose_amount);
         });
 
         $scope.sumBaht = $scope.sumBaht - parseFloat($scope.Order.discount);
@@ -34,8 +37,8 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
     $scope.loadTransportRateData = function(){
 
         IndexOverlayFactory.overlayShow();
-        var params = null;
-        HTTPService.clientRequest('admin/transport-rate/list', params).then(function(result){
+        var params = {'rate_level' : $scope.Customer.user_level};
+        HTTPService.clientRequest('admin/transport-rate/get', params).then(function(result){
             if(result.data.STATUS == 'OK'){
                 $scope.TransportRateData = result.data.DATA;
             }else{
@@ -196,10 +199,50 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
     }
 
     $scope.confirmCancelOrder = function(){
+      IndexOverlayFactory.overlayShow();
         var params = {'order_id' : $scope.Order.id};
         HTTPService.clientRequest('admin/order/cancel', params).then(function(result){
             if(result.data.STATUS == 'OK'){
                 window.location.replace('admin/order');
+            }
+            else{
+              var alertMsg = result.data.DATA;
+              alert(alertMsg);
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+
+    $scope.sendTransportPaymentSMS = function(){
+
+      $scope.alertMessage = 'ต้องการส่ง SMS แจ้งเตือนชำระเงินแก่ลูกค้า ใช่หรือไม่ ?';
+
+      var modalInstance = $uibModal.open({
+          animation : false,
+          templateUrl : 'views/dialog_confirm.html',
+          size : 'sm',
+          scope : $scope,
+          backdrop : 'static',
+          controller : 'ModalDialogCtrl',
+          resolve : {
+              params : function() {
+                  return {};
+              } 
+          },
+      });
+      modalInstance.result.then(function (valResult) {
+          $scope.confirmSendTransportPaymentSMS();
+      });
+    }
+
+    $scope.confirmSendTransportPaymentSMS = function(){
+        IndexOverlayFactory.overlayShow();
+        var params = {'order_id' : $scope.Order.id};
+        HTTPService.clientRequest('admin/order/sms/transport-payment', params).then(function(result){
+            if(result.data.STATUS == 'OK'){
+                // window.location.replace('admin/order');
+                var alertMsg = 'แจ้ง SMS เตือนลูกค้าเรียบร้อยแล้ว';
+                alert(alertMsg);
             }
             else{
               var alertMsg = result.data.DATA;

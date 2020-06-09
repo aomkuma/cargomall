@@ -394,14 +394,19 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.calcSum = function (){
         $scope.sumBaht = 0;
+        var cnt = 0;
         angular.forEach($scope.ProductListStorage, function(value, key) {
             $log.log(value.product_size_choose);
             if(parseFloat(value.product_promotion_price) > 0){
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
+                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
             }else{
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
+                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat(value.exchange_rate)) * parseFloat(value.product_qty)));
             }
+            cnt++;
+            $scope.sumBaht = parseFloat($scope.sumBaht.toFixed(2));
+            console.log(cnt + ' : ' + $scope.sumBaht);
         });
+        // console.log('round : ' + i +' = ' + $scope.sumBaht.toFixed(2));
         $scope.sumBaht = parseFloat($scope.sumBaht.toFixed(2));
         // $log.log($scope.MoneyBalance, $scope.sumBaht);
     };
@@ -638,7 +643,6 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     HTTPService.clientRequest('exchange-rate/get', null).then(function(result){
     if(result.data.STATUS == 'OK'){
       $scope.exchange_rate = parseFloat(result.data.DATA.exchange_rate);
-      $scope.last_update_exrate = (result.data.DATA.last_update_exrate);
       $scope.exchange_rate_transfer = parseFloat(result.data.DATA.exchange_rate_transfer);
     }
     });

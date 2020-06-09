@@ -12,6 +12,7 @@ use App\UserSession;
 use App\UserAddress;
 use App\MoneyBag;
 use App\ForgotPassUrl;
+use App\TransportRate;
 
 
 use App\Mail\ForgotPassMail;
@@ -161,8 +162,14 @@ class UsersController extends Controller
                     ->take($limit)
                     ->get();
 
+        $total_balance = MoneyBag::sum('balance');
+
+        $level_list = TransportRate::groupBy('rate_level')->get();
+
         $this->data_result['DATA']['DataList'] = $list;
+        $this->data_result['DATA']['LevelList'] = $level_list;
         $this->data_result['DATA']['Total'] = $totalRows;
+        $this->data_result['DATA']['TotalBalance'] = $total_balance;
 
         return $this->returnResponse(200, $this->data_result, response(), false);
     }
@@ -266,6 +273,22 @@ class UsersController extends Controller
         }
 
         return $this->returnResponse(200, $this->data_result, response(), false);
+    }
+
+    public function updateUserLevel()
+    {
+        //
+        $params = Request::all();
+        $Data = $params['obj']['Data'];
+
+        $user = User::find($Data['id']);
+        if($user){
+            $user->user_level = $Data['user_level'];
+            $user->save();
+        }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+        
     }
 
     public function updateData()

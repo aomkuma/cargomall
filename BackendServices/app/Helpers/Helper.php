@@ -53,7 +53,7 @@
 
 	function getLastChinaRate(){
 		$exchange_rate = ExchangeRate::orderBy('created_at', 'DESC')->first();
-		return $exchange_rate->exchange_rate;
+		return ['exchange_rate'=> $exchange_rate->exchange_rate, 'last_update_exrate' => $exchange_rate->created_at->toDateTimeString()];
 	}
 
 	function getLastChinaRateTransfer(){

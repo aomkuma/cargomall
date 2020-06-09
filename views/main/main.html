@@ -108,11 +108,13 @@
 		<img src="files/img/exchange-rate-banner.png" style="height: 180px;" alt="" title="">
 	</div>
 	<div class="col-md-8 visible-lg visible-md">
-		<div class="row">
+		<div class="row form-group">
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="circle-box-md">
 					<br><br>{{'ORDER_PRODUCT_TXT' | translate}}<br>
 					<b>{{exchange_rate | number:2}} THB</b>
+					<br>
+
 				</div>
 			</div>
 			<div class="col-md-4 col-sm-4 col-xs-4">
@@ -128,13 +130,18 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-10 text-center">
+				<span style="background-color: #ED2224; padding: 5px; border-radius: 5px; color: #FFFFFF; font-size: 0.8em;">อัพเดทล่าสุดเมื่อวันที่ {{getThaiDateTimeFromString(last_update_exrate)}}</span>
+			</div>
+		</div>
 	</div>
 
 	<div class="col-sm-4 visible-sm">
 		<img src="files/img/exchange-rate-banner.png" style="height: 120px;" alt="" title="">
 	</div>
 	<div class="col-sm-8 visible-sm">
-		<div class="row">
+		<div class="row form-group">
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="circle-box-sm">
 					<br>{{'ORDER_PRODUCT_TXT' | translate}}<br>
@@ -153,6 +160,11 @@
 					<b>{{exchange_rate_transfer | number:2}} THB</b>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-md-10 text-center">
+					<span style="background-color: #ED2224; padding: 5px; border-radius: 5px; color: #FFFFFF; font-size: 0.8em;">อัพเดทล่าสุดเมื่อวันที่ {{getThaiDateTimeFromString(last_update_exrate)}}</span>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -160,7 +172,7 @@
 		<img src="files/img/exchange-rate-banner.png" style="width: 100%" alt="" title="">
 	</div>
 	<div class="col-xs-12 visible-xs" style="margin-top:20px;">
-		<div class="row">
+		<div class="row form-group">
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="circle-box-xs">
 					<br>{{'ORDER_PRODUCT_TXT' | translate}}<br>
@@ -178,6 +190,11 @@
 					<br>{{'TRANSFER_MONEY_TXT' | translate}}<br>
 					<b>{{exchange_rate_transfer}} THB</b>
 				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10 text-center">
+				<span style="background-color: #ED2224; padding: 5px; border-radius: 5px; color: #FFFFFF; font-size: 0.8em;">อัพเดทล่าสุดเมื่อวันที่ {{getThaiDateTimeFromString(last_update_exrate)}}</span>
 			</div>
 		</div>
 	</div>

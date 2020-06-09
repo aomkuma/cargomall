@@ -64,6 +64,44 @@ angular.module('app').controller('AdminImporterController', function($scope, $co
       });
     }
 
+    $scope.delete = function(id){
+
+      $scope.alertMessage = 'ต้องการลบรายการนำเข้าสินค้านี้ ใช่หรือไม่ ?';
+
+      var modalInstance = $uibModal.open({
+          animation : false,
+          templateUrl : 'views/dialog_confirm.html',
+          size : 'sm',
+          scope : $scope,
+          backdrop : 'static',
+          controller : 'ModalDialogCtrl',
+          resolve : {
+              params : function() {
+                  return {};
+              } 
+          },
+      });
+      modalInstance.result.then(function (valResult) {
+          $scope.confirmDelete(id);
+      });
+    }
+
+    $scope.confirmDelete = function(id){
+        IndexOverlayFactory.overlayShow();
+        var params = {'id' : id};
+        HTTPService.clientRequest('admin/importer/delete', params).then(function(result){
+        if(result.data.STATUS == 'OK'){
+          
+          window.location.reload();
+          
+        }else{
+          var alertMsg = result.data.DATA;
+          alert(alertMsg);
+        }
+        IndexOverlayFactory.overlayHide();
+        });
+    }
+
     $scope.condition = {'keyword' : ''};
 
     $scope.Pagination = {'totalPages' : 0, 'currentPage' : 0, 'limitRowPerPage' : 15, 'limitDisplay' : 10};

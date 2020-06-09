@@ -90,10 +90,13 @@ class ExchangeRatesController extends Controller
 
     public function getCurrentExchangeRate(){
 
-    	$exchange_rate = getLastChinaRate();
+    	$exchange_rate_data = getLastChinaRate();
+        $exchange_rate = $exchange_rate_data['exchange_rate'];
+        $last_update_exrate = $exchange_rate_data['last_update_exrate'];
         $exchange_rate_transfer = getLastChinaRateTransfer();
 
 		$this->data_result['DATA']['exchange_rate'] = $exchange_rate;
+        $this->data_result['DATA']['last_update_exrate'] = $last_update_exrate;
         $this->data_result['DATA']['exchange_rate_transfer'] = $exchange_rate_transfer;
 
     	return $this->returnResponse(200, $this->data_result, response(), false);

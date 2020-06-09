@@ -45,7 +45,10 @@ class OrdersImport implements ToModel
             $order = Order::where('tracking_no', 'LIKE', DB::raw("'%" . $data['tracking_no'] . "%'"))->first();
 
             if($order){
-
+                if($order->order_status == 3){
+                    $order->order_status = 4;
+                    $order->save();
+                }
                 // find order tracking
                 $order_tracking = OrderTracking::where('tracking_no', $data['tracking_no'])->first();
 
