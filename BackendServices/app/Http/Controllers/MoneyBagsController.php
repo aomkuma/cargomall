@@ -612,6 +612,8 @@ class MoneyBagsController extends Controller
 
         $totalRows = MoneyUse::with('customer')
                     ->join('user', 'user.id', '=', 'money_use.user_id')
+                    ->join('order', 'money_use.to_ref_id', '=', 'order.id')
+                    ->leftJoin('order_tracking', 'money_use.to_ref_id_2', '=', 'order_tracking.tracking_no')
                     ->where('pay_status', 2)
                     ->where(function($query) use ($condition){
                         if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
@@ -634,8 +636,10 @@ class MoneyBagsController extends Controller
                     ->count();
 
         $list = MoneyUse::with('customer')
-                    ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname')
+                    ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname', 'order.order_no', 'order_tracking.tracking_no')
                     ->join('user', 'user.id', '=', 'money_use.user_id')
+                    ->join('order', 'money_use.to_ref_id', '=', 'order.id')
+                    ->leftJoin('order_tracking', 'money_use.to_ref_id_2', '=', 'order_tracking.tracking_no')
                     ->where('pay_status', 2)
                     ->where(function($query) use ($condition){
                         if(isset($condition['user_id']) &&  !empty($condition['user_id'])){

@@ -64,6 +64,8 @@
 							<th class="text-center">เบอร์โทร</th>
 							<th class="text-center">วันที่ชำระ</th>
 							<th class="text-center">จำนวนเงินที่ชำระ</th>
+							<th class="text-center">เลขออร์เดอร์</th>
+							<th class="text-center">เลขแทรค</th>
 							<th class="text-center">ประเภทการชำระ</th>
 						</tr>
 					</thead>
@@ -74,6 +76,8 @@
 							<td>{{data.customer.mobile_no}}</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td class="text-right">{{data.pay_amount_thb | number:2}}</td>
+							<td>{{data.order_no}}</td>
+							<td>{{data.tracking_no}}</td>
 							<td>{{getPayType(data.pay_type)}}</td>
 						</tr>
 					</tbody>

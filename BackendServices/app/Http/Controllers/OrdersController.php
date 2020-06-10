@@ -216,6 +216,11 @@ class OrdersController extends Controller
                         ->whereNotNull('order_tracking.transport_cost_china')
                         ->whereNotNull('order_tracking.transport_cost_thai')
                         ->whereNotNull('order_tracking.import_fee')
+
+                        ->where('order_tracking.transport_cost_china' , '>=', 0)
+                        ->where('order_tracking.transport_cost_thai' , '>=', 0)
+                        ->where('order_tracking.import_fee' , '>=', 0)
+
                         ->where('order_tracking.payment_status', false)
                         ->where(function($query) use ($condition){
                             if(isset($condition['pay_type']) && $condition['pay_type'] == 2){

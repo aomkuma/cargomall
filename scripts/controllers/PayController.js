@@ -171,7 +171,7 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
       // $scope.Pay.pay_amount_yuan = parseFloat(totalYuan);
       $scope.Pay.pay_amount_thb = parseFloat((parseFloat(total_china_transport_cost) + parseFloat(china_thai_transport_cost) + parseFloat(transport_company_cost)).toFixed(2));
       $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);*/
-      $scope.Pay['to_ref_id_2'] = tracking_no;
+      $scope.Pay['to_ref_id'] = tracking_no;
       $scope.Pay.pay_amount_thb = parseFloat((parseFloat(import_fee) + parseFloat(transport_cost_china) + parseFloat(transport_cost_thai)).toFixed(2));
       $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
 
