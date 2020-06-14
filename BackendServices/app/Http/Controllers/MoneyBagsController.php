@@ -359,7 +359,7 @@ class MoneyBagsController extends Controller
                         }
 
                         if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
-                            $query->where('pay_type', $condition['pay_type']);
+                            $query->where('pay_type', floatval($condition['pay_type']));
                         }
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
@@ -610,59 +610,164 @@ class MoneyBagsController extends Controller
         $condition['user_id'] = trim($condition['user_id']);
         $condition['pay_type'] = trim($condition['pay_type']);
 
-        $totalRows = MoneyUse::with('customer')
-                    ->join('user', 'user.id', '=', 'money_use.user_id')
-                    ->join('order', 'money_use.to_ref_id', '=', 'order.id')
-                    ->leftJoin('order_tracking', 'money_use.to_ref_id_2', '=', 'order_tracking.tracking_no')
-                    ->where('pay_status', 2)
-                    ->where(function($query) use ($condition){
-                        if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
-                            $query->where('user_id', $condition['user_id']);
-                        }
+        if($condition['pay_type'] == 2){
+            $totalRows = MoneyUse::with('customer')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->join('order', 'money_use.to_ref_id', '=', 'order.id')
+                        ->leftJoin('order_tracking', 'money_use.to_ref_id_2', '=', 'order_tracking.tracking_no')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
 
-                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
-                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
-                            $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
-                        }
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
 
-                        if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
-                            $query->where('pay_type', $condition['pay_type']);
-                        }
-                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
-                            $condition['created_at'] = getDateFromString($condition['created_at']);
-                            $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
-                        }
-                    })
-                    ->count();
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->count();
 
-        $list = MoneyUse::with('customer')
-                    ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname', 'order.order_no', 'order_tracking.tracking_no')
-                    ->join('user', 'user.id', '=', 'money_use.user_id')
-                    ->join('order', 'money_use.to_ref_id', '=', 'order.id')
-                    ->leftJoin('order_tracking', 'money_use.to_ref_id_2', '=', 'order_tracking.tracking_no')
-                    ->where('pay_status', 2)
-                    ->where(function($query) use ($condition){
-                        if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
-                            $query->where('user_id', $condition['user_id']);
-                        }
+            $list = MoneyUse::with('customer')
+                        ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname', 'order.order_no', 'order_tracking.tracking_no')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->join('order', 'money_use.to_ref_id', '=', 'order.id')
+                        ->leftJoin('order_tracking', 'money_use.to_ref_id_2', '=', 'order_tracking.tracking_no')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
 
-                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
-                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
-                            $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
-                        }
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
 
-                        if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
-                            $query->where('pay_type', $condition['pay_type']);
-                        }
-                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
-                            $condition['created_at'] = getDateFromString($condition['created_at']);
-                            $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
-                        }
-                    })
-                    ->orderBy('money_use.created_at', 'DESC')
-                    ->skip($skip)
-                    ->take($limit)
-                    ->get();
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->orderBy('money_use.created_at', 'DESC')
+                        ->skip($skip)
+                        ->take($limit)
+                        ->get();
+
+        } else if($condition['pay_type'] == 5){
+            $totalRows = MoneyUse::with('customer')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->join('importer', 'money_use.to_ref_id', '=', 'importer.id')
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
+
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
+
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->count();
+
+            $list = MoneyUse::with('customer')
+                        ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname', 'importer.tracking_no')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->join('importer', 'money_use.to_ref_id', '=', 'importer.id')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
+
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
+
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->orderBy('money_use.created_at', 'DESC')
+                        ->skip($skip)
+                        ->take($limit)
+                        ->get();
+
+        }else{
+            $totalRows = MoneyUse::with('customer')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
+
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
+
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->count();
+
+            $list = MoneyUse::with('customer')
+                        ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
+
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
+
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->orderBy('money_use.created_at', 'DESC')
+                        ->skip($skip)
+                        ->take($limit)
+                        ->get();
+        }
 
         $this->data_result['DATA']['DataList'] = $list;
         $this->data_result['DATA']['Total'] = $totalRows;

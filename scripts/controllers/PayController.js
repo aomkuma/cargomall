@@ -267,6 +267,9 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
             // window.location.replace('');
             $scope.PaySuccess = false;
             $scope.Pay.to_ref_id = null;
+            if($scope.Pay.pay_type == 2){
+              $scope.Pay.to_ref_id_2 = null;
+            }
             $scope.checkPayType();
           }, 3000);
           

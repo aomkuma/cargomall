@@ -210,7 +210,7 @@
 			</div>
 		</div>
 
-		<!-- <fieldset>
+		<fieldset>
 			<legend>รายละเอียดค่าใช้จ่าย</legend>
 			<div class="row form-group">
 				<label class="col-md-2">
@@ -218,9 +218,11 @@
 				</label>
 				<div class="col-md-3">
 					{{ OrderDesc.total_china_transport_cost | number:2 }}
+					<br>
+					<span style="color: red;">หมายเหตุ: ค่าขนส่งภายในประเทศจีนทั้งหมดจะถูกคิดรวมกับสินค้าแทร็คแรกที่ถึงโกดังไทยค่ะ</span>
 				</div>
 			</div>
-			<div class="row form-group">
+			<!-- <div class="row form-group">
 				<label class="col-md-2">
 					ค่าขนส่งจากจีนมาไทย (บาท) :
 				</label>
@@ -244,8 +246,8 @@
 				<div class="col-md-3">
 					{{ OrderDesc.tracking_no_thai }}
 				</div>
-			</div>
-		</fieldset> -->
+			</div> -->
+		</fieldset> 
 		<div class="row form-group">
 			<label class="col-md-12" style="color: #ED2224;"> 
 				<h4>รายละเอียดข้อมูล Tracking </h4>
@@ -321,6 +323,58 @@
 				</label>
 				<div class="col-md-3">
 					{{item.bill_no}}
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<label class="col-md-2">
+					สูง
+				</label>
+				<div class="col-md-3">
+					{{item.heights}}
+				</div>
+				<label class="col-md-2">
+					CBM
+				</label>
+				<div class="col-md-3">
+					{{item.cbm}}
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2">
+					วันที่ของออกจีน
+				</label>
+				<div class="col-md-3">
+					{{item.china_departure_date}}
+				</div>
+				<label class="col-md-2">
+					เลขที่บิล
+				</label>
+				<div class="col-md-3">
+					{{item.bill_no}}
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2">
+					เลขแทรคไทย
+				</label>
+				<div class="col-md-3">
+					{{item.tracking_no_thai}}
+				</div>
+				
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2">
+					ค่าขนส่งจากจีนมาไทย
+				</label>
+				<div class="col-md-3">
+					{{item.transport_cost_china}}
+				</div>
+				<label class="col-md-2">
+					ค่าขนส่งในไทย
+				</label>
+				<div class="col-md-3">
+					{{item.transport_cost_thai}}
 				</div>
 			</div>
 			
