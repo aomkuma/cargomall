@@ -44,10 +44,12 @@ class ImportersController extends Controller
         $skip = $offset * $limit;
 
         $totalRows = Importer::
-                    where(function($query) use ($condition){
+                    join('user', 'user.id', '=', 'importer.user_id')
+                    ->where(function($query) use ($condition){
 
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('tracking_no', $condition['keyword']);
+                            $query->orWhere('user_code', $condition['keyword']);
                         }
 
                         if(isset($condition['importer_status']) &&  !empty($condition['importer_status'])){
@@ -56,16 +58,18 @@ class ImportersController extends Controller
                     })
                     ->count();
 
-        $list = Importer::
+        $list = Importer::select('importer.*', 'user.user_code')
                     // with('customer')
-                    with(array('customer'=>function($query){
+                    ->with(array('customer'=>function($query){
                             $query->with('addresses');
                         }
                     ))
+                    ->join('user', 'user.id', '=', 'importer.user_id')
                     ->where(function($query) use ($condition){
 
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('tracking_no', $condition['keyword']);
+                            $query->orWhere('user_code', $condition['keyword']);
                         }
 
                         if(isset($condition['importer_status']) &&  !empty($condition['importer_status'])){
@@ -73,7 +77,7 @@ class ImportersController extends Controller
                         }
 
                     })
-                    ->orderBy('created_at', 'DESC')
+                    ->orderBy('importer.created_at', 'DESC')
                     ->skip($skip)
                     ->take($limit)
                     ->get();
