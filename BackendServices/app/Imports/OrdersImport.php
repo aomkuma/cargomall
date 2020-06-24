@@ -23,10 +23,20 @@ class OrdersImport implements ToModel
         }else{
             $cbm = $row[12];
         }
+
+        $goods_desc_th = null;
+
+        if(!empty($row[4])){
+            $goods_desc_th_arr = explode('"', trim($row[4]));
+            $goods_desc_th = $goods_desc_th_arr[count($goods_desc_th_arr) - 2];
+        }
+
         $data = [
             //
             'tracking_no'     => trim($row[0]),
             'china_arrival_date'    => trim($row[1]),
+            'goods_desc_en' => trim($row[3]),
+            'goods_desc_th' => $goods_desc_th,
             'cargo'    => trim($row[5]), 
             'package_amount'    => trim($row[6]),
             'weight_kg'    => trim($row[8]),

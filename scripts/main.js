@@ -117,9 +117,9 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
                       {'id' : 4, 'value' : 'สินค้าออกจากโกดังจีน'},
                       {'id' : 5, 'value' : 'สินค้าถึงโกดังไทย'},
                       {'id' : 6, 'value' : 'อยู่ระหว่างกระบวนการจัดส่ง'},
-                      {'id' : 7, 'value' : 'รอการจัดส่งสินค้า'},
-                      {'id' : 8, 'value' : 'เสร็จสิ้น'},
-                      {'id' : 9, 'value' : 'ยกเลิก'}
+                      // {'id' : 7, 'value' : 'รอการจัดส่งสินค้า'},
+                      {'id' : 7, 'value' : 'เสร็จสิ้น'},
+                      {'id' : 8, 'value' : 'ยกเลิก'}
                     ];
 
   $scope.IMPORTER_STATUS = [{'id' : 1, 'value' : 'คำขอบริการนำเข้าสินค้า'},

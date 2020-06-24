@@ -73,8 +73,8 @@
 								<select class="form-control" data-ng-model="data.user_level" data-ng-options="sel.rate_level as sel.rate_level for sel in LevelList" data-ng-change="updateUserLevel(data)"></select>
 							</td>
 							<td class="text-center">
-								<button class="btn btn-primary" data-ng-show="data.money_bags.balance > 0" data-ng-click="withdrawnMoney(data)">ถอนเงิน</button>
-								<button class="btn btn-default" data-ng-click="refundMoney(data)">คืนเงินเข้ากระเป๋า</button>
+								<button class="btn btn-primary" data-ng-show="data.money_bags.balance > 0 && UserData.role == '1'" data-ng-click="withdrawnMoney(data)">ถอนเงิน</button>
+								<button class="btn btn-default" data-ng-click="refundMoney(data)" data-ng-show="UserData.role == '1'">คืนเงินเข้ากระเป๋า</button>
 							</td>
 						</tr>
 					</tbody>

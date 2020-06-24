@@ -431,7 +431,26 @@ class OrdersController extends Controller
         if($order && $order->order_status == 6){
 
             $mobile_no = $order->customer->mobile_no;
-            $message = 'รายการฝากสั่งเลขที่ ' . $order->order_no . ' ขณะนี้อยู่ในสถานะ "รอการชำระค่าขนส่ง" กรุณาเข้าสู่ระบบเพื่อดำเนินการชำระค่าขนส่งสินค้า ขอบคุณค่ะ';
+
+            // get waiting payment tracking status
+            $tracking_no_list = OrderTracking::select('tracking_no')
+                                ->where('order_id', $order_id)
+                                ->whereNotNull('order_tracking.transport_cost_china')
+                                ->whereNotNull('order_tracking.transport_cost_thai')
+                                ->whereNotNull('order_tracking.import_fee')
+                                ->where('order_tracking.transport_cost_china' , '>=', 0)
+                                ->where('order_tracking.transport_cost_thai' , '>=', 0)
+                                ->where('order_tracking.import_fee' , '>=', 0)
+                                ->where('order_tracking.payment_status', false)
+                                ->get()->toArray();
+
+            // print_r($tracking_no_list);exit;
+            $track_arr = [];
+            foreach ($tracking_no_list as $key => $value) {
+                $track_arr[] = $value['tracking_no'];
+            }
+
+            $message = 'รายการฝากสั่ง ' . implode(',', $track_arr) . ' ขณะนี้อยู่ในสถานะ "รอการชำระค่าขนส่ง" กรุณาเข้าสู่ระบบเพื่อดำเนินการชำระค่าขนส่งสินค้า ขอบคุณค่ะ';
             sendSms($mobile_no, $message);
 
             $this->data_result['DATA'] = true;

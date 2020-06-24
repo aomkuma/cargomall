@@ -81,8 +81,8 @@
 							<td class="text-right">{{data.pay_amount_thb | number:2}}</td>
 							<td>{{getDepositStatus(data.pay_status)}}</td>
 							<td>
-								<button class="btn btn-primary" data-ng-click="approveDeposit(data.id)" title="ยืนยันการฝากจ่าย" data-ng-show="data.pay_status == 1"><i class="fas fa-check"></i></button>
-								<button class="btn btn-info" data-ng-click="rejectDeposit(data.id)" title="ยกเลิกการฝากจ่าย" data-ng-show="data.pay_status == 1"><i class="fas fa-ban"></i></button>
+								<button class="btn btn-primary" data-ng-click="approveDeposit(data.id)" title="ยืนยันการฝากจ่าย" data-ng-show="data.pay_status == 1 && UserData.role == 1"><i class="fas fa-check"></i></button>
+								<button class="btn btn-info" data-ng-click="rejectDeposit(data.id)" title="ยกเลิกการฝากจ่าย" data-ng-show="data.pay_status == 1 && UserData.role == 1"><i class="fas fa-ban"></i></button>
 							</td>
 						</tr>
 					</tbody>

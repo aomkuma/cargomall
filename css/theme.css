@@ -535,3 +535,7 @@ a.next {
 .form-control-static{
   padding-top: 0px;
 }
+
+.blue-label{
+  color: blue;
+}
