@@ -254,7 +254,7 @@
 			</label>
 		</div>
 		<fieldset data-ng-repeat="item in Order.order_trackings">
-			<legend>{{ item.tracking_no }}</legend>
+			<legend>{{ item.tracking_no }} ({{item.goods_desc_en}} / {{item.goods_desc_th}})</legend>
 			<div class="row form-group">
 				<label class="col-md-2 blue-label">
 					วันที่สินค้าถึงโกดังจีน
@@ -348,10 +348,18 @@
 					{{item.china_departure_date}}
 				</div>
 				<label class="col-md-2 blue-label">
-					เลขที่บิล
+					เลขตู้
 				</label>
 				<div class="col-md-3">
-					{{item.bill_no}}
+					{{item.container_no}}
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 blue-label">
+					วันที่เข้าไทย
+				</label>
+				<div class="col-md-3">
+					{{item.thai_arrival}}
 				</div>
 			</div>
 			<div class="row form-group">

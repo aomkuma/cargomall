@@ -45,7 +45,9 @@ class OrdersImport implements ToModel
             'heights'    => trim($row[11]),
             'cbm'    => $cbm/*$row[12]*/,
             'china_departure_date'    => trim($row[13]),
-            'bill_no'    => trim($row[14])
+            'bill_no'    => trim($row[14]),
+            'container_no'    => $row[15],
+            'thai_arrival'    => $row[16]
         ];
 
         $data['tracking_no'] = trim($data['tracking_no']);
