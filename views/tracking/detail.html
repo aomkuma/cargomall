@@ -77,6 +77,10 @@
 					<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.transport_type_txt}}</div>
 				</div>
 				<div class="row">
+					<label class="col-md-3 col-sm-4 col-xs-5 text-right">รูปแบบการจัดส่ง</label>
+					<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.package_type_txt}}</div>
+				</div>
+				<div class="row">
 					<label class="col-md-3 col-sm-4 col-xs-5 text-right">วิธีการรับสินค้า</label>
 					<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.receive_order_type_txt}}</div>
 				</div>
@@ -313,13 +317,13 @@
 			</div>
 			<div class="row form-group">
 				<label class="col-md-2 blue-label">
-					วันที่ของออกจีน
+					วันที่ของเข้าจีน
 				</label>
 				<div class="col-md-3">
-					{{item.china_departure_date}}
+					{{item.china_arrival_date}}
 				</div>
 				<label class="col-md-2 blue-label">
-					เลขที่บิล
+					เลขที่ตู้
 				</label>
 				<div class="col-md-3">
 					{{item.bill_no}}

@@ -43,6 +43,7 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
         $scope.getOrderList();
       }
       else if($scope.Pay.pay_type == 5){
+        $scope.Pay['selectedPayList'] = [];
         $scope.getImporterList();
       }
     }
@@ -280,6 +281,60 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
         IndexOverlayFactory.overlayHide();
       });
     }
+
+  $scope.toggleSelectionType2 = function toggleSelection(obj, index) {
+    if($scope.Pay.selectedPayList==undefined){
+      $scope.Pay.selectedPayList = [obj];
+    }else{
+    
+        var idx = $scope.Pay.selectedPayList.indexOf(obj);
+    
+        if (idx > -1) {
+          $scope.Pay.selectedPayList.splice(idx, 1);
+        }
+        else {
+          $scope.Pay.selectedPayList.push(obj);
+        }
+    }
+
+    // re calc pay amount 
+
+    $scope.Pay.pay_amount_thb = 0;
+    for(var i = 0; i < $scope.Pay.selectedPayList.length; i++){
+      $scope.Pay.pay_amount_thb += $scope.Pay.selectedPayList[i].totalBaht;//parseFloat((parseFloat($scope.Pay.selectedPayList[i].import_fee) + parseFloat($scope.Pay.selectedPayList[i].transport_cost_china) + parseFloat($scope.Pay.selectedPayList[i].transport_cost_thai)).toFixed(2));
+    }
+
+    $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
+    $log.log($scope.SelectedPayBaht);
+    // console.log($scope.Pay.selectedPayList, index);
+  };
+
+  $scope.toggleSelectionType5 = function toggleSelection(obj, index) {
+    if($scope.Pay.selectedPayList==undefined){
+      $scope.Pay.selectedPayList = [obj];
+    }else{
+    
+        var idx = $scope.Pay.selectedPayList.indexOf(obj);
+    
+        if (idx > -1) {
+          $scope.Pay.selectedPayList.splice(idx, 1);
+        }
+        else {
+          $scope.Pay.selectedPayList.push(obj);
+        }
+    }
+
+    // re calc pay amount 
+
+    $scope.Pay.pay_amount_thb = 0;
+    for(var i = 0; i < $scope.Pay.selectedPayList.length; i++){
+      $scope.Pay.pay_amount_thb += $scope.Pay.selectedPayList[i].totalBaht;//parseFloat((parseFloat($scope.Pay.selectedPayList[i].import_fee) + parseFloat($scope.Pay.selectedPayList[i].transport_cost_china) + parseFloat($scope.Pay.selectedPayList[i].transport_cost_thai)).toFixed(2));
+    }
+
+    $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
+    $log.log($scope.SelectedPayBaht);
+    // console.log($scope.Pay.selectedPayList, index);
+  };
 
     $scope.PaySuccess = false;
     ShowDialogConfirmPay = false;

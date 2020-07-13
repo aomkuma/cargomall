@@ -71,6 +71,51 @@
 			
 		</div>
 		<hr>
+		<div class="row form-group" data-ng-show="importer_id == undefined">
+			<label class="col-md-2">	
+				ลูกค้าที่ต้องการทำรายการ
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-9">
+				<select class="form-control" data-ng-model="Importer.user_id" data-ng-options="data.id as ('(' + data.user_code + ') ' + data.firstname + ' ' + data.lastname) for data in UserList" data-ng-change="getUserAddress(Importer.user_id)">
+					<option value="">ทั้งหมด</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group" data-ng-show="importer_id == undefined">
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				ที่อยูจัดส่งสินค้า
+			</label>
+			<div class="col-md-10" data-ng-repeat="address in UserAddress">
+				<label for="address{{$index}}">
+				<div class="row">
+					<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" >
+						<input id="address{{$index}}" type="radio" value="{{address.id}}" data-ng-model="Importer.customer_address_id" aria-label="..." required="true">
+					</div>
+					<div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+						<label for="address{{$index}}" style="font-weight: lighter;">
+							{{ 'ADDRESS1_TXT' | translate }} {{address.address1}}&nbsp;
+							{{ 'ADDRESS2_TXT' | translate }} {{address.address2}}&nbsp;
+							{{ 'ADDRESS3_TXT' | translate }} {{address.address3}}&nbsp;
+							{{ 'ADDRESS4_TXT' | translate }} {{address.address4}}&nbsp;
+							{{ 'ADDRESS5_TXT' | translate }} {{address.address5}}&nbsp;
+							{{ 'ADDRESS6_TXT' | translate }} {{address.address6}}&nbsp;
+							{{ 'ADDRESS7_TXT' | translate }} {{address.address7}}&nbsp;
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-10" data-ng-show="UserData.addresses.length == 0">
+				ไม่พบข้อมูลที่อยู่ <a data-ng-click="editProfileDialog()">คลิกที่นี่เพื่อเพิ่มข้อมูล</a>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-2 col-sm-2 col-xs-12">	
+				หมายเหตุเพิ่มเติม (ลูกค้า)
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<textarea class="form-control" data-ng-model="Importer.remark_customer" disabled="true"></textarea>
+			</div>
+		</div>
 		<div class="row form-group">
 			<label class="col-md-2">	
 				หมายเลข track
@@ -288,12 +333,6 @@
 			</label>
 			<div class="col-md-4 col-sm-4 col-xs-12">
 				<textarea class="form-control" data-ng-model="Importer.remark"></textarea>
-			</div>
-			<label class="col-md-2 col-sm-2 col-xs-12">	
-				หมายเหตุเพิ่มเติม (ลูกค้า)
-			</label>
-			<div class="col-md-4 col-sm-4 col-xs-12">
-				<textarea class="form-control" data-ng-model="Importer.remark_customer" disabled="true"></textarea>
 			</div>
 		</div>
 		<hr>

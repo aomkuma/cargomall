@@ -101,8 +101,11 @@
 							<th>จำนวนเงินค่าขนส่ง (บาท)</th>
 						</tr>
 					</thead>
-					<tr ng-repeat="data in DataList track by $index" data-ng-click="setPayAmountTransportValue(data.id, data.import_fee, data.transport_cost_china, data.transport_cost_thai)">
-						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id_2" value="{{data.tracking_no}}" data-ng-click="setPayAmountTransportValue(data.id, data.import_fee, data.transport_cost_china, data.transport_cost_thai)"></td>
+					<tr ng-repeat="data in DataList track by $index">
+						<td>
+							<!--<input id="radio{{$index}}" type="checkbox" value="{{data.tracking_no}}" data-ng-click="setPayAmountTransportValue(data.id, data.import_fee, data.transport_cost_china, data.transport_cost_thai)" data-ng-click="toggleSelection(data.tracking_no, $index)">-->
+							<input id="radio{{$index}}" type="checkbox" value="{{data.tracking_no}}" data-ng-click="toggleSelectionType2(data, $index)">
+						</td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.order_no}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.tracking_no}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
@@ -127,7 +130,10 @@
 						</tr>
 					</thead>
 					<tr ng-repeat="data in DataList track by $index">
-						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountImporterValue(data.totalBaht)"></td>
+						<td>
+							<!--<input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountImporterValue(data.totalBaht)">-->
+							<input id="radio{{$index}}" type="checkbox" value="{{data.id}}" data-ng-click="toggleSelectionType5(data, $index)">
+						</td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.tracking_no}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.totalBaht | number:2}}</label></td>

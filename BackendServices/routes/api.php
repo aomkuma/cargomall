@@ -46,19 +46,23 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/order/upload', 'OrdersController@uploadExcel');
 	Route::post('admin/order/cancel', 'OrdersController@cancelOrder');
 	Route::post('admin/order/sms/transport-payment', 'OrdersController@sendTransportPaymentSMS');
+	Route::post('admin/order/tracking/delete', 'OrdersController@deleteTrack');
+	Route::post('admin/order/cancel/cancel-status', 'OrdersController@cancelCancelStatus');
 	
-
 	Route::post('admin/topup/list', 'MoneyBagsController@getRequestTopupList');
 	Route::post('admin/topup/status/update', 'MoneyBagsController@updateTopupStatus');
 
 	Route::post('admin/pay/list', 'MoneyBagsController@getPayList');
 
 	Route::post('admin/importer/list', 'ImportersController@list');
+	Route::post('admin/importer/group', 'ImportersController@listGroup');
 	Route::post('admin/importer/status/update', 'ImportersController@updateImporterStatus');
 	Route::post('admin/importer/upload', 'ImportersController@uploadExcel');
 	Route::post('admin/importer/delete', 'ImportersController@delete');
 	
 	Route::post('admin/user/list', 'UsersController@getUserList');
+	Route::post('admin/user/address', 'UsersController@getUserAddress');
+	
 	Route::post('admin/customer/list', 'UsersController@getCustomerList');
 	Route::post('admin/customer/withdrawn', 'MoneyBagsController@withdrawnMoney');
 	Route::post('admin/customer/refund', 'MoneyBagsController@refundMoney');

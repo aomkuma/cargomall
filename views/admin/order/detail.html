@@ -90,6 +90,10 @@
 					<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.transport_type_txt}}</div>
 				</div>
 				<div class="row">
+					<label class="col-md-3 col-sm-4 col-xs-5 text-right">รูปแบบการจัดส่ง</label>
+					<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.package_type_txt}}</div>
+				</div>
+				<div class="row">
 					<label class="col-md-3 col-sm-4 col-xs-5 text-right">วิธีการรับสินค้า</label>
 					<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.receive_order_type_txt}}</div>
 				</div>
@@ -273,7 +277,9 @@
 			</label>
 		</div>
 		<fieldset data-ng-repeat="item in Order.order_trackings">
-			<legend style="color:{{item.payment_status == true?'green' : 'red'}};">{{ item.tracking_no }} ({{item.goods_desc_en}} / {{item.goods_desc_th}}) ( {{item.payment_status == true?'ชำระแล้ว' : 'ยังไม่ได้ชำระ'}} )</legend>
+			<legend style="color:{{item.payment_status == true?'green' : 'red'}};">{{ item.tracking_no }} ({{item.goods_desc_en}} / {{item.goods_desc_th}}) ( {{item.payment_status == true?'ชำระแล้ว' : 'ยังไม่ได้ชำระ'}} )
+				<button class="btn btn-danger" data-ng-click="deleteTrack(item.id)">ลบ</button>
+			</legend>
 			<div class="row form-group">
 				<label class="col-md-2 blue-label">
 					วันที่สินค้าถึงโกดังจีน
@@ -338,10 +344,10 @@
 					{{item.china_departure_date}}
 				</div>
 				<label class="col-md-2 blue-label">
-					เลขตู้
+					เลขที่ตู้
 				</label>
 				<div class="col-md-3">
-					{{item.container_no}}
+					{{item.bill_no}}
 				</div>
 			</div>
 			<div class="row form-group">
@@ -422,6 +428,7 @@
 		<button class="btn btn-info" data-ng-click="updateOrderStatus(Order.id, Order.order_status, 'next')" data-ng-show="Order.order_status < 7 && Order.order_status != 8">อัพเดทสถานะ order</button>
 		<button class="btn btn-primary" data-ng-click="updateOrder(Order, OrderDesc)" data-ng-show="Order.order_status != 8">บันทึกข้อมูล</button>
 		<button class="btn btn-default" data-ng-click="cancelOrder()" data-ng-show="Order.order_status != 8">ยกเลิกรายการสั่งซื้อนี้</button>
+		<button class="btn btn-warning" data-ng-click="cancelCancelStatus(Order.id)" data-ng-show="Order.order_status == 8">ยกเลิกการยกเลิก</button>
 	</div>
 </div>
 <style type="text/css">

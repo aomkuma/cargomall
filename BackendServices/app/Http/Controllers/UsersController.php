@@ -120,7 +120,7 @@ class UsersController extends Controller
 
     public function getUserList(){
 
-        $users = User::all();
+        $users = User::orderBy('user_code',  'ASC')->get();
         $this->data_result['DATA']['DataList'] = $users;
         return $this->returnResponse(200, $this->data_result, response(), false);
     }
@@ -371,6 +371,20 @@ class UsersController extends Controller
 
         $this->data_result['DATA']['token'] = $token;
         $this->data_result['DATA']['UserData'] = base64_encode($UserData);
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function getUserAddress(){
+        
+        $params = Request::all();
+        $token = $params['user_session']['token'];
+        $user_id = $params['obj']['user_id'];
+        
+        $data = UserAddress::where('user_id', $user_id)->get();
+        
+        $this->data_result['DATA']['addresses'] = $data;
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 

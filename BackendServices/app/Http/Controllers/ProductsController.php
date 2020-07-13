@@ -69,7 +69,7 @@ class ProductsController extends Controller
 
 	private function translateWord($keyword){
 		// return $keyword;
-		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyCIQ0NJYS09Gp3lJdpR4gsmS9QQ5xPs_fU', 'default_target_translation' => 'th']);
+		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyC-aor9zNlmSXKJb-2iIz8wMsLrJzvcxdo', 'default_target_translation' => 'th']);
 		$trans = new GoogleTranslate($translateClient);
 		$result = $trans->justTranslate($keyword);
 		return trim($result);

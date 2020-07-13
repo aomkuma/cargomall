@@ -132,6 +132,12 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
             $scope.ShippingOption.transport_company_txt = 'Nim Express';
         }
 
+        if($scope.Order.package_type == 'all'){
+            $scope.ShippingOption.package_type_txt = 'รวมกล่อง';
+        }else if($scope.Order.package_type == 'single'){
+            $scope.ShippingOption.package_type_txt = 'แยกกล่อง';
+        }
+
 
         $scope.ShippingOption.special_option_txt = $scope.Order.add_on;
     }
@@ -316,6 +322,82 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
           return i;
         }
       }
+    }
+
+    $scope.deleteTrack = function(id){
+
+      $scope.alertMessage = 'ต้องการลบรายการ track นี้ ใช่หรือไม่ ?';
+
+      var modalInstance = $uibModal.open({
+          animation : false,
+          templateUrl : 'views/dialog_confirm.html',
+          size : 'sm',
+          scope : $scope,
+          backdrop : 'static',
+          controller : 'ModalDialogCtrl',
+          resolve : {
+              params : function() {
+                  return {};
+              } 
+          },
+      });
+      modalInstance.result.then(function (valResult) {
+          $scope.confirmDeleteTrack(id);
+      });
+    }
+
+    $scope.confirmDeleteTrack = function(id){
+        IndexOverlayFactory.overlayShow();
+        var params = {'id' : id};
+        HTTPService.clientRequest('admin/order/tracking/delete', params).then(function(result){
+        if(result.data.STATUS == 'OK'){
+          
+          window.location.reload();
+          
+        }else{
+          var alertMsg = result.data.DATA;
+          alert(alertMsg);
+        }
+        IndexOverlayFactory.overlayHide();
+        });
+    }
+
+    $scope.cancelCancelStatus = function(id){
+
+      $scope.alertMessage = 'ต้องการยกเลิกการยกเลิกสถานะของรายการนี้ ใช่หรือไม่ ?';
+
+      var modalInstance = $uibModal.open({
+          animation : false,
+          templateUrl : 'views/dialog_confirm.html',
+          size : 'sm',
+          scope : $scope,
+          backdrop : 'static',
+          controller : 'ModalDialogCtrl',
+          resolve : {
+              params : function() {
+                  return {};
+              } 
+          },
+      });
+      modalInstance.result.then(function (valResult) {
+          $scope.confirmcancelCancelStatus(id);
+      });
+    }
+
+    $scope.confirmcancelCancelStatus = function(id){
+        IndexOverlayFactory.overlayShow();
+        var params = {'id' : id};
+        HTTPService.clientRequest('admin/order/cancel/cancel-status', params).then(function(result){
+        if(result.data.STATUS == 'OK'){
+          
+          window.location.reload();
+          
+        }else{
+          var alertMsg = result.data.DATA;
+          alert(alertMsg);
+        }
+        IndexOverlayFactory.overlayHide();
+        });
     }
 
     $scope.order_id = $routeParams.order_id;

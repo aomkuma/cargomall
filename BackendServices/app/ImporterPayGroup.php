@@ -4,14 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CartSession extends Model
+class ImporterPayGroup extends Model
 {
     //
-    protected $table = 'cart_session';
+    protected $table = 'importer_pay_group';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
 	public $incrementing = false;
+    
     protected $fillable = [
-        'id', 'user_id', 'cart_desc', 'created_by', 'updated_by', 'created_at', 'updated_at'
+        'id', 'importer_group_id', 'user_id', 'user_code', 'created_at', 'updated_at'
     ];
 }
