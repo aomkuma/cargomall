@@ -27,6 +27,12 @@ angular.module('app').controller('SummaryOrderController', function($scope, $coo
         $scope.ShippingOption.receive_order_type_txt = 'จัดส่งตามที่อยู่';
     }
 
+    if($scope.ship_option.package_type == 'all'){
+        $scope.ShippingOption.package_type_txt = 'รวมกล่อง';
+    }else if($scope.ship_option.package_type == 'single'){
+        $scope.ShippingOption.package_type_txt = 'แยกกล่อง';
+    }
+
     // if($scope.ship_option.transport_company == 'kerry'){
     //     $scope.ShippingOption.transport_company_txt = 'Kerry Express';
     // }else if($scope.ship_option.transport_company == 'nim'){

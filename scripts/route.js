@@ -300,7 +300,7 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
-	.when("/admin/importer/detail/:importer_id", {
+	.when("/admin/importer/detail/:importer_id?", {
         templateUrl : "views/admin/importer/detail.html",
         controller : "AdminImporterDetailController",
         resolve : {
@@ -451,6 +451,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
 				return $ocLazyLoad.load({
 					files : [ "scripts/controllers/admin/AdminWithdrawnHistoryController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/admin/importer/group", {
+        templateUrl : "views/admin/importer/group.html",
+        controller : "AdminImporterPayGroupController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminImporterPayGroupController.js" ]
 				});
 			} ]
 		}

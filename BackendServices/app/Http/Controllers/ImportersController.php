@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Importer;
+use App\ImporterPayGroup;
 
 use Excel;
 
@@ -77,7 +78,51 @@ class ImportersController extends Controller
                         }
 
                     })
+                    // ->orderBy('importer.thai_arrival', 'DESC')
                     ->orderBy('importer.created_at', 'DESC')
+                    ->skip($skip)
+                    ->take($limit)
+                    ->get();
+
+        $this->data_result['DATA']['DataList'] = $list;
+        $this->data_result['DATA']['Total'] = $totalRows;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function listGroup(Request $request){
+
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $condition = $params['obj']['condition'];
+        $currentPage = $params['obj']['currentPage'];
+        $limitRowPerPage = $params['obj']['limitRowPerPage'];
+
+        $currentPage = $currentPage - 1;
+
+        $limit = $limitRowPerPage;
+        $offset = $currentPage;
+        $skip = $offset * $limit;
+
+        $totalRows = ImporterPayGroup::where(function($query) use ($condition){
+
+                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                            $query->where('importer_group_id', 'LIKE', '%' .$condition['keyword'] . '%');
+                            $query->orWhere('user_code', $condition['keyword']);
+                        }
+                    })
+                    ->count();
+
+        $list = ImporterPayGroup::where(function($query) use ($condition){
+
+                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                            $query->where('importer_group_id', 'LIKE', '%' .$condition['keyword'] . '%');
+                            $query->orWhere('user_code', $condition['keyword']);
+                        }
+                    })
+                    ->orderBy('created_at', 'DESC')
                     ->skip($skip)
                     ->take($limit)
                     ->get();
@@ -111,6 +156,7 @@ class ImportersController extends Controller
                         $query->where('tracking_no' , $condition['tracking_no']);  
                     } 
                 })
+                ->orderBy('importer.thai_arrival', 'DESC')
                 ->get();
 
         $this->data_result['DATA'] = $list;
@@ -176,7 +222,11 @@ class ImportersController extends Controller
 
         if(!isset($Data['id'])){
             $Data['id'] = generateID();
-            $Data['user_id'] = $user_data['id'];
+            
+            if(!isset($Data['user_id'])){
+                $Data['user_id'] = $user_data['id'];
+            }
+            
             $Data['importer_status'] = 1;
             $result = Importer::create($Data);
         }else{

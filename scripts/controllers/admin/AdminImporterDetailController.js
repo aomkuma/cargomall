@@ -15,6 +15,30 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
     
     $templateCache.removeAll();
 
+    $scope.getUserList = function(){
+      HTTPService.clientRequest('admin/user/list', null).then(function(result){
+        if(result.data.STATUS == 'OK'){
+          
+          $scope.UserList =  result.data.DATA.DataList;
+        }
+      });
+    }
+
+    $scope.getUserAddress = function(user_id){
+
+        IndexOverlayFactory.overlayShow();
+        var params = {'user_id' : user_id};
+        HTTPService.clientRequest('admin/user/address', params).then(function(result){
+            if(result.data.STATUS == 'OK'){
+                $scope.UserAddress = result.data.DATA.addresses;
+            }else{
+              var alertMsg = result.data.DATA;
+              alert(alertMsg);
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+
     $scope.loadTransportRateData = function(){
 
         IndexOverlayFactory.overlayShow();
@@ -93,6 +117,9 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
             if(result.data.STATUS == 'OK'){
                 // window.location.href = 'admin/order';
                 // window.location.reload();
+                if($scope.importer_id == undefined){
+                  window.location.href = 'admin/importer';
+                }
             }
             else{
               var alertMsg = result.data.DATA;
@@ -176,6 +203,12 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
     $scope.importer_id = $routeParams.importer_id;
     $scope.rateByKG = 0;
     $scope.rateByCBM = 0;
-    $scope.loadData();
+    console.log($scope.importer_id);
+    if($scope.importer_id){
+      $scope.loadData();
+    }else{
+      $scope.getUserList();
+    }
+    
     
 });

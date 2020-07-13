@@ -12,6 +12,7 @@ use App\Importer;
 use App\User;
 use App\WithdrawnHistory;
 use App\RefundHistory;
+use App\ImporterPayGroup;
 
 use App\Mail\OrderRequestMailable;
 use App\Mail\OrderTransportCostMailable;
@@ -142,7 +143,8 @@ class MoneyBagsController extends Controller
     public function pay(Request $request){
 
         $params = $request->all();
-        // exit;
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+
         $Data = $params['obj']['Data'];
         $Data['user_id'] = ''.$Data['user_id'];
         $Data['to_ref_id'] = trim($Data['to_ref_id']);
@@ -168,26 +170,72 @@ class MoneyBagsController extends Controller
 
             }
         }
+        // exit;
 
-        $Data['id'] = generateID();
+        if($Data['pay_type'] == '2'){
 
-        if($Data['pay_type'] == '1' || $Data['pay_type'] == '2' || $Data['pay_type'] == '5'){
-            $Data['pay_status'] = 2;
-        }else{
-            $Data['pay_status'] = 1;
+            $_data = [];
+
+            foreach ($Data['selectedPayList'] as $key => $value) {
+                # code...
+                $_data = $Data;
+
+                $_data['id'] = generateID();
+                $_data['pay_status'] = 2;
+                $_data['exchange_rate'] = null;
+                $_data['to_ref_id'] = $value['order_id'];
+                $_data['to_ref_id_2'] = $value['tracking_no'];
+                $_data['pay_amount_thb'] = $value['totalBaht'];
+
+                $result = MoneyUse::create($_data);
+
+            }
+
+            $Data = $_data;
+
+        }else if($Data['pay_type'] == '5'){
+
+            $_data = [];
+            
+            foreach ($Data['selectedPayList'] as $key => $value) {
+                # code...
+                $_data = $Data;
+
+                $_data['id'] = generateID();
+                $_data['pay_status'] = 2;
+                $_data['exchange_rate'] = null;
+                $_data['to_ref_id'] = $value['id'];
+                $_data['pay_amount_thb'] = $value['totalBaht'];
+
+                $result = MoneyUse::create($_data);
+
+            }
+
+            $Data = $_data;
+
+        } else{
+
+            $Data['id'] = generateID();
+
+            if($Data['pay_type'] == '1' || $Data['pay_type'] == '2' || $Data['pay_type'] == '5'){
+                $Data['pay_status'] = 2;
+            }else{
+                $Data['pay_status'] = 1;
+            }
+
+            if($Data['pay_type'] == '3' || $Data['pay_type'] == '4'){
+                $Data['exchange_rate'] = null;//getLastChinaRateTransfer();
+                $Data['pay_amount_thb'] = null;
+                $Data['to_ref_id'] = null;
+            }
+
+            if($Data['pay_type'] == '2' || $Data['pay_type'] == '5'){
+                $Data['exchange_rate'] = null;
+            }
+            
+            $result = MoneyUse::create($Data);
+
         }
-
-        if($Data['pay_type'] == '3' || $Data['pay_type'] == '4'){
-            $Data['exchange_rate'] = null;//getLastChinaRateTransfer();
-            $Data['pay_amount_thb'] = null;
-            $Data['to_ref_id'] = null;
-        }
-
-        if($Data['pay_type'] == '2' || $Data['pay_type'] == '5'){
-            $Data['exchange_rate'] = null;
-        }
-        
-        $result = MoneyUse::create($Data);
 
         if($result){
 
@@ -237,70 +285,85 @@ class MoneyBagsController extends Controller
 
             if($Data['pay_type'] == '2'){
 
-
+                foreach ($Data['selectedPayList'] as $key => $value) {
                 // update order status to 7 (Already pay)
-                $order = Order::find($Data['to_ref_id']);
+                    $order = Order::find($value['order_id']);
 
-                if($order){
+                    if($order){
 
-                    // update payment_status in order_tracking
-                    $order_tracking = OrderTracking::where('tracking_no', $Data['to_ref_id_2'])
-                                    ->where('order_id', $Data['to_ref_id'])
+                        // update payment_status in order_tracking
+                        $order_tracking = OrderTracking::where('tracking_no', $value['tracking_no'])
+                                        ->where('order_id', $value['order_id'])
+                                        ->first();
+                        // print_r($order_tracking );exit;
+                        if($order_tracking){
+                            $order_tracking->payment_status = 1;
+                            $order_tracking->save();
+                        }
+                        // $order->order_status = 7;
+                        // $order->save();
+
+                        $order_data = Order::with('customer')
+                                    ->where('id', $value['order_id'])
                                     ->first();
-                    // print_r($order_tracking );exit;
-                    if($order_tracking){
-                        $order_tracking->payment_status = 1;
-                        $order_tracking->save();
+                        
+                        $Data['id'] = trim($Data['id']);
+                        $pay_data = MoneyUse::where('to_ref_id', $value['order_id'])
+                                            ->where('to_ref_id_2', $value['tracking_no'])
+                                            ->first();//MoneyUse::find($Data['id']);
+
+                        $user_id = trim($order_data->customer->id);
+                        $money_bag_data = MoneyBag::where('user_id', $user_id)->first();
+
+                        $email_to = $order_data->customer->email;
+
+                        Mail::to($email_to)->send(new OrderTransportCostMailable($order_data, $pay_data, $money_bag_data));
+                        
                     }
-                    // $order->order_status = 7;
-                    // $order->save();
-
-                    $order_data = Order::with('customer')
-                                ->where('id', $Data['to_ref_id'])
-                                ->first();
-                    
-                    $Data['id'] = trim($Data['id']);
-                    $pay_data = MoneyUse::find($Data['id']);
-
-                    $user_id = trim($order_data->customer->id);
-                    $money_bag_data = MoneyBag::where('user_id', $user_id)->first();
-
-                    $email_to = $order_data->customer->email;
-
-                    Mail::to($email_to)->send(new OrderTransportCostMailable($order_data, $pay_data, $money_bag_data));
-                    
                 }
                 
             }
 
             if($Data['pay_type'] == '5'){
 
-                // update order status to 7 (Already pay)
-                $importer = Importer::find($Data['to_ref_id']);
+                $importer_group_id = [];
 
-                if($importer){
-                    $importer->exchange_rate = $CurrentExchangeRate;
-                    $importer->importer_status = 5;
-                    $importer->save();
+                foreach ($Data['selectedPayList'] as $key => $value) {
+                    // update order status to 7 (Already pay)
+                    $value['id'] = trim($value['id']);
+                    $importer = Importer::find($value['id']);
 
-                    $importer_data = Importer::with('customer')
-                                    ->where('id', $Data['to_ref_id'])
-                                    ->first();
+                    if($importer){
+                        $importer->exchange_rate = $CurrentExchangeRate;
+                        $importer->importer_status = 5;
+                        $importer->save();
 
-                    $pay_data = MoneyUse::find($Data['id']);
+                        $importer_data = Importer::with('customer')
+                                        ->where('id', $value['id'])
+                                        ->first();
 
-                    $user_id = trim($importer_data->customer->id);
-                    $money_bag_data = MoneyBag::where('user_id', $user_id)->first();
+                        $pay_data = MoneyUse::where('to_ref_id', $value['id'])->first();
 
-                    $email_to = $importer_data->customer->email;
+                        $user_id = trim($importer_data->customer->id);
+                        $money_bag_data = MoneyBag::where('user_id', $user_id)->first();
 
-                    Mail::to($email_to)->send(new ImporterCostMailable($importer_data, $pay_data, $money_bag_data));
+                        $email_to = $importer_data->customer->email;
 
+                        Mail::to($email_to)->send(new ImporterCostMailable($importer_data, $pay_data, $money_bag_data));
+
+                    }
+
+                    $importer_group_id[] = $value['tracking_no'];
                 }
                 
+                // update importer pay group
+                $importer_pay_group = new ImporterPayGroup;
+                $importer_pay_group->importer_group_id = implode(' / ', $importer_group_id);
+                $importer_pay_group->user_id = $user_data['id'];
+                $importer_pay_group->user_code = $user_data['user_code'];
+                $importer_pay_group->save();
+
             }
-
-
             
             $this->data_result['DATA'] = base64_encode(getUserProfile($Data['user_id']));
             

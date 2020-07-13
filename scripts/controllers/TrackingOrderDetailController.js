@@ -91,6 +91,12 @@ angular.module('app').controller('TrackingOrderDetailController', function($scop
             $scope.ShippingOption.transport_company_txt = 'Nim Express';
         }
 
+        if($scope.Order.package_type == 'all'){
+            $scope.ShippingOption.package_type_txt = 'รวมกล่อง';
+        }else if($scope.Order.package_type == 'single'){
+            $scope.ShippingOption.package_type_txt = 'แยกกล่อง';
+        }
+
 
         $scope.ShippingOption.special_option_txt = $scope.Order.add_on;
     }

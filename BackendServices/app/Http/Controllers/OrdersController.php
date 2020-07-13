@@ -287,6 +287,7 @@ class OrdersController extends Controller
     	$order->net_price = $cost;
     	$order->estimate_cost = $cost;
     	$order->transport_type = $ShippingOptions['transport_type'];
+        $order->package_type = $ShippingOptions['package_type'];
     	$order->payment_type = 'TRANSFER';
     	$order->receive_order_type = $ShippingOptions['receive_order_type'];
 
@@ -553,9 +554,37 @@ class OrdersController extends Controller
         $order = Order::find($order_id);
 
         if($order){
-
+            $last_order_status = $order->order_status;
             Log::info("Order No : " . $order->order_no);
-            $order->order_status = 9;
+            $order->order_status = 8;
+            $order->last_order_status = $last_order_status;
+            $order->save();
+
+            $this->data_result['DATA'] = true;
+        }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function cancelCancelStatus(){
+
+        $params = Request::all();
+
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $id = trim($params['obj']['id']);
+        
+        Log::info("CANCEL_CANCEL_STATUS_ORDER => ");
+        Log::info("By User : " . $user_data['firstname'] . ' ' . $user_data['lastname']);
+
+        $order = Order::find($id);
+
+        if($order){
+            $last_order_status = $order->order_status;
+            Log::info("Order No : " . $order->order_no);
+            $order->order_status = $order->last_order_status;
+            $order->last_order_status = null;
             $order->save();
 
             $this->data_result['DATA'] = true;
@@ -609,6 +638,19 @@ class OrdersController extends Controller
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 
+    }
+
+    public function deleteTrack(){
+        
+        $params = Request::all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $id = $params['obj']['id'];
+
+        $result = OrderTracking::find($id)->delete();
+
+        $this->data_result['DATA'] = $result;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
     }
 
     private function calcCost($ProductList){

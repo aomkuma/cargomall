@@ -5,6 +5,8 @@
 <br>
 หมายเลข order : {{ $order->order_no }}
 <br>
+หมายเลข Track : {{ $pay->to_ref_id_2 }}
+<br>
 ผู้ชำระ {{ $order->customer->firstname }} {{ $order->customer->lastname }}
 <br>
 วันที่ชำระ {{ $pay->created_at }}

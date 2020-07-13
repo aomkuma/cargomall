@@ -34,7 +34,7 @@ class OrderTransportCostMailable extends Mailable
     public function build()
     {
         return $this->markdown('emails.order.transport-cost')
-                ->subject("ยืนยันการชำระค่าขนส่ง (" . $this->order->order_no . ")")
+                ->subject("ยืนยันการชำระค่าขนส่ง (" . $this->order->order_no . "), Track no. : " . $this->pay->to_ref_id_2)
                 ->with(['order' => $this->order, 'pay' => $this->pay, 'money_bag' => $this->money_bag]);
     }
 }
