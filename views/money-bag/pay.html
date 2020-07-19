@@ -106,10 +106,10 @@
 							<!--<input id="radio{{$index}}" type="checkbox" value="{{data.tracking_no}}" data-ng-click="setPayAmountTransportValue(data.id, data.import_fee, data.transport_cost_china, data.transport_cost_thai)" data-ng-click="toggleSelection(data.tracking_no, $index)">-->
 							<input id="radio{{$index}}" type="checkbox" value="{{data.tracking_no}}" data-ng-click="toggleSelectionType2(data, $index)">
 						</td>
-						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.order_no}}</label></td>
-						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.tracking_no}}</label></td>
-						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
-						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.totalBaht | number:2}}</label></td>
+						<td><label  style="font-weight: lighter;">{{data.order_no}}</label></td>
+						<td><label  style="font-weight: lighter;">{{data.tracking_no}}</label></td>
+						<td><label  style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
+						<td><label  style="font-weight: bold;">{{data.totalBaht | number:2}}</label></td>
 					</tr>
 				</table>
 			</div>

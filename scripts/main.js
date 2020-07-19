@@ -99,6 +99,24 @@ app.config(function($controllerProvider, $compileProvider, $filterProvider, $log
   $logProvider.debugEnabled(false);
 });
 
+app.config(['$httpProvider', function($httpProvider) {
+     $httpProvider.interceptors.push('noCacheInterceptor');
+}]).factory('noCacheInterceptor', function () {
+        return {
+            request: function (config) {
+                console.log(config.method);
+                console.log(config.url);
+                if(config.method=='GET'){
+                    var separator = config.url.indexOf('?') === -1 ? '?' : '&';
+                    config.url = config.url+separator+'noCache=' + new Date().getTime();
+                }
+                console.log(config.method);
+                console.log(config.url);
+                return config;
+           }
+       };
+});
+
 app.run(function($rootScope, $templateCache) {
    $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();

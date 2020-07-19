@@ -76,8 +76,8 @@
 							<td>{{data.customer.mobile_no}}</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td class="text-right">{{data.pay_amount_thb | number:2}}</td>
-							<td>{{data.order_no}}</td>
-							<td>{{data.tracking_no}}</td>
+							<td>{{data.order_no}}{{data.order.order_no}}</td>
+							<td>{{data.tracking_no}}{{data.order_tracking.tracking_no}}{{data.importer.tracking_no}}</td>
 							<td>{{getPayType(data.pay_type)}}</td>
 						</tr>
 					</tbody>

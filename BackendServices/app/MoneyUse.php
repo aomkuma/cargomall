@@ -21,4 +21,19 @@ class MoneyUse extends Model
     {
         return $this->hasOne('App\User','id','user_id');
     }
+
+    public function importer()
+    {
+        return $this->hasOne('App\Importer','id','to_ref_id');
+    }
+
+    public function order()
+    {
+        return $this->hasOne('App\Order','id','to_ref_id');
+    }
+
+    public function orderTracking()
+    {
+        return $this->hasOne('App\OrderTracking','tracking_no','to_ref_id_2');
+    }
 }

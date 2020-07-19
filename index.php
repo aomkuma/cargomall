@@ -1,3 +1,8 @@
+<?php
+	header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");//Dont cache
+	header("Pragma: no-cache");//Dont cache
+	header("Expires: " . date('D, d M Y H:i:s'));
+?>
 <!DOCTYPE html>
 <html lang="en-US" data-ng-app="app">
 	<head>
@@ -10,8 +15,7 @@
 
 		<meta name="fragment" content="!">
 
-		<meta name="keywords" content="taobao, tmall, 1688, สั่งซื้อสินค้าจากจีนม สั่ง taobao , alipay, โอนเงิน alipay, สั่ง taobao เอง ,สั่งเว็บจีน , สั่งสินค้าเว็บจีน ,สั่งของเว็บจีน , ซื้อของเว็บจีน , สั่งซื้อจากจีน , สั่งซื้อสินค้าจากจีน ,สั่งสินค้าจากจีน , สั่งสินค้าจาก taobao , ซื้อสินค้าจากจีน , ทัวร์จีน , ซื้อของ , ซื้อของจากจีน , ขายส่งเสื้อผ้า , สินค้าราคาส่ง , ทัวร์ซื้อสินค้าจีน , นำ เข้า , นำเข้าสินค้าจากจีน , นำเข้าสินค้า , นำเข้าจากจีน , นำเข้าสินค้าจีน , นำเข้า จีน , นำเข้า ราคาถูก , นำเข้าสินค้าจากจีน ราคาถูก , นำเข้าสินค้า ราคาถูก , นำเข้าจากจีน ราคาถูก , นำเข้าสินค้าจีน ราคาถูก , นำเข้า จีน ราคาถูก , นำเข้า กิโล , นำเข้าสินค้าจากจีน กิโล , นำเข้าสินค้า กิโล , นำเข้าจากจีน กิโล , นำเข้าสินค้าจีน กิโล , นำเข้า จีน กิโล , นำเข้า ราคาถูก , นำเข้า taobao , นำเข้าสินค้าจากจีน taobao ,นำเข้าสินค้าจากจีน pantip , นำเข้าสินค้าจากจีน ภาษี , นำเข้าสินค้าจากจีน ทำอย่างไร ,นำเข้าสินค้าจากจีน ทำไง , นำเข้าสินค้าจากจีน เชียงใหม่ ,นำ้เข้าสินค้าจากจีน ราคาถูก , นำเข้าสินค้าจากจีน alibaba , นำเข้าเสื้อผ้าจากจีน , นำเข้าของจากจีน , นำเข้าของเล่น , นำเข้าของเล่นจากจีน , นำเข้าของจีน , นำเข้าของจากจีน taobao , หิ้วสินค้าจากจีน , หิ้วจากจีน , หิ้วสินค้าจีน , หิ้วของจากจีน , หิ้วของจากจีนราคาถูก , หิ้วของ , taobao เสื้อผ้า ,taobao เสื้อผ้าผู้ชาย , taobao เสื้อผ้าคู่รัก , taobao เสื้อผ้าคนอ้วน , taobao เสื้อผ้าราคาถูก , taobao รองเท้า , taobao รองเท้าสวย , taobao รองเท้าผู้ชาย ,taobao รองเท้าไซส์ใหญ่ ,taobao กระเป๋า , taobao กระเป๋า ผู้ชาย , taobao กระเป๋า ราคาถูก , taobao กระเป๋าสตางค์ , taobao คือ , taobao คืออะไร , พรีออเดอร์ , พรีออเดอร์จีน , พรีออเดอร์จีนราคาถูก , พรีออเดอร์จีน ถูก , พรีออเดอร์ คือ , พรีออเดอร์ คืออะไร , preorder , pre order 88 , preorder รองเท้า , pre order taobao , pre order รองเท้า , pre order h&m , แลกเงินหยวน , แลกเงินหยวนที่ไหนดี , แลกเงินหยวนได้ที่ไหน , รวมสินค้าที่จีน , รวมสินค้าจากจีน , แหล่งรวมสินค้าจีน , shipping agent , เอเย่นต์ , เอเย่นต์จีน , เอเจนท์ , เอเจ้นท์จีน , เอเย่นต์ดีๆ จากจีน , agent shipping , shipping agency , shipping agency ดีๆ จากจีน , ตัวแทนจากจีน , ตัวแทนนำเข้าจากจีน , เอเย่นต์ในไทย , เอเย่นต์ในจีน , เอเย่นต์ส่งสินค้าจากจีนกลับไทย , เอเจนซี่ , เอเจนซี่จีน">
-		<meta name="description" content="รับนำเข้าสินค้าจากจีน, taobao, tmall, 1688,รับโอนเงินไปจีน,รับสั่งของจากจีน, โอนเงิน alipay">
+		<meta name="keywords" content="taobao, tmall, 1688, สั่งซื้อสินค้าจากจีนม สั่ง taobao , alipay, โอนเงิน alipay, สั่ง taobao เอง ,สั่งเว็บจีน , สั่งสินค้าเว็บจีน ,สั่งของเว็บจีน , ซื้อของเว็บจีน , สั่งซื้อจากจีน , สั่งซื้อสินค้าจากจีน ,สั่งสินค้าจากจีนy">
 
 		<meta http-equiv="Content-Security-Policy" content="img-src * 'self' data:; default-src * 'self' gap: ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; ">
 
@@ -23,52 +27,52 @@
 	  	<meta property="og:image"         content="" />
 		
 		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-			
+			<!-- 
 		<base href="/" /> 
-	 	 
-		<!-- 
+	 	  -->
+		
 		<base href="/cargomall/" />
-		 -->
+		
 		<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
 		<!-- include js -->
-		<script src='scripts/node_modules/angular/angular.min.js'></script>
-		<script src='scripts/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'></script>
-		<script src='scripts/node_modules/angular-route/angular-route.min.js'></script>
-		<script src='scripts/node_modules/angular-animate/angular-animate.min.js'></script>
-		<script src="scripts/node_modules/angular-cookies/angular-cookies.min.js"></script>
-		<script src="scripts/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
-		<script src="scripts/node_modules/oclazyload/dist/ocLazyLoad.min.js"></script>
-		<script src="scripts/node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
-		<script src="scripts/node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
-		<script src="scripts/node_modules/angular-bind-html-compile-ci-dev/angular-bind-html-compile.min.js"></script>
-		<script src="scripts/node_modules/angular-translate/angular-translate.js"></script>
-		<script src="scripts/node_modules/ng-youtube/src/ng-youtube-embed.js"></script>
-		<script type="text/javascript" src='scripts/node_modules/ngstorage/ngStorage.js' charset="utf-8"></script>
-		<script type="text/javascript" src='scripts/node_modules/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js' charset="utf-8"></script>
+		<script src='scripts/node_modules/angular/angular.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>'></script>
+		<script src='scripts/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>'></script>
+		<script src='scripts/node_modules/angular-route/angular-route.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>'></script>
+		<script src='scripts/node_modules/angular-animate/angular-animate.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>'></script>
+		<script src="scripts/node_modules/angular-cookies/angular-cookies.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/node_modules/angular-ui-router/release/angular-ui-router.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/node_modules/oclazyload/dist/ocLazyLoad.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/node_modules/ng-file-upload/dist/ng-file-upload.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/node_modules/angular-bind-html-compile-ci-dev/angular-bind-html-compile.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/node_modules/angular-translate/angular-translate.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/node_modules/ng-youtube/src/ng-youtube-embed.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script type="text/javascript" src='scripts/node_modules/ngstorage/ngStorage.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>' charset="utf-8"></script>
+		<script type="text/javascript" src='scripts/node_modules/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>' charset="utf-8"></script>
 		
 		<script src="scripts/node_modules/chart.js/dist/Chart.bundle.min.js"></script>
 
-		<script src="scripts/node_modules/angular-socialshare/dist/angular-socialshare.min.js"></script>
+		<script src="scripts/node_modules/angular-socialshare/dist/angular-socialshare.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
 		
-		<script src='scripts/main.js?version=28as7d768230sd9238423h4i2u374128s72342k3j4234g23h4k234k2h34d768230sdf7s8df68y4k23jh42hj34kf7s8df68s6f876sd87f6s86df8s6df86s7d8f239df6'></script>
-		<script src='scripts/route.js?version=4428as7374128s72342k3j4234g23h4k234k2h34d768230sdf7s8df6874128s72342k3j4234g23h4k234k2h34d768230sdf7s8df68s6f876sd87f6s86df8s6df86s7d8f239df67632487'></script>
-		<script src='scripts/factory.js?version=22883098120s7d768230sdf7s8df68s6f876sd87f6s86df8s6df74128s72342k3j4234g23h4k234k2h34d768230sdf7s8df6874128s72342k3j4234g23h4k234k2h34d768230sdf7s8df6886s7d8f239df6938123938434823912391df6'></script>
-		<script src='scripts/util.js?version=128as7d76887s6df8s76df8s6df76sdf68sdf8301982374128s72342k3j4234g23h4k234k2h34d768230sdf7s8df6874128s72342k3j4234g23h4k234k2h34d768230sdf7s8df68091820397982374222374928377as1'></script>
+		<script src='scripts/main.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>'></script>
+		<script src='scripts/route.js?version=<?=strtotime(date('YmdHis')).rand(99,999999999) ?>'></script>
+		<script src='scripts/factory.js?version=<?=date('YmdHis').rand(999,999999999) ?>'></script>
+		<script src='scripts/util.js?version=<?=date('YmdHis').rand(9999,999999999) ?>'></script>
 
-		<script src="scripts/ckeditor_sdk/vendor/ckeditor/ckeditor.js"></script>
-		<script src="scripts/ckeditor_sdk/samples/assets/picoModal-2.0.1.min.js"></script>
-		<script src="scripts/ckeditor_sdk/samples/assets/contentloaded.js"></script>
-		<script src="scripts/ckeditor_sdk/samples/assets/beautify-html.js"></script>
+		<script src="scripts/ckeditor_sdk/vendor/ckeditor/ckeditor.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/ckeditor_sdk/samples/assets/picoModal-2.0.1.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/ckeditor_sdk/samples/assets/contentloaded.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/ckeditor_sdk/samples/assets/beautify-html.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
 		<script src="scripts/jquery.min.js"></script>
 		<script src="scripts/bootstrap.min.js"></script>
 		
 		<!-- include js end -->
 
 		<!-- include css -->
-		<link rel="stylesheet" href="scripts/node_modules/bootstrap/dist/css/bootstrap.min.css">
-		<link rel="stylesheet" href="scripts/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css">
-		<link rel="stylesheet" href="scripts/node_modules/angular-bootstrap-colorpicker/css/colorpicker.css">
-		<link rel="stylesheet" href="fa/css/all.min.css">
+		<link rel="stylesheet" href="scripts/node_modules/bootstrap/dist/css/bootstrap.min.css?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>">
+		<link rel="stylesheet" href="scripts/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>">
+		<link rel="stylesheet" href="scripts/node_modules/angular-bootstrap-colorpicker/css/colorpicker.css?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>">
+		<link rel="stylesheet" href="fa/css/all.min.css?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>">
 		
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-161508645-1"></script>
 		<script> window.prerenderReady = false; </script>

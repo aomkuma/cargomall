@@ -277,8 +277,15 @@ class MoneyBagsController extends Controller
 
                     $email_to = $order_data->customer->email;
 
-                    Mail::to($email_to)->send(new OrderRequestMailable($order_data));
+                    try{
+                        
+                        Mail::to($email_to)->send(new OrderRequestMailable($order_data));
 
+                    }catch(\Exception $e){
+
+                        Log::error("ERROR :: " . $e->getMessage());
+                        
+                    }
                 }
                 
             }
@@ -317,8 +324,13 @@ class MoneyBagsController extends Controller
 
                         $email_to = $order_data->customer->email;
 
-                        Mail::to($email_to)->send(new OrderTransportCostMailable($order_data, $pay_data, $money_bag_data));
-                        
+                        try{
+                            Mail::to($email_to)->send(new OrderTransportCostMailable($order_data, $pay_data, $money_bag_data));
+                        }catch(\Exception $e){
+
+                            Log::error("ERROR :: " . $e->getMessage());
+                            
+                        }
                     }
                 }
                 
@@ -349,8 +361,13 @@ class MoneyBagsController extends Controller
 
                         $email_to = $importer_data->customer->email;
 
-                        Mail::to($email_to)->send(new ImporterCostMailable($importer_data, $pay_data, $money_bag_data));
+                        try{
+                            Mail::to($email_to)->send(new ImporterCostMailable($importer_data, $pay_data, $money_bag_data));
+                        }catch(\Exception $e){
 
+                            Log::error("ERROR :: " . $e->getMessage());
+                            
+                        }
                     }
 
                     $importer_group_id[] = $value['tracking_no'];
@@ -535,8 +552,15 @@ class MoneyBagsController extends Controller
 
             $email_to = $topup->customer->email;
 
-            Mail::to($email_to)->send(new TopupNotiMailable($topup, $money_bag_data));
-            
+            try{
+
+                Mail::to($email_to)->send(new TopupNotiMailable($topup, $money_bag_data));
+
+            }catch(\Exception $e){
+
+                Log::error("ERROR :: " . $e->getMessage());
+
+            }
 
             $this->data_result['DATA'] = 'Topup success';
 
@@ -591,8 +615,13 @@ class MoneyBagsController extends Controller
 
             $email_to = $transfer->customer->email;
 
-            Mail::to($email_to)->send(new TransferNotiMailable($transfer, $money_bag_data));
+            try{
+                Mail::to($email_to)->send(new TransferNotiMailable($transfer, $money_bag_data));
+           }catch(\Exception $e){
 
+                Log::error("ERROR :: " . $e->getMessage());
+                
+            }
             $this->data_result['DATA'] = 'Transfer success';
 
         }
@@ -646,7 +675,15 @@ class MoneyBagsController extends Controller
 
             $email_to = $deposit->customer->email;
 
-            Mail::to($email_to)->send(new DepositNotiMailable($deposit, $money_bag_data));
+            try{
+                
+                Mail::to($email_to)->send(new DepositNotiMailable($deposit, $money_bag_data));
+
+            }catch(\Exception $e){
+
+                Log::error("ERROR :: " . $e->getMessage());
+                
+            }
 
             $this->data_result['DATA'] = 'Deposit success';
 
@@ -805,6 +842,9 @@ class MoneyBagsController extends Controller
                         ->count();
 
             $list = MoneyUse::with('customer')
+                        ->with('importer')
+                        ->with('order')
+                        ->with('orderTracking')
                         ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname')
                         ->join('user', 'user.id', '=', 'money_use.user_id')
                         ->where('pay_status', 2)
