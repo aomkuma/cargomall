@@ -35,8 +35,8 @@ angular.module('app').controller('ImporterDetailController', function($scope, $c
     $scope.loadTransportRateData = function(){
 
         IndexOverlayFactory.overlayShow();
-        var params = null;
-        HTTPService.clientRequest('admin/transport-rate/list', params).then(function(result){
+        var params = {'rate_level' : $scope.UserData.user_level};
+        HTTPService.clientRequest('admin/transport-rate/get', params).then(function(result){
             if(result.data.STATUS == 'OK'){
                 $scope.TransportRateData = result.data.DATA;
             }else{
@@ -58,6 +58,7 @@ angular.module('app').controller('ImporterDetailController', function($scope, $c
     	HTTPService.clientRequest('importer/get', params).then(function(result){
 	        if(result.data.STATUS == 'OK'){
 	        	$scope.Importer = result.data.DATA;
+            $scope.Customer = result.data.DATA.customer;
 
 	        	if(checkEmptyField($scope.Importer.china_arrival)){
 	        		$scope.Importer.china_arrival = makeDateTime($scope.Importer.china_arrival);

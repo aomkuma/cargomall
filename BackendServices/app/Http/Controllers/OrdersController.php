@@ -9,6 +9,8 @@ use App\OrderDesc;
 use App\OrderDetail;
 use App\OrderTracking;
 use App\CartSession;
+use App\Models\OrderActivityLog;
+
 use Request;
 
 use DB;
@@ -26,6 +28,80 @@ use Illuminate\Support\Facades\Log;
 class OrdersController extends Controller
 {
     //
+
+    public function deleteProduct(){
+
+        $params = Request::all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $order_detail_id = $params['obj']['order_detail_id'];
+        
+        $order_activity_log = OrderDetail::find($order_detail_id)->delete();
+
+        $this->data_result['DATA']['order_activity_log'] = $order_activity_log;
+        
+        return $this->returnResponse(200, $this->data_result, response(), false);
+    }
+
+    public function getHistoryList(){
+
+        $params = Request::all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $order_id = $params['obj']['order_id'];
+        
+        $order_activity_log = OrderActivityLog::where('order_id', $order_id)
+                            ->orderBy('created_at', 'DESC')
+                            ->get();
+
+        $this->data_result['DATA']['order_activity_log'] = $order_activity_log;
+        
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+    
+    public function updateProductList(){
+
+        $params = Request::all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $ProductList = $params['obj']['ProductList'];
+        $result = 0;
+
+        $cost = 0;
+
+        foreach ($ProductList as $key => $value) {
+            $update_data = [];
+            $update_data['product_price_yuan'] = $value['product_price_yuan'];
+            $update_data['product_promotion_price'] = $value['product_promotion_price'];
+            $update_data['product_choose_amount'] = $value['product_choose_amount'];
+
+            $result += OrderDetail::find($value['id'])->update($update_data);
+
+            if($value['product_promotion_price'] > 0){
+                $cost += ($value['product_promotion_price'] * /*$v['exchange_rate']) **/ $value['product_choose_amount']);
+            }else{
+                $cost += ($value['product_price_yuan'] * /*$v['exchange_rate']) **/ $value['product_choose_amount']);
+            }
+        }
+
+        $order_id = $ProductList[0]['order_id'];
+
+        // update price total
+        // $cost = $this->calcCost($ProductList);
+        $order_data = Order::find($order_id);
+        $order_data->net_price = $cost;
+        $order_data->save();
+
+        // $order_no = $order->order_no;
+        $admin_id = $user_data['id'];
+        $admin_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
+
+        addOrderActivityLog('update_product', $order_id, $admin_id, $admin_name, null, null, null, null, null);
+
+        $this->data_result['DATA']['result'] = $result;
+        
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
     public function pendingList(){
 
         $params = Request::all();
@@ -58,10 +134,12 @@ class OrdersController extends Controller
         $skip = $offset * $limit;
 
         $totalRows = Order::with('orderDesc')
+                ->join('user' , 'user.id', '=', 'order.user_id')
                 ->where(function($query) use ($condition){
                     if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                         $query->where('order_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         $query->orWhere('tracking_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                        $query->orWhere('user_code' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                     }
                     if(isset($condition['order_status']) &&  !empty($condition['order_status'])){
                         $query->where('order_status', $condition['order_status']);
@@ -76,12 +154,15 @@ class OrdersController extends Controller
                 })
                 ->count();
 
-        $list = Order::with('orderDesc')
+        $list = Order::select('order.*')
+                ->with('orderDesc')
                 ->with('customer')
+                ->join('user' , 'user.id', '=', 'order.user_id')
                 ->where(function($query) use ($condition){
                     if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                         $query->where('order_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         $query->orWhere('tracking_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                        $query->orWhere('user_code' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                     }
                     if(isset($condition['order_status']) &&  !empty($condition['order_status'])){
                         $query->where('order_status', $condition['order_status']);
@@ -168,6 +249,105 @@ class OrdersController extends Controller
 
     }
 
+    public function listByUserLimit(){
+
+        $params = Request::all();
+
+        $user_data = [];
+        if(isset($params['user_session']['user_data'])){
+            $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+            $user_data['id'] = ''.$user_data['id'];
+        }else{
+            $user_data['id'] = null;
+        }
+        // $condition = $params['obj']['condition'];
+
+        $list = Order::where('user_id', $user_data['id'])
+                ->orderBy('created_at', 'DESC')
+                ->take(5)
+                ->get();
+
+        $this->data_result['DATA'] = $list;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function listByUserAndStatus(){
+
+        $params = Request::all();
+
+        $user_data = [];
+        if(isset($params['user_session']['user_data'])){
+            $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+            $user_data['id'] = ''.$user_data['id'];
+        }else{
+            $user_data['id'] = null;
+        }
+        $condition = $params['obj']['condition'];
+
+        if($condition['pay_type'] == 1){
+
+            $list = Order::with('orderDesc')
+                    ->with('orderDetails')
+                    ->where('user_id', $user_data['id'])
+                    ->where(function($query) use ($condition){
+                        if(isset($condition['pay_type']) && $condition['pay_type'] == 1){
+                            $query->where('order_status' , 1);    
+                        }
+                        if(isset($condition['to_ref_id']) &&  !empty($condition['to_ref_id'])){
+                            $query->where('id' , $condition['to_ref_id']);
+                        }
+
+                        if(isset($condition['order_no']) && !empty($condition['order_no'])){
+                            $query->where('order_no' , $condition['order_no']);
+                        }
+                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                            $condition['created_at'] = getDateFromString($condition['created_at']);
+                            $query->where('created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                        }
+                    })
+                    ->get();
+
+        }else if($condition['pay_type'] == 2){
+            $list = OrderTracking::select("order_tracking.*", "order.id", "order.order_no", "order.created_at", "order.user_id")
+                        ->join("order", "order.id", "=", "order_tracking.order_id")
+                        ->where('order.user_id', $user_data['id'])
+                        ->whereNotNull('order_tracking.transport_cost_china')
+                        ->whereNotNull('order_tracking.transport_cost_thai')
+                        ->whereNotNull('order_tracking.import_fee')
+
+                        ->where('order_tracking.transport_cost_china' , '>=', 0)
+                        ->where('order_tracking.transport_cost_thai' , '>=', 0)
+                        ->where('order_tracking.import_fee' , '>=', 0)
+
+                        ->where('order_tracking.payment_status', false)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['pay_type']) && $condition['pay_type'] == 2){
+                                $query->where('order.order_status' , 6);
+                            }   
+
+                            if(isset($condition['to_ref_id']) &&  !empty($condition['to_ref_id'])){
+                                $query->where('order.id' , $condition['to_ref_id']);
+                            }
+
+                            if(isset($condition['order_no']) && !empty($condition['order_no'])){
+                                $query->where('order.order_no' , $condition['order_no']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('order.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->get();
+        }
+
+        $this->data_result['DATA'] = $list;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
     public function confirmOrder(){
 
     	$params = Request::all();
@@ -207,6 +387,7 @@ class OrdersController extends Controller
     	$order->net_price = $cost;
     	$order->estimate_cost = $cost;
     	$order->transport_type = $ShippingOptions['transport_type'];
+        $order->package_type = $ShippingOptions['package_type'];
     	$order->payment_type = 'TRANSFER';
     	$order->receive_order_type = $ShippingOptions['receive_order_type'];
 
@@ -227,7 +408,7 @@ class OrdersController extends Controller
         if(isset($ShippingOptions['transport_company_other'])){
             $order->transport_company_other = $ShippingOptions['transport_company_other'];
         }
-    	$order->order_status = 1;
+    	$order->order_status = 0;
 
     	$order->save();
 
@@ -321,13 +502,98 @@ class OrdersController extends Controller
             Log::info("Order No : " . $order->order_no);
             Log::info("To Order Status : " . $to_order_status);
 
-            if($to_order_status == 6 && $current_order_status < $to_order_status){
+            /*if($to_order_status == 6 && $current_order_status < $to_order_status){
                 $mobile_no = $order->customer->mobile_no;
                 $message = 'รายการฝากสั่งเลขที่ ' . $order->order_no . ' ขณะนี้อยู่ในสถานะ "รอการชำระค่าขนส่ง" กรุณาเข้าสู่ระบบเพื่อดำเนินการชำระค่าขนส่งสินค้า ขอบคุณค่ะ';
                 sendSms($mobile_no, $message);
-            }
+            }*/
+
+            $order_id = $order->id;
+            $order_no = $order->order_no;
+            $admin_id = $user_data['id'];
+            $admin_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
+            $old_status = $current_order_status;
+            $new_status = $to_order_status;
+
+            addOrderActivityLog('update_status', $order_id, $admin_id, $admin_name, $order_no, $old_status, $new_status, null, null);
 
             $this->data_result['DATA'] = true;
+        }else{
+
+            $this->data_result['STATUS'] = 'ERROR';
+            $this->data_result['DATA'] = 'Order not found';
+
+        }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function sendTransportPaymentSMS(){
+        $params = Request::all();
+
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $order_id = trim($params['obj']['order_id']);
+
+        $order = Order::with('customer')->find($order_id);
+
+        if($order && $order->order_status == 6){
+
+            $mobile_no = $order->customer->mobile_no;
+
+            // get waiting payment tracking status
+            $tracking_no_list = OrderTracking::select('tracking_no')
+                                ->where('order_id', $order_id)
+                                ->whereNotNull('order_tracking.transport_cost_china')
+                                ->whereNotNull('order_tracking.transport_cost_thai')
+                                ->whereNotNull('order_tracking.import_fee')
+                                ->where('order_tracking.transport_cost_china' , '>=', 0)
+                                ->where('order_tracking.transport_cost_thai' , '>=', 0)
+                                ->where('order_tracking.import_fee' , '>=', 0)
+                                ->where('order_tracking.payment_status', false)
+                                ->get()->toArray();
+
+            // print_r($tracking_no_list);exit;
+            $track_arr = [];
+            foreach ($tracking_no_list as $key => $value) {
+                $track_arr[] = $value['tracking_no'];
+            }
+
+            $message = 'รายการฝากสั่ง ' . implode(',', $track_arr) . ' ขณะนี้อยู่ในสถานะ "รอการชำระค่าขนส่ง" กรุณาเข้าสู่ระบบเพื่อดำเนินการชำระค่าขนส่งสินค้า ขอบคุณค่ะ';
+            sendSms($mobile_no, $message);
+
+            $this->data_result['DATA'] = true;
+        
+        }else{
+
+            $this->data_result['STATUS'] = 'ERROR';
+            $this->data_result['DATA'] = 'Order not found';
+
+        }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function sendProductPaymentSMS(){
+        $params = Request::all();
+
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $order_id = trim($params['obj']['order_id']);
+
+        $order = Order::with('customer')->find($order_id);
+
+        if($order && $order->order_status == 1){
+
+            $mobile_no = $order->customer->mobile_no;
+
+            $message = 'รายการฝากสั่ง เลขที่ ' . $order->order_no . ' ขณะนี้อยู่ในสถานะ "รอการชำระเงินค่าสินค้า" กรุณาเข้าสู่ระบบเพื่อดำเนินการชำระค่าสินค้า ขอบคุณค่ะ';
+            sendSms($mobile_no, $message);
+
+            $this->data_result['DATA'] = true;
+        
         }else{
 
             $this->data_result['STATUS'] = 'ERROR';
@@ -373,6 +639,7 @@ class OrdersController extends Controller
 
         $order = Order::find($Order['id']);
         if($order){
+            $order->china_order_no = $Order['china_order_no'];
             $order->tracking_no = $Order['tracking_no'];
             $order->tracking_no_thai = $Order['tracking_no_thai'];
             $order->discount = $Order['discount'];
@@ -398,13 +665,24 @@ class OrdersController extends Controller
         foreach ($Order['order_trackings'] as $key => $value) {
             $order_tracking = OrderTracking::find($value['id']);
             if($order_tracking){
+                $order_tracking->china_order_no = $value['china_order_no'];
+                $order_tracking->china_tracking_no = $value['china_tracking_no'];
                 $order_tracking->product_type = $value['product_type'];
                 $order_tracking->transport_cost_china = $value['transport_cost_china'];
                 $order_tracking->transport_cost_thai = $value['transport_cost_thai'];
+                $order_tracking->tracking_no_thai = $value['tracking_no_thai'];
+                $order_tracking->import_fee = $value['import_fee'];
                 $order_tracking->save();
             }
 
         }
+
+        $order_id = $order->id;
+        $order_no = $order->order_no;
+        $admin_id = $user_data['id'];
+        $admin_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
+
+        addOrderActivityLog('update_order_detail', $order_id, $admin_id, $admin_name, $order_no, null, null, null, null);
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 
@@ -425,9 +703,53 @@ class OrdersController extends Controller
 
         if($order){
 
+            $order_id = $order->id;
+            $order_no = $order->order_no;
+            $admin_id = $user_data['id'];
+            $admin_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
+
+            $last_order_status = $order->order_status;
             Log::info("Order No : " . $order->order_no);
-            $order->order_status = 9;
+            $order->order_status = 8;
+            $order->last_order_status = $last_order_status;
             $order->save();
+
+            addOrderActivityLog('cancel_order', $order_id, $admin_id, $admin_name, $order_no, null, null, null, null);
+
+            $this->data_result['DATA'] = true;
+        }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function cancelCancelStatus(){
+
+        $params = Request::all();
+
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $id = trim($params['obj']['id']);
+        
+        Log::info("CANCEL_CANCEL_STATUS_ORDER => ");
+        Log::info("By User : " . $user_data['firstname'] . ' ' . $user_data['lastname']);
+
+        $order = Order::find($id);
+
+        if($order){
+
+            $order_id = $order->id;
+            $order_no = $order->order_no;
+            $admin_id = $user_data['id'];
+            $admin_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
+
+            $last_order_status = $order->order_status;
+            Log::info("Order No : " . $order->order_no);
+            $order->order_status = $order->last_order_status;
+            $order->last_order_status = null;
+            $order->save();
+
+            addOrderActivityLog('cancel_cancel_order', $order_id, $admin_id, $admin_name, $order_no, null, null, null, null);
 
             $this->data_result['DATA'] = true;
         }
@@ -475,11 +797,42 @@ class OrdersController extends Controller
             $order->transport_company_other = $Order['transport_company_other'];
             $order->save();
 
+            // $tracking_no = $order->$tracking_no;
+            $order_id = $order->id;
+            $order_no = $order->order_no;
+            $admin_id = $user_data['id'];
+            $admin_name = $user_data['user_code'] . ' ' . $user_data['firstname'] . ' ' . $user_data['lastname'];
+            $subject = 'บริษัทขนส่ง';
+            addOrderActivityLog('cus_update_order_detail', $order_id, $admin_id, $admin_name, $order_no, null, null, null,  $subject);
+
             $this->data_result['DATA'] = true;
         }
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 
+    }
+    
+    public function deleteTrack(){
+        
+        $params = Request::all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $id = $params['obj']['id'];
+
+        $result = OrderTracking::find($id);
+        
+        $tracking_no = $result->tracking_no;
+        $order_id = $result->order_id;
+        // $order_no = $result->order_no;
+        $admin_id = $user_data['id'];
+        $admin_name = $user_data['firstname'] . ' ' . $user_data['lastname'];
+
+        $result->delete();
+
+        addOrderActivityLog('delete_tracking', $order_id, $admin_id, $admin_name, null, null, null, $tracking_no);
+
+        $this->data_result['DATA'] = $result;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
     }
 
     private function calcCost($ProductList){

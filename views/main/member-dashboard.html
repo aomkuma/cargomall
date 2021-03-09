@@ -1,0 +1,511 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div  style="margin-right: 0px;">
+
+	<div class="row hidden-xs" style="margin-top:180px; background-color: #e8a587; padding: 8px; padding-top:20px;">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="row form-group">
+				<div class="col-md-9 col-sm-8 col-xs-12">
+					<input type="text" class="form-control" data-ng-model="link_url" focus-me="focusLinkURLInput"  placeholder="ค้นหาสินค้าจาก taobao, tmall, 1688 .." style="height: 40px;" data-ng-enter="getProduct(link_url)">
+				</div>
+				<div class="col-md-3 col-sm-4 col-xs-12">
+					<button class="btn btn-login btn-block" data-ng-click="getProduct(link_url)" data-ng-disabled="link_url == null || link_url == ''" style="height: 40px;"><i class="fas fa-search"></i> {{'SEARCH_FROM_LINK' | translate}}</button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+	<div class="row visible-xs" style="margin-top:100px; background-color: #e8a587; padding: 8px; padding-top:20px;">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="row form-group">
+				<div class="col-md-9 col-sm-8 col-xs-12">
+					<input type="text" class="form-control" data-ng-model="link_url" focus-me="focusLinkURLInput"  placeholder="ค้นหาสินค้าจาก taobao, tmall, 1688 .." style="height: 40px;" data-ng-enter="getProduct(link_url)">
+				</div>
+				<div class="col-md-3 col-sm-4 col-xs-12">
+					<button class="btn btn-login btn-block" data-ng-click="getProduct(link_url)" data-ng-disabled="link_url == null || link_url == ''" style="height: 40px;"><i class="fas fa-search"></i> {{'SEARCH_FROM_LINK' | translate}}</button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+	<div class="contaner" style="max-width:1200px; margin: auto;">
+		<div class="row" style=" padding: 10px; padding-top:20px;">
+			<div class="col-md-4" style="background-color: #d4928c; padding-top: 30px;">
+				<div class="row form-group">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="input-group">
+						  <span class="input-group-addon" id="basic-addon1">฿</span>
+						  <input type="text" class="form-control big-form" placeholder="Username" aria-describedby="basic-addon1" value="{{UserData.money_bags.balance | number:2}}" style="text-align: center;font-size: 1.5em;" disabled="true">
+						</div>
+						 
+					</div>
+				</div>
+				<div class="row form-group">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="row form-group">
+							<div class="col-md-6 col-sm-6 col-xs-6">
+								<a class="btn btn-primary btn-big blue-btn btn-block" href="topup">เติมเงิน</a>
+						 	</div>
+						 	<div class="col-md-6 col-sm-6 col-xs-6">
+								<a class="btn btn-primary btn-big btn-block" href="pay/4">ชำระเงิน</a>
+						 	</div>
+						 </div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-8" style="">
+				<div class="row form-group">
+					<div class="col-md-4 col-sm-4 col-xs-4">
+						<div class="rate-box-md">
+							{{'ORDER_PRODUCT_TXT' | translate}}<br><br>
+							<span class="rate-label"><b>{{exchange_rate | number:2}} THB</b></span>
+							
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-4 col-xs-4">
+						<div class="rate-box-md">
+							{{'TOPUP_TXT' | translate}}<br><br>
+							<span class="rate-label"><b>{{exchange_rate_transfer | number:2}} THB</b></span>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-4 col-xs-4">
+						<div class="rate-box-md">
+							{{'TRANSFER_MONEY_TXT' | translate}}<br><br>
+							<span class="rate-label"><b>{{exchange_rate_transfer | number:2}} THB</b></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="padding-top:20px; padding: 8px;">
+			<div class="row form-group">
+				<div class="col-md-12 col-sm-12 col-xs-12" style="">
+					<div class="dashboard-blog" style="background-color: #e3ceb8;">
+						<br><!-- <span class="glyphicon glyphicon-th-list"></span> รายการสั่งซื้อ -->
+						<a href="product-info"><img src="files/img/icon-shortcut/shopping-icon.png" style="width: 100px; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+					</div>
+					<div class="dashboard-blog" style="background-color: #ed8c87;">
+						<br><!-- <span class="glyphicon glyphicon-import"></span> รายการนำเข้า -->
+						<a href="view-orders"><img src="files/img/icon-shortcut/basket-icon.png" style="width: 100px; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+					</div>
+					<div class="dashboard-blog" style="background-color: #e3bab8;">
+						<br><!-- <span class="glyphicon glyphicon-transfer"></span> โอนเงินไปจีน -->
+						<a href="tracking/order"><img src="files/img/icon-shortcut/check-tracking-icon.png" style="width: 100px; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+					</div>
+
+				
+					<div class="dashboard-blog" style="background-color: #ed8c87;">
+						<br><!-- <span class="glyphicon glyphicon-th-list"></span> รายการสั่งซื้อ -->
+						<a href="topup"><img src="files/img/icon-shortcut/wallet-icon.png" style="width: 100px; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+					</div>
+					<div class="dashboard-blog" style="background-color: #e3bab8;">
+						<br><!-- <span class="glyphicon glyphicon-import"></span> รายการนำเข้า -->
+						<a href="pay/4"><img src="files/img/icon-shortcut/payment-icon.png" style="width: 100px; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+					</div>
+					<div class="dashboard-blog" style="background-color: #e3ceb8;">
+						<br><!-- <span class="glyphicon glyphicon-transfer"></span> โอนเงินไปจีน -->
+						<a href="pay/3"><img src="files/img/icon-shortcut/transfer-icon.png" style="width: 100px; padding:5px;" alt="" title="" class="img-quick-btn"></a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style=" padding: 8px; padding-top:20px;" ng-form="frm">
+			<div class="col-md-6">
+				<div class="panel panel-warning">
+					<div class="panel-heading text-center">
+						<span style="font-size: 1em; font-weight: bolder;">รายการฝากสั่งสินค้า</span>
+					</div>
+				
+					<div class="panel-body">
+						<table class="table table-striped table-bordered">
+							<thead>
+								<tr>
+									<th>หมายเลขออเดอร์</th>
+									<th>วันที่ทำการสั่งซื้อ</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tr data-ng-repeat="data in OrderList">
+								<td>{{data.order_no}}</td>
+								<td>
+									{{getThaiDateTimeFromString(data.created_at)}}<br>
+									{{getOrderStatus(data.order_status)}}
+								</td>
+								<td>
+									<a href="tracking/order/detail/{{data.id}}" class="btn btn-warning btn-block">รายละเอียด</a>
+									<a href="pay/1/{{data.id}}" class="btn btn-primary btn-block" data-ng-show="data.order_status == 1">ชำระเงินค่าสินค้า</a>
+									<a href="pay/2/{{data.id}}" class="btn btn-default btn-block" data-ng-show="data.order_status == 6">ชำระเงินค่าขนส่ง</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="panel panel-info">
+					<div class="panel-heading text-center">
+						<span style="font-size: 1em; font-weight: bolder;">รายการนำเข้าสินค้า</span>
+					</div>
+				
+					<div class="panel-body">
+						<table class="table table-striped table-bordered">
+							<thead>
+								<tr>
+									<th>หมายเลขแทรค</th>
+									<th>วันที่ทำนำเข้า</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tr data-ng-repeat="data in ImporterList">
+								<td>{{data.tracking_no}}</td>
+								<td>
+									{{getThaiDateTimeFromString(data.created_at)}}<br>
+									{{getImporterStatus(data.importer_status)}}
+								</td>
+								<td>
+									<a href="importer/detail/{{data.id}}" class="btn btn-warning btn-block">รายละเอียด</a>
+									<a href="pay/5/{{data.id}}" class="btn btn-default" data-ng-show="data.importer_status == 4">ชำระเงิน</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="row" style=" padding: 8px; padding-top:20px;" ng-form="frm">
+			<div class="col-md-6">
+				<div class="panel panel-danger">
+					<div class="panel-heading text-center">
+						<span style="font-size: 1em; font-weight: bolder;">พัสดุไม่มีเจ้าของ</span>
+						<button class="btn btn-primary btn-sm pull-right">แจ้งเป็นเจ้าของ</button>
+					</div>
+				
+					<div class="panel-body">
+						<table class="table table-striped table-bordered">
+							<thead>
+								<tr>
+									<th>หมายเลขแทรค</th>
+									<th>วันที่ทำการสั่งซื้อ</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tr data-ng-repeat="data in TrackingNoneOwnerList track by $index">
+								<td>
+									<a href="BackendServices/storage/app/{{data.image_path}}" target="_blank"><img src="BackendServices/storage/app/{{data.image_path}}" style="height: 100px;"></a>
+									{{data.order_tracking.tracking_no}}
+								</td>
+								<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
+								<td>
+									<a href="tracking-none-owner/detail/{{data.id}}" class="btn btn-warning btn-block">รายละเอียด</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-heading text-center">
+						<span style="font-size: 1em; font-weight: bolder;">คำนวณค่าขนส่ง</span>
+					</div>
+				
+					<div class="panel-body">
+						<div class="row form-group">
+							<label class="col-md-2 col-sm-2 col-xs-12">	
+								การขนส่ง
+							</label>
+							<div class="col-md-4 col-sm-4 col-xs-12">
+								<select class="form-control" data-ng-model="Importer.transport_type" data-ng-change="calcPrice()">
+									<option value="">กรุณาเลือก..</option>	
+									<option value="car">ทางรถ</option>
+									<option value="sea">ทางเรือ</option>
+								</select>
+							</div>
+							<label class="col-md-2 col-sm-2 col-xs-12">	
+								ประเภทสินค้า
+							</label>
+							<div class="col-md-4 col-sm-4 col-xs-12">
+								<select class="form-control" data-ng-model="Importer.product_type" data-ng-change="calcPrice()">
+									<option value="">กรุณาเลือก</option>
+									<option value="ทั่วไป">ทั่วไป</option>
+									<option value="มอก." data-ng-hide="Importer.transport_type == 'sea'">มอก.</option>
+									<option value="อ.ย." data-ng-hide="Importer.transport_type == 'sea'">อย.</option>
+									<option value="อย.มอก." data-ng-hide="Importer.transport_type == 'car'">อย.มอก.</option>
+									<option value="สินค้าพิเศษ" data-ng-hide="Importer.transport_type == 'sea'">สินค้าพิเศษ</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<label class="col-md-2 col-sm-2 col-xs-12">	
+								น้ำหนัก (KGM)
+							</label>
+							<div class="col-md-4 col-sm-4 col-xs-12">
+								<input class="form-control" data-ng-model="Importer.weight_kgm" maxlength="30" data-ng-blur="calcPrice()">
+							</div>
+						</div>
+						
+						<div class="row form-group">
+							<label class="col-md-2 col-sm-2 col-xs-12">	
+								กว้าง (CM)
+							</label>
+							<div class="col-md-4 col-sm-4 col-xs-12">
+								<input class="form-control" data-ng-model="Importer.width" maxlength="30" data-ng-blur="calcCbm()" placeholder="เซ็นติเมตร">
+							</div>
+							<label class="col-md-2 col-sm-2 col-xs-12">	
+								ยาว (CM)
+							</label>
+							<div class="col-md-4 col-sm-4 col-xs-12">
+								<input class="form-control" data-ng-model="Importer.longs" maxlength="30" data-ng-blur="calcCbm()" placeholder="เซ็นติเมตร">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-md-2 col-sm-2 col-xs-12">	
+								สูง (CM)
+							</label>
+							<div class="col-md-4 col-sm-4 col-xs-12">
+								<input class="form-control" data-ng-model="Importer.height" maxlength="30" data-ng-blur="calcCbm()" placeholder="เซ็นติเมตร">
+							</div>
+							<label class="col-md-2 col-sm-2 col-xs-12">	
+								คิว (CBM)
+							</label>
+							<div class="col-md-4 col-sm-4 col-xs-12">
+								<input class="form-control" data-ng-model="Importer.cbm" maxlength="30" data-ng-blur="calcPrice()">
+							</div>
+						</div>
+						<div class="row form-group">
+							
+							<label class="col-md-12 col-sm-12 col-xs-12 text-center" style="color: #337ab7;">	
+								ราคาคิดตามน้ำหนัก {{rateByKG | number:2}} บาท<br>
+								ราคาคิดตามปริมาตร {{rateByCBM | number:2}} บาท
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style=" padding: 8px;" ng-form="frm">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<h3>ที่อยู่โกดังจีน</h3>
+				</div>
+				<div class="row form-group" data-ng-repeat="data in CargoAddressList">
+					<div class="col-md-12">
+						<p><h3>{{data.title}}</h3></p>
+						<pre>{{data.address}}</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div data-ng-include src="'views/footer.html'"></div>
+
+<script type="text/ng-template" id="purchase-detail.html">
+
+	<div class="modal-header  text-center">
+
+	</div>
+	<div class="modal-body">
+		asdasd
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="cancel()">ปิด</button>
+	</div>
+</script>
+<style type="text/css">
+
+	.img-quick-btn{
+		cursor: pointer;
+		
+	}
+
+	.img-quick-btn:hover{
+		box-shadow: 10px 10px 5px #ccc;
+		-moz-box-shadow: 0px 10px 5px #ccc;
+		-webkit-box-shadow: 0px 10px 5px #ccc;   
+		background-color: #ccc; 
+		padding: 10px; 
+		border-radius: 5%;
+		width: 100%;
+	}
+
+
+	.table{
+		/*padding:10px;*/
+		border-collapse: separate;
+    	border-spacing: 0.2em;
+    	background-color: #FFFFFF;
+	}
+
+	.rate-header-0{
+		background-color: #cc6262;
+		color: #000000;
+		font-weight: bolder;
+		text-align: center;
+		font-size: 1.5em;
+	}
+
+	.rate-header-1{
+		background-color: #ED2224;
+		color : #FFFFFF;
+		text-align: center;
+	}
+
+	.rate-header-2{
+		background-color: #999;
+		color : #000000;
+		text-align: center;
+	}
+
+	.rate-detail-price{
+		background-color: #fa849c;
+		color : #000000;
+		text-align: center;
+	}
+
+	.rate-detail{
+		background-color: #ccc;
+		color : #000000;
+		text-align: center;
+	}
+
+	.suggestion-title{
+		font-weight: bolder;
+		font-size: 2.5em;
+	}
+
+	.rate-title{
+		font-weight: bolder;
+		font-size: 2em;
+		color : #ED2224;
+		text-shadow : 1px 1px 2px #2e0000;
+	}
+
+	.circle-box-md{ 
+		/*line-height: 200px;*/
+  		text-align: center;
+		height: 5em;
+		width: 5em;
+		background-color: #ED2224;
+		border-radius: 50%;
+		/*display: inline-block;*/
+		color:#FFFFFF;
+		font-size: 1.3em;
+	}
+
+	.rate-box-md{ 
+		/*line-height: 200px;*/
+  		text-align: center;
+  		vertical-align: middle;
+		/*height: 5em;
+		width: 5em;*/
+		padding-top: 39px;
+		padding-bottom: 39px;
+		background-color: #8cb0d4;
+		border-radius: 5%;
+		/*display: inline-block;*/
+		color:#FFFFFF;
+		font-size: 1.3em;
+	}
+
+	.circle-box-sm{ 
+		/*line-height: 200px;*/
+  		text-align: center;
+		height: 120px;
+		width: 120px;
+		background-color: #ED2224;
+		border-radius: 50%;
+		/*display: inline-block;*/
+		color:#FFFFFF;
+		font-size: 1.3em;
+	}
+
+	.circle-box-xs{ 
+		/*line-height: 200px;*/
+  		text-align: center;
+		height: 70px;
+		width: 70px;
+		background-color: #ED2224;
+		border-radius: 50%;
+		/*display: inline-block;*/
+		color:#FFFFFF;
+		font-size: 0.8em;
+	}
+
+	.modal-body{
+		font-size: 1.3em;
+	}
+
+	.input-group-addon
+	{
+		background: #ED2224;
+		color: #FFF;
+		font-weight: bolder;
+		font-size: 1.3em;
+	}
+
+	.big-form{
+
+		height: 2em;
+	}
+
+	.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+		color: #000000;
+	}
+
+	.btn-big{
+		font-size: 1.3em;
+		vertical-align: middle;
+	}
+
+	.blue-btn{
+		background-color: #3b9bb3; 
+		border-color: #3b9bb3;
+	}
+
+	.blue-btn:hover{
+		background-color: #297f94; 
+		border-color: #297f94;
+	}
+	
+	.rate-label{
+		margin-top: 25px;
+		padding: 5px;
+		background-color: #3d4c5c;
+		border-radius: 5%;
+	}
+
+	.dashboard-blog{
+		text-align: center;
+		width: 33.33%;
+		height: 160px;
+		float: left;
+		background-color: #c46e6e;
+		font-size: 1.1em;
+	}
+
+	/*.contaner{
+		width: 80%;
+	}*/
+
+</style>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>

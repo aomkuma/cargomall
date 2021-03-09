@@ -12,6 +12,6 @@ class CartSession extends Model
     protected $keyType = 'string';
 	public $incrementing = false;
     protected $fillable = [
-        'id', 'user_id', 'cart_desc', 'creaated_by', 'updated_by', 'created_at', 'updated_at'
+        'id', 'user_id', 'cart_desc', 'created_by', 'updated_by', 'created_at', 'updated_at'
     ];
 }

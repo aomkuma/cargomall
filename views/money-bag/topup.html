@@ -45,12 +45,19 @@
 				<input class="form-control" type="text" data-ng-model="Topup.from_account" maxlength="20" placeholder="เลขบัญชีต้นทาง" required="true">
 			</div>
 		</div> -->
+		
+		<div class="row form-group">
+			<label class="col-md-12" style="color: red;">ระบบจะทำการอนุมัติการเติมเงินในช่วงเวลา 8.00 - 21.00น.</label>
+		</div>
 		<div class="row form-group">
 			<label class="col-md-3 col-sm-4 col-xs-12">โอนไปยังเลขบัญชี</label>
 			<div class="col-md-6 col-sm-6 col-xs-12">
 				<!-- <input class="form-control" type="text" data-ng-model="Topup.to_account" maxlength="20" placeholder="เลขบัญชีปลายทาง" required="true"> -->
-				<select class="form-control"  data-ng-model="Topup.to_account" ng-options="data.account_no as (data.account_no + ' ' + data.bank_name + ' ' + data.account_name) for data in ToAccountList" required="true">
-					<option value="">กรุณาเลือก..</option>
+				<select class="form-control"  data-ng-model="Topup.to_account"  required="true"><!--ng-options="data.account_no as (data.account_no + ' ' + data.bank_name + ' ' + data.account_name) for data in ToAccountList"-->
+					<!-- <option value="">กรุณาเลือก..</option> 
+					<option value="2211398701">2211398701 - ธนาคารกรุงศรี (นางสาวกวินนาฎ ฉัตรอุทัย)</option>-->
+					<option value="4190815076">4190815076 - ธนาคารไทยพาณิชย์ (นางสาวกวินนาฎ ฉัตรอุทัย)</option>
+					<option value="0668339999">0668339999 - ธนาคารกสิกรไทย (บจก. คาร์โก้ มอลล์)</option>
 				</select>
 			</div>
 		</div>

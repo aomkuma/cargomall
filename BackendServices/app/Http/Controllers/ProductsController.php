@@ -69,7 +69,7 @@ class ProductsController extends Controller
 
 	private function translateWord($keyword){
 		// return $keyword;
-		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyCIQ0NJYS09Gp3lJdpR4gsmS9QQ5xPs_fU', 'default_target_translation' => 'th']);
+		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyC-aor9zNlmSXKJb-2iIz8wMsLrJzvcxdo', 'default_target_translation' => 'th']);
 		$trans = new GoogleTranslate($translateClient);
 		$result = $trans->justTranslate($keyword);
 		return trim($result);
@@ -160,7 +160,6 @@ class ProductsController extends Controller
 			
 			// print_r($itemInfo);
 			// exit;
-
 			$ProductLevelList = [];
 			foreach ($itemInfo->Attributes->ItemAttribute as $key => $value) {
 				// $quantity = simpleXmlToArray($value)['Quantity'];
@@ -226,7 +225,7 @@ class ProductsController extends Controller
 			    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 			       	// echo $ItemAttribute->PropertyName;
 			       	$vid = null;
-					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'food taste'){
+					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'food taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
@@ -298,7 +297,6 @@ class ProductsController extends Controller
 				$product_color_choose = $arr_color[0];
 			}
 			$price_range_list = [];
-			
 			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
 									,'product_image'=>(string)$itemInfo->MainPictureUrl
@@ -375,7 +373,7 @@ class ProductsController extends Controller
 			if (isset($itemInfo->Attributes->ItemAttribute)) {
 			    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 			       
-					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color'){
+					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
@@ -560,7 +558,7 @@ class ProductsController extends Controller
 		if (isset($itemInfo->Attributes->ItemAttribute)) {
 		    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 		       
-				if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'model'){
+				if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'model' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
 				 	$color_val = (string)$ItemAttribute->Value;
 				 	if(isset($ItemAttribute->ImageUrl)){
 				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 

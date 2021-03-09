@@ -45,20 +45,33 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/order/status/update', 'OrdersController@updateOrderStatus');
 	Route::post('admin/order/upload', 'OrdersController@uploadExcel');
 	Route::post('admin/order/cancel', 'OrdersController@cancelOrder');
-
+	Route::post('admin/order/sms/transport-payment', 'OrdersController@sendTransportPaymentSMS');
+	Route::post('admin/order/sms/product-payment', 'OrdersController@sendProductPaymentSMS');
+	Route::post('admin/order/tracking/delete', 'OrdersController@deleteTrack');
+	Route::post('admin/order/cancel/cancel-status', 'OrdersController@cancelCancelStatus');
+	Route::post('admin/order/product/update', 'OrdersController@updateProductList');
+	Route::post('admin/order/view-activity-log', 'OrdersController@getHistoryList');
+	Route::post('admin/order/product/delete', 'OrdersController@deleteProduct');
+	
+	
 	Route::post('admin/topup/list', 'MoneyBagsController@getRequestTopupList');
 	Route::post('admin/topup/status/update', 'MoneyBagsController@updateTopupStatus');
 
 	Route::post('admin/pay/list', 'MoneyBagsController@getPayList');
 
 	Route::post('admin/importer/list', 'ImportersController@list');
+	Route::post('admin/importer/group', 'ImportersController@listGroup');
 	Route::post('admin/importer/status/update', 'ImportersController@updateImporterStatus');
 	Route::post('admin/importer/upload', 'ImportersController@uploadExcel');
+	Route::post('admin/importer/delete', 'ImportersController@delete');
 	
 	Route::post('admin/user/list', 'UsersController@getUserList');
+	Route::post('admin/user/address', 'UsersController@getUserAddress');
+	
 	Route::post('admin/customer/list', 'UsersController@getCustomerList');
 	Route::post('admin/customer/withdrawn', 'MoneyBagsController@withdrawnMoney');
 	Route::post('admin/customer/refund', 'MoneyBagsController@refundMoney');
+	Route::post('admin/customer/update/level', 'UsersController@updateUserLevel');
 
 	Route::post('admin/exchange-rate/list', 'ExchangeRatesController@getExchangeRateList');
 	Route::post('admin/exchange-rate/update', 'ExchangeRatesController@updateExchangeRate');
@@ -77,7 +90,9 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/deposit/status/update', 'MoneyBagsController@updateDepositStatus');
 
 	Route::post('admin/transport-rate/list', 'TransportRatesController@list');
+	Route::post('admin/transport-rate/get', 'TransportRatesController@get');
 	Route::post('admin/transport-rate/update', 'TransportRatesController@update');
+	Route::post('admin/transport-rate/update/rate-level', 'TransportRatesController@updateRateLevel');
 
 	Route::post('admin/landing-page/list', 'LandingPageController@list');
 	Route::post('admin/landing-page/get', 'LandingPageController@get');
@@ -111,14 +126,34 @@ Route::post('pay/inform', 'MoneyBagsController@pay');
 Route::post('pay/history', 'MoneyBagsController@payHistory');
 
 Route::post('order/list/by-user', 'OrdersController@listByUser');
+Route::post('order/list/by-user/limit', 'OrdersController@listByUserLimit');
+Route::post('order/list/by-user-status', 'OrdersController@listByUserAndStatus');
 Route::post('order/transport-company/update', 'OrdersController@updateTransportCompany');
 
 Route::post('importer/list/by-user', 'ImportersController@listByUser');
+Route::post('importer/list/by-user/limit', 'ImportersController@listByUserLimit');
 Route::post('importer/get', 'ImportersController@get');
 Route::post('importer/update', 'ImportersController@update');
 
 Route::post('cart/get', 'ProductsController@getCartSession');
 Route::post('cart/update', 'ProductsController@updateCartSession');
+
+Route::post('admin/carg-address/list/manage', 'CargoAddressController@getListManage');
+Route::post('admin/carg-address/update/manage', 'CargoAddressController@updateDAta');
+Route::post('admin/carg-address/delete/manage', 'CargoAddressController@deleteData');
+
+Route::post('cargo-address/list', 'CargoAddressController@getList');
+
+Route::post('tracking-none-owner/list', 'TrackingNoneOwnerController@getList');
+Route::post('tracking-none-owner/list/active', 'TrackingNoneOwnerController@getListActive');
+Route::post('tracking-none-owner/add', 'TrackingNoneOwnerController@addData');
+Route::post('tracking-none-owner/update', 'TrackingNoneOwnerController@updateData');
+Route::post('tracking-none-owner/list/manage', 'TrackingNoneOwnerController@getListManage');
+Route::post('tracking-none-owner/get/manage', 'TrackingNoneOwnerController@getDataManage');
+Route::post('tracking-none-owner/upload-image', 'TrackingNoneOwnerController@uploadData');
+
+Route::post('tracking-none-owner/request-to-be-owner', 'TrackingNoneOwnerController@requestToBeOwner');
+Route::post('tracking-none-owner/add-to-be-owner', 'TrackingNoneOwnerController@addToBeOwner');
 
 Route::group(['middleware' => ['before' => 'jwt.auth']], function() {
 

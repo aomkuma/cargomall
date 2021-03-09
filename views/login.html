@@ -15,6 +15,14 @@
         <input type="password" class="form-control" data-ng-model="Login.password" required="true">
       </div>
     </div>
+    <div class="row form-group">
+      <label class="col-md-2 col-sm-3 col-xs-4 text-left"></label>
+      <div class="col-md-3 col-sm-9 col-xs-8 text-left">
+        <div class="form-group">
+          <input id="chk" type="checkbox" data-ng-model="Login.remember_password" > <label for="chk">{{'REMEMBER_PASSWORD_TXT' | translate}}</label>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-12 text-center">
         

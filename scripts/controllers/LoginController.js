@@ -2,7 +2,7 @@ angular.module('app').controller('LoginController',function($scope, $routeParams
 	
 	$scope.user = {'Username':'','Password':''};
 
-    var reDirect = '';
+    var reDirect = 'member-dashboard';
     if($routeParams.redirect_url !== undefined){
         reDirect = $routeParams.redirect_url;
         console.log(reDirect);
@@ -12,6 +12,8 @@ angular.module('app').controller('LoginController',function($scope, $routeParams
     
 	//------- Authenticate function
 	$scope.authenticate = function (){
+
+        
 		var flag= false;
         $scope.showError = false;
         $scope.showSuccess = true;

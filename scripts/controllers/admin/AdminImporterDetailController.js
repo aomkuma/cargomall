@@ -15,11 +15,35 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
     
     $templateCache.removeAll();
 
+    $scope.getUserList = function(){
+      HTTPService.clientRequest('admin/user/list', null).then(function(result){
+        if(result.data.STATUS == 'OK'){
+          
+          $scope.UserList =  result.data.DATA.DataList;
+        }
+      });
+    }
+
+    $scope.getUserAddress = function(user_id){
+
+        IndexOverlayFactory.overlayShow();
+        var params = {'user_id' : user_id};
+        HTTPService.clientRequest('admin/user/address', params).then(function(result){
+            if(result.data.STATUS == 'OK'){
+                $scope.UserAddress = result.data.DATA.addresses;
+            }else{
+              var alertMsg = result.data.DATA;
+              alert(alertMsg);
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+
     $scope.loadTransportRateData = function(){
 
         IndexOverlayFactory.overlayShow();
-        var params = null;
-        HTTPService.clientRequest('admin/transport-rate/list', params).then(function(result){
+        var params = {'rate_level' : $scope.Customer.user_level};
+        HTTPService.clientRequest('admin/transport-rate/get', params).then(function(result){
             if(result.data.STATUS == 'OK'){
                 $scope.TransportRateData = result.data.DATA;
             }else{
@@ -42,6 +66,7 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
 
                 if(checkEmptyField($scope.Importer.china_arrival)){
                   $scope.Importer.china_arrival = makeDateTime($scope.Importer.china_arrival);
+                  console.log($scope.Importer.china_arrival);
                 }
                 if(checkEmptyField($scope.Importer.china_departure)){
                   $scope.Importer.china_departure = makeDateTime($scope.Importer.china_departure);
@@ -93,6 +118,9 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
             if(result.data.STATUS == 'OK'){
                 // window.location.href = 'admin/order';
                 // window.location.reload();
+                if($scope.importer_id == undefined){
+                  window.location.href = 'admin/importer';
+                }
             }
             else{
               var alertMsg = result.data.DATA;
@@ -106,7 +134,7 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
       var importer = angular.copy($scope.Importer);
       var transport_rate_kg = null;
       var transport_rate_cbm = null;
-      if(importer.transport_type == 'sea'){
+      if(importer.transport_type == 'car'){
         // calc by kg 
 
         // find by prod desc
@@ -119,7 +147,7 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
         // $scope.TransportRateData.rate_sea_kg 
         // calc by cbm
 
-      }else if(importer.transport_type == 'car'){
+      }else if(importer.transport_type == 'sea'){
         var index = $scope.findProductRate($scope.TransportRateData.rate_sea_kg , importer.product_type);
         transport_rate_kg = $scope.TransportRateData.rate_sea_kg[index];
 
@@ -176,6 +204,12 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
     $scope.importer_id = $routeParams.importer_id;
     $scope.rateByKG = 0;
     $scope.rateByCBM = 0;
-    $scope.loadData();
+    console.log($scope.importer_id);
+    if($scope.importer_id){
+      $scope.loadData();
+    }else{
+      $scope.getUserList();
+    }
+    
     
 });

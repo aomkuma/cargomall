@@ -36,6 +36,9 @@
 		<div class="row form-group">
 			<div class="col-md-12 table-responsive">
 				<table class="table table-striped table-hover table-bordered"> 
+					<caption>
+						<b>ยอดเงินทั้งหมด : {{TotalBalance | number:2}} บาท</b>
+					</caption>
 					<thead>
 						<tr>
 							<th class="text-center">รหัสลูกค้า</th>
@@ -44,6 +47,7 @@
 							<th class="text-center">ที่อยู่</th>
 							<th class="text-center">วันที่สมัคร</th>
 							<th class="text-center">ยอดเงินในกระเป๋า</th>
+							<th class="text-center">ระดับ</th>
 							<th class="text-center">จัดการ</th>
 						</tr>
 					</thead>
@@ -65,9 +69,12 @@
 							</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td class="text-right">{{data.money_bags.balance | number:2}}</td>
+							<td>
+								<select class="form-control" data-ng-model="data.user_level" data-ng-options="sel.rate_level as sel.rate_level for sel in LevelList" data-ng-change="updateUserLevel(data)"></select>
+							</td>
 							<td class="text-center">
-								<button class="btn btn-primary" data-ng-show="data.money_bags.balance > 0" data-ng-click="withdrawnMoney(data)">ถอนเงิน</button>
-								<button class="btn btn-default" data-ng-click="refundMoney(data)">คืนเงินเข้ากระเป๋า</button>
+								<button class="btn btn-primary" data-ng-show="data.money_bags.balance > 0 && UserData.role == '1'" data-ng-click="withdrawnMoney(data)">ถอนเงิน</button>
+								<button class="btn btn-default" data-ng-click="refundMoney(data)" data-ng-show="UserData.role == '1'">คืนเงินเข้ากระเป๋า</button>
 							</td>
 						</tr>
 					</tbody>

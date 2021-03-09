@@ -79,8 +79,8 @@
 							<td class="text-center"><a href="{{data.slip_file}}" target="_blank"><img src="{{data.slip_file}}" style="height: 100px;"></a></td>
 							<td>{{getTopupStatus(data.topup_status)}}</td>
 							<td>
-								<button class="btn btn-primary" data-ng-click="approveTopup(data.id)" title="อนุมัติ" data-ng-show="data.topup_status == 1"><i class="fas fa-check"></i></button>
-								<button class="btn btn-info" data-ng-click="rejectTopup(data.id)" title="ปฏิเสธ" data-ng-show="data.topup_status == 1"><i class="fas fa-ban"></i></button>
+								<button class="btn btn-primary" data-ng-click="approveTopup(data.id)" title="อนุมัติ" data-ng-show="data.topup_status == 1 && UserData.role == 1"><i class="fas fa-check"></i></button>
+								<button class="btn btn-info" data-ng-click="rejectTopup(data.id)" title="ปฏิเสธ" data-ng-show="data.topup_status == 1 && UserData.role == 1"><i class="fas fa-ban"></i></button>
 							</td>
 						</tr>
 					</tbody>

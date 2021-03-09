@@ -88,7 +88,7 @@ angular.module('app').controller('AdminDepositController', function($scope, $coo
 
     $scope.rejectDeposit = function(deposit_id){
 
-      $scope.alertMessage = 'ต้องการอนุมัติการแจ้งฝากจ่ายนี้ ใช่หรือไม่ ?';
+      $scope.alertMessage = 'ต้องการปฏิเสธการแจ้งฝากจ่ายนี้ ใช่หรือไม่ ?';
 
       var modalInstance = $uibModal.open({
           animation : false,

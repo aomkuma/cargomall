@@ -1,0 +1,209 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row" style=" padding: 8px; padding-top:20px;" ng-form="frm">
+	<div class="col-md-10 col-md-offset-1">
+		<div class="page-header text-center">
+			<span style="font-size: 1.3em; font-weight: bolder;">รายการพัสดุไม่มีเจ้าของ</span>
+		</div>
+
+		<div class="row form-group">
+			
+			<div class="col-md-12 text-center">
+				<img src="BackendServices/storage/app/{{Data.image_path}}" style="height: 200px;">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12" style="color: #999;"> 
+				<h4>สถานะรายการ  : {{ getTrackingNoneOwnerStatus(Data.track_status) }}</h4>
+			</label>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12" style="color: #999;"> 
+				<h4>สถานะสินค้า  :  {{getOrderStatus(OrderData.order_status)}} </h4>
+			</label>
+		</div>
+		
+		<div class="row form-group">
+			<label class="col-md-12">
+				<div class="row form-group">
+					<label class="col-md-12" style="color: #ED2224;"> 
+						<h4>รายละเอียดข้อมูล Tracking </h4>
+					</label>
+				</div>
+				<fieldset>
+					<legend>{{ OrderDrackingData.tracking_no }} ({{OrderDrackingData.goods_desc_en}} / {{OrderDrackingData.goods_desc_th}})</legend>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							วันที่สินค้าถึงโกดังจีน
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.china_arrival_date}}
+						</div>
+						<label class="col-md-2 blue-label">
+							โกดัง
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.cargo}}
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							จำนวนกล่อง
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.package_amount}}
+						</div>
+						<label class="col-md-2 blue-label">
+							น้ำหนัก (KG)
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.weight_kg}}
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							ยาว
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.longs}}
+						</div>
+						<label class="col-md-2 blue-label">
+							กว้าง
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.widths}}
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							สูง
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.heights}}
+						</div>
+						<label class="col-md-2 blue-label">
+							CBM
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.cbm}}
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							วันที่ของเข้าจีน
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.china_arrival_date}}
+						</div>
+						<label class="col-md-2 blue-label">
+							เลขที่ตู้
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.bill_no}}
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							สูง
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.heights}}
+						</div>
+						<label class="col-md-2 blue-label">
+							CBM
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.cbm}}
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							วันที่ของออกจีน
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.china_departure_date}}
+						</div>
+						<label class="col-md-2 blue-label">
+							เลขตู้
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.container_no}}
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							เลข order จีน
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.china_order_no}}
+						</div>
+						
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							วันที่เข้าไทย
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.thai_arrival}}
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							เลขแทรคจีน
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.china_tracking_no}}
+						</div>
+						<label class="col-md-2 blue-label">
+							เลขแทรคไทย
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.tracking_no_thai}}
+						</div>
+						
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							ค่าขนส่งจากจีนมาไทย
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.transport_cost_china}}
+						</div>
+						<label class="col-md-2 blue-label">
+							ค่าขนส่งในไทย
+						</label>
+						<div class="col-md-3">
+							{{OrderDrackingData.transport_cost_thai}}
+						</div>
+					</div>
+					
+					
+				</fieldset>
+			</label>
+			
+		</div>
+
+		<div class="page-header">&nbsp;</div>
+
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<a href="tracking-none-owner/list" class="btn btn-default">กลับหน้ารายการ</a>
+				<button class="btn btn-primary" data-ng-click="addToOwner(Data.id)">แจ้งเป็นเจ้าของสินค้า</button>
+			</div>
+			
+		</div>
+	</div>
+
+</div>

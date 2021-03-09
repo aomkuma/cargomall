@@ -21,244 +21,27 @@
 			</div>
 		</div>
 		<div class="row form-group">
-			<label class="col-md-1">
-				ประเภทการขนส่ง
-			</label>
-			<div class="col-md-2">
-				<select class="form-control" data-ng-model="TransportRate.transport_type">
-					<option value="">กรุณาเลือก</option>
-					<option value="sea">เรือ</option>
-					<option value="car">รถ</option>
-				</select>
-			</div>
-			<label class="col-md-1">
-				ประเภทการคำนวณ
-			</label>
-			<div class="col-md-2">
-				<select class="form-control" data-ng-model="TransportRate.rate_by_condition">
-					<option value="">กรุณาเลือก</option>
-					<option value="kg">น้ำหนัก (KG)</option>
-					<option value="cbm">ปริมาตร (CBM)</option>
-				</select>
-			</div>
-			
-		</div>
-
-		<div class="row form-group">
-			<label class="col-md-1">
-				รายละเอียด
-			</label>
-			<div class="col-md-2">
-				<input class="form-control" data-ng-model="TransportRate.product_desc">
-			</div>
-			<label class="col-md-1" data-ng-show="TransportRate.rate_by_condition == 'kg'">
-				น้อยกว่า 100kg
-			</label>
-			<label class="col-md-1" data-ng-show="TransportRate.rate_by_condition == 'cbm'">
-				น้อยกว่า 2 CBM
-			</label>
-			<div class="col-md-2">
-				<input class="form-control" data-ng-model="TransportRate.rate_1">
-			</div>
-		</div>
-
-		<div class="row form-group">
-			
-			<label class="col-md-1" data-ng-show="TransportRate.rate_by_condition == 'kg'">
-				มากกว่า 100kg
-			</label>
-			<label class="col-md-1" data-ng-show="TransportRate.rate_by_condition == 'cbm'">
-				มากกว่า 2 CBM
-			</label>
-			<div class="col-md-2">
-				<input class="form-control" data-ng-model="TransportRate.rate_2">
-			</div>
-
-			<label class="col-md-1" data-ng-show="TransportRate.rate_by_condition == 'kg'">
-				มากกว่า 500kg
-			</label>
-			<label class="col-md-1" data-ng-show="TransportRate.rate_by_condition == 'cbm'">
-				มากกว่า 5 CBM
-			</label>
-			<div class="col-md-2">
-				<input class="form-control" data-ng-model="TransportRate.rate_3">
-			</div>
-
 			<div class="col-md-1">
-				<button class="btn btn-info" data-ng-click="updateData(TransportRate)"><i class="fas fa-plus"></i></button>
+				<a class="btn btn-primary" href="admin/transport-rate/detail/"><i class="fas fa-plus"></i></a>
 			</div>
-			
 		</div>
-
 		<div class="row form-group">
-			<div class="col-lg-6">
-				<div class="row form-group">
-					<div class="col-lg-12 text-center">
-						<h2>ทางรถ</h2>
-					</div>
-				</div>
-
-				<div class="row form-group">
-					<div class="col-md-12 table-responsive">
-						<table class="table table-striped table-hover"> 
-							<thead>
-								<tr><td colspan="5" class="rate-header-0">ตามน้ำหนัก (KG)</td></tr>
-								<tr>
-									<td class="rate-detail-price">ประเภท</td>
-									<td class="rate-header-1">น้อยกว่า 100kg</td>
-									<td class="rate-header-1">มากกว่า 100kg</td>
-									<td class="rate-header-1">มากกว่า 500kg</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr data-ng-repeat="data in Data.rate_sea_kg">
-									<td class="rate-detail-price"><input data-ng-model="data.product_desc" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_1" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_2" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_3" data-ng-blur="updateData(data)"></td>
-								</tr>
-								
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<div class="row form-group">
-					<div class="col-md-12 table-responsive">
-						<table class="table table-striped table-hover"> 
-							<thead>
-								<tr><td colspan="5" class="rate-header-0">ตามปริมาตร (CBM)</td></tr>
-								<tr>
-									<td class="rate-detail-price">ประเภท</td>
-									<td class="rate-header-1">น้อยกว่า 2 cbm</td>
-									<td class="rate-header-1">มากกว่า 2 cbm</td>
-									<td class="rate-header-1">มากกว่า 5 cbm</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr data-ng-repeat="data in Data.rate_sea_cbm">
-									<td class="rate-detail-price"><input data-ng-model="data.product_desc" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_1" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_2" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_3" data-ng-blur="updateData(data)"></td>
-								</tr>
-								
-							</tbody>
-						</table>
-					</div>
-				</div>
+			<div class="col-md-12 table-responsive">
+				<table class="table table-striped table-hover table-bordered"> 
+					<thead>
+						<tr>
+							<th class="text-center">ระดับ</th>
+							<th class="text-center">จัดการ</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="data in DataList">
+							<td>{{data.rate_level}}</td>
+							<td><a class="btn btn-primary" href="admin/transport-rate/detail/{{ data.rate_level }}"><i class="fas fa-pen-square"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
+				
 			</div>
-
-			<div class="col-lg-6">
-				<div class="row form-group">
-					<div class="col-lg-12 text-center">
-						<h2>ทางเรือ</h2>
-					</div>
-				</div>
-
-				<div class="row form-group">
-					<div class="col-md-12 table-responsive">
-						<table class="table table-striped table-hover"> 
-							<thead>
-								<tr><td colspan="5" class="rate-header-0">ตามน้ำหนัก (KG)</td></tr>
-								<tr>
-									<td class="rate-detail-price">ประเภท</td>
-									<td class="rate-header-1">น้อยกว่า 100kg</td>
-									<td class="rate-header-1">มากกว่า 100kg</td>
-									<td class="rate-header-1">มากกว่า 500kg</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr data-ng-repeat="data in Data.rate_car_kg">
-									<td class="rate-detail-price"><input data-ng-model="data.product_desc" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_1" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_2" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_3" data-ng-blur="updateData(data)"></td>
-								</tr>
-								
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<div class="row form-group">
-					<div class="col-md-12 table-responsive">
-						<table class="table table-striped table-hover"> 
-							<thead>
-								<tr><td colspan="5" class="rate-header-0">ตามปริมาตร (CBM)</td></tr>
-								<tr>
-									<td class="rate-detail-price">ประเภท</td>
-									<td class="rate-header-1">น้อยกว่า 2 cbm</td>
-									<td class="rate-header-1">มากกว่า 2 cbm</td>
-									<td class="rate-header-1">มากกว่า 5 cbm</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr data-ng-repeat="data in Data.rate_car_cbm">
-									<td class="rate-detail-price"><input data-ng-model="data.product_desc" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_1" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_2" data-ng-blur="updateData(data)"></td>
-									<td class="rate-detail"><input class="form-control" data-ng-model="data.rate_3" data-ng-blur="updateData(data)"></td>
-								</tr>
-								
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-		
 	</div>
 </div>
-<style type="text/css">
-	.table{
-		/*padding:10px;*/
-		border-collapse: separate;
-    	border-spacing: 0.2em;
-    	background-color: #FFFFFF;
-	}
-
-	.rate-header-0{
-		background-color: #cc6262;
-		color: #000000;
-		font-weight: bolder;
-		text-align: center;
-		font-size: 1.5em;
-	}
-
-	.rate-header-1{
-		background-color: #ED2224;
-		color : #FFFFFF;
-		text-align: center;
-	}
-
-	.rate-header-2{
-		background-color: #999;
-		color : #000000;
-		text-align: center;
-	}
-
-	.rate-detail-price{
-		background-color: #fa849c;
-		color : #000000;
-		text-align: center;
-	}
-
-	.rate-detail{
-		background-color: #ccc;
-		color : #000000;
-		text-align: center;
-	}
-
-	.suggestion-title{
-		font-weight: bolder;
-		font-size: 2.5em;
-	}
-
-	.rate-title{
-		font-weight: bolder;
-		font-size: 2em;
-		color : #ED2224;
-		text-shadow : 1px 1px 2px #2e0000;
-	}
-</style>

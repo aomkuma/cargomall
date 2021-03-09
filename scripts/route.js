@@ -12,6 +12,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
+	.when("/member-dashboard", {
+        templateUrl : "views/main/member-dashboard.html",
+        controller : "MemberDashboardController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/MemberDashboardController.js" ]
+				});
+			} ]
+		}
+	})
+
 	.when("/forgot-pass/:data_key", {
         templateUrl : "views/update-forgot-pass.html",
         controller : "ForgotPassController",
@@ -204,6 +216,30 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
+	.when("/tracking-none-owner/list", {
+        templateUrl : "views/tracking-none-owner/main.html",
+        controller : "TrackingNoneOwnerController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/TrackingNoneOwnerController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/tracking-none-owner/detail/:id", {
+        templateUrl : "views/tracking-none-owner/detail.html",
+        controller : "TrackingNoneOwnerDetailController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/TrackingNoneOwnerDetailController.js" ]
+				});
+			} ]
+		}
+	})
+
 	.when("/admin", {
         templateUrl : "views/admin/home.html",
         controller : "AdminHomeController",
@@ -300,7 +336,7 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
-	.when("/admin/importer/detail/:importer_id", {
+	.when("/admin/importer/detail/:importer_id?", {
         templateUrl : "views/admin/importer/detail.html",
         controller : "AdminImporterDetailController",
         resolve : {
@@ -384,6 +420,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
+	.when("/admin/transport-rate/detail/:rate_level?", {
+        templateUrl : "views/admin/transport-rate/detail.html",
+        controller : "AdminTransportRateDetailController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminTransportRateDetailController.js" ]
+				});
+			} ]
+		}
+	})
+
 	.when("/admin/customer", {
         templateUrl : "views/admin/customer/main.html",
         controller : "AdminCustomerController",
@@ -443,6 +491,43 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 			} ]
 		}
 	})
+
+	.when("/admin/cargo-address", {
+        templateUrl : "views/admin/cargo-address/main.html",
+        controller : "AdminCargoAddressController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminCargoAddressController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/admin/tracking-none-owner/list", {
+        templateUrl : "views/admin/tracking-none-owner/main.html",
+        controller : "AdminTrackingNoneOwnerController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminTrackingNoneOwnerController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/admin/tracking-none-owner/detail/:id", {
+        templateUrl : "views/admin/tracking-none-owner/detail.html",
+        controller : "AdminTrackingNoneOwnerDetailController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminTrackingNoneOwnerDetailController.js" ]
+				});
+			} ]
+		}
+	})
+
 
 	;
 	$locationProvider.html5Mode({

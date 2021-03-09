@@ -17,15 +17,15 @@
 				<div class="page-header">
 					<span style="font-size: 1.3em; font-weight: bolder;">รายละเอียดข้อมูลการฝากสั่งซื้อ</span>
 					<br><br>
-					<div class="row" data-ng-show="Order.order_status == 9">
+					<div class="row" data-ng-show="Order.order_status == 8">
 						<div class="col-md-12 col-sm-12 hidden-xs text-center status-timeline" style="font-size: 0.9em;" >
 							ยกเลิก
 						</div>
 					</div>
-					<div class="row" data-ng-show="Order.order_status != 9">
+					<div class="row" data-ng-show="Order.order_status != 8">
 						<div class="col-md-12 col-sm-12 hidden-xs text-center" style="font-size: 0.9em; color: #999;" >
-							<span data-ng-repeat="data in ORDER_STATUS track by $index" ng-show="$index < 8" data-ng-class="{'status-timeline' : $index + 1 <= Order.order_status}">
-								{{ getOrderStatus(data.id) }} <label ng-show="$index < 7">-></label> 
+							<span data-ng-repeat="data in ORDER_STATUS track by $index" ng-show="$index <= 7" data-ng-class="{'status-timeline' : $index <= Order.order_status}">
+								{{ getOrderStatus(data.id) }} <label ng-show="$index <= 6">-></label> 
 							</span>
 						</div>
 					</div>
@@ -75,6 +75,10 @@
 				<div class="row">
 					<label class="col-md-3 col-sm-4 col-xs-5 text-right">ประเภทการขนส่ง</label>
 					<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.transport_type_txt}}</div>
+				</div>
+				<div class="row">
+					<label class="col-md-3 col-sm-4 col-xs-5 text-right">รูปแบบการจัดส่ง</label>
+					<div class="col-md-9 col-sm-8 col-xs-7">{{ShippingOption.package_type_txt}}</div>
 				</div>
 				<div class="row">
 					<label class="col-md-3 col-sm-4 col-xs-5 text-right">วิธีการรับสินค้า</label>
@@ -218,9 +222,11 @@
 				</label>
 				<div class="col-md-3">
 					{{ OrderDesc.total_china_transport_cost | number:2 }}
+					<br>
+					<span style="color: red;">หมายเหตุ: ค่าขนส่งภายในประเทศจีนทั้งหมดจะถูกคิดรวมกับสินค้าแทร็คแรกที่ถึงโกดังไทยค่ะ</span>
 				</div>
 			</div>
-			<div class="row form-group">
+			<!-- <div class="row form-group">
 				<label class="col-md-2">
 					ค่าขนส่งจากจีนมาไทย (บาท) :
 				</label>
@@ -244,23 +250,23 @@
 				<div class="col-md-3">
 					{{ OrderDesc.tracking_no_thai }}
 				</div>
-			</div>
-		</fieldset>
+			</div> -->
+		</fieldset> 
 		<div class="row form-group">
 			<label class="col-md-12" style="color: #ED2224;"> 
 				<h4>รายละเอียดข้อมูล Tracking </h4>
 			</label>
 		</div>
 		<fieldset data-ng-repeat="item in Order.order_trackings">
-			<legend>{{ item.tracking_no }}</legend>
+			<legend>{{ item.tracking_no }} ({{item.goods_desc_en}} / {{item.goods_desc_th}})</legend>
 			<div class="row form-group">
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
 					วันที่สินค้าถึงโกดังจีน
 				</label>
 				<div class="col-md-3">
 					{{item.china_arrival_date}}
 				</div>
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
 					โกดัง
 				</label>
 				<div class="col-md-3">
@@ -268,13 +274,13 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
 					จำนวนกล่อง
 				</label>
 				<div class="col-md-3">
 					{{item.package_amount}}
 				</div>
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
 					น้ำหนัก (KG)
 				</label>
 				<div class="col-md-3">
@@ -282,13 +288,13 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
 					ยาว
 				</label>
 				<div class="col-md-3">
 					{{item.longs}}
 				</div>
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
 					กว้าง
 				</label>
 				<div class="col-md-3">
@@ -296,13 +302,13 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
 					สูง
 				</label>
 				<div class="col-md-3">
 					{{item.heights}}
 				</div>
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
 					CBM
 				</label>
 				<div class="col-md-3">
@@ -310,17 +316,97 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-md-2">
+				<label class="col-md-2 blue-label">
+					วันที่ของเข้าจีน
+				</label>
+				<div class="col-md-3">
+					{{item.china_arrival_date}}
+				</div>
+				<label class="col-md-2 blue-label">
+					เลขที่ตู้
+				</label>
+				<div class="col-md-3">
+					{{item.bill_no}}
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<label class="col-md-2 blue-label">
+					สูง
+				</label>
+				<div class="col-md-3">
+					{{item.heights}}
+				</div>
+				<label class="col-md-2 blue-label">
+					CBM
+				</label>
+				<div class="col-md-3">
+					{{item.cbm}}
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 blue-label">
 					วันที่ของออกจีน
 				</label>
 				<div class="col-md-3">
 					{{item.china_departure_date}}
 				</div>
-				<label class="col-md-2">
-					เลขที่บิล
+				<label class="col-md-2 blue-label">
+					เลขตู้
 				</label>
 				<div class="col-md-3">
-					{{item.bill_no}}
+					{{item.container_no}}
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 blue-label">
+					เลข order จีน
+				</label>
+				<div class="col-md-3">
+					{{item.china_order_no}}
+				</div>
+				<label class="col-md-2 blue-label">
+					เลขแทรคจีน
+				</label>
+				<div class="col-md-3">
+					{{item.china_tracking_no}}
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 blue-label">
+					วันที่เข้าไทย
+				</label>
+				<div class="col-md-3">
+					{{item.thai_arrival}}
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 blue-label">
+					เลขแทรคจีน
+				</label>
+				<div class="col-md-3">
+					{{item.china_tracking_no}}
+				</div>
+				<label class="col-md-2 blue-label">
+					เลขแทรคไทย
+				</label>
+				<div class="col-md-3">
+					{{item.tracking_no_thai}}
+				</div>
+				
+			</div>
+			<div class="row form-group">
+				<label class="col-md-2 blue-label">
+					ค่าขนส่งจากจีนมาไทย
+				</label>
+				<div class="col-md-3">
+					{{item.transport_cost_china}}
+				</div>
+				<label class="col-md-2 blue-label">
+					ค่าขนส่งในไทย
+				</label>
+				<div class="col-md-3">
+					{{item.transport_cost_thai}}
 				</div>
 			</div>
 			

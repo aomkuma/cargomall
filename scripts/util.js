@@ -190,9 +190,11 @@ function toFixedPoint(num, dotplace) {
 function makeDate(dateInput){
     var d2 = dateInput.split('-');
     var d = new Date();
-    d.setDate(d2[2]);
-    d.setMonth(d2[1] - 1);
     d.setYear(d2[0]);
+    d.setMonth(d2[1] - 1);
+    d.setDate(d2[2]);
+    
+    
      
     return d;
 }
@@ -204,9 +206,14 @@ function makeDateTime(dateInput){
     var d2 = d1[0].split('-');
     var d3 = d1[1].split(':');
     var d = new Date();
-    d.setDate(d2[2]);
-    d.setMonth(d2[1] - 1);
+    console.log(d2[2]);
+    console.log(d2[1] - 1);
+    console.log(d2[0]);
     d.setYear(d2[0]);
+    d.setMonth(d2[1] - 1);
+    d.setDate(d2[2]);
+    
+    
     d.setSeconds(d3[2]);
     d.setMinutes(d3[1]);
     d.setHours(d3[0]);

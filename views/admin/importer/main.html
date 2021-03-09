@@ -37,6 +37,7 @@
 			</div>
 			<div class="col-md-3">
 				<button class="btn btn-info" data-ng-click="getImporterList()"><i class="fas fa-search"></i></button>
+				<a class="btn btn-default" href='admin/importer/detail/'><i class="fas fa-plus"></i></a>
 			</div>
 			
 		</div>
@@ -66,6 +67,7 @@
 							<th class="text-center">เบอร์โทร</th>
 							<th class="text-center">วันที่สร้าง</th>
 							<th class="text-center">หมายเลข Tracking</th>
+							<th class="text-center">วันที่ของเข้าไทย</th>
 							<th class="text-center">ค่าลังไม้ (หยวน)</th>
 							<th class="text-center">ค่าขนส่งในจีน (หยวน)</th>
 							<th class="text-center">ค่าขนส่ง (บาท)</th>
@@ -81,6 +83,7 @@
 							<td>{{data.customer.mobile_no}}</td>
 							<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 							<td>{{data.tracking_no}}</td>
+							<td>{{getThaiDateFromString(data.thai_arrival)}}</td>
 							<td class="text-right">{{data.package_price | number:2}}</td>
 							<td class="text-right">{{data.total_price_yuan | number:2}}</td>
 							<td class="text-right">{{(data.total_price_thb) | number:2}}</td>
@@ -88,6 +91,7 @@
 							<td>{{getImporterStatus(data.importer_status)}}</td>
 							<td>
 								<a class="btn btn-primary" href="admin/importer/detail/{{ data.id }}"><i class="fas fa-pen-square"></i></a>
+								<button class="btn btn-default" data-ng-click="delete(data.id)"><i class="fas fa-trash"></i></button>
 							</td>
 						</tr>
 					</tbody>

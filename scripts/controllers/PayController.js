@@ -36,12 +36,14 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
 
     $scope.checkPayType = function(){
       $scope.Pay.pay_amount_thb = null;
-      $scope.Pay.pay_amount_yuan = null
+      $scope.Pay.pay_amount_yuan = null;
+      $scope.Pay.to_ref_id = null;
       $log.log($scope.Pay.pay_type);
       if($scope.Pay.pay_type == 1 || $scope.Pay.pay_type == 2){
         $scope.getOrderList();
       }
       else if($scope.Pay.pay_type == 5){
+        $scope.Pay['selectedPayList'] = [];
         $scope.getImporterList();
       }
     }
@@ -49,7 +51,7 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
     $scope.getOrderList = function(){
       IndexOverlayFactory.overlayShow();
       var params = {'condition' : $scope.Pay};
-      HTTPService.clientRequest('order/list/by-user', params).then(function(result){
+      HTTPService.clientRequest('order/list/by-user-status', params).then(function(result){
         if(result.data.STATUS == 'OK'){
           $scope.DataList = result.data.DATA;
 
@@ -115,6 +117,10 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
     }
 
     $scope.setPayAmountValue = function(totalYuan, exchange_rate, discount){
+      if(!checkEmptyField(discount)){
+        discount = 0;
+      }
+
       $scope.Pay.pay_amount_yuan = parseFloat(totalYuan);
       $scope.Pay.pay_amount_thb = parseFloat((parseFloat(totalYuan) * parseFloat(exchange_rate) - parseFloat(discount)).toFixed(2));
       $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
@@ -122,7 +128,7 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
     }
 
     $scope.sumBahtValue = function (){
-      for(var i = 0; i < $scope.DataList.length; i++){
+      /*for(var i = 0; i < $scope.DataList.length; i++){
         if(!checkEmptyField($scope.DataList[i].order_desc.total_china_transport_cost)){
           $scope.DataList[i].order_desc.total_china_transport_cost = 0;
         }
@@ -140,12 +146,21 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
           $scope.setPayAmountTransportValue($scope.DataList[i].order_desc.total_china_transport_cost, $scope.DataList[i].order_desc.china_thai_transport_cost, $scope.DataList[i].order_desc.transport_company_cost);
         }
 
+      }*/
+
+      for(var i = 0; i < $scope.DataList.length; i++){
+        $scope.DataList[i]['totalBaht'] = 0;
+        $scope.DataList[i].totalBaht =  parseFloat($scope.DataList[i].import_fee) + parseFloat($scope.DataList[i].transport_cost_china) + parseFloat($scope.DataList[i].transport_cost_thai); 
+        
+        if($scope.DataList[i].id == $scope.Pay.to_ref_id){
+          $scope.setPayAmountTransportValue($scope.DataList[i].tracking_no, $scope.DataList[i].import_fee, $scope.DataList[i].transport_cost_china, $scope.DataList[i].transport_cost_thai);
+        }
       }
-      
+
       $scope.ShowChooseToPay = true;
     }
-    $scope.setPayAmountTransportValue = function(total_china_transport_cost, china_thai_transport_cost, transport_company_cost){
-      if(!checkEmptyField(total_china_transport_cost)){
+    $scope.setPayAmountTransportValue = function(tracking_no, import_fee, transport_cost_china, transport_cost_thai){
+      /*if(!checkEmptyField(total_china_transport_cost)){
         total_china_transport_cost = 0;
       }
       if(!checkEmptyField(china_thai_transport_cost)){
@@ -156,6 +171,9 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
       }  
       // $scope.Pay.pay_amount_yuan = parseFloat(totalYuan);
       $scope.Pay.pay_amount_thb = parseFloat((parseFloat(total_china_transport_cost) + parseFloat(china_thai_transport_cost) + parseFloat(transport_company_cost)).toFixed(2));
+      $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);*/
+      $scope.Pay['to_ref_id'] = tracking_no;
+      $scope.Pay.pay_amount_thb = parseFloat((parseFloat(import_fee) + parseFloat(transport_cost_china) + parseFloat(transport_cost_thai)).toFixed(2));
       $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
 
       $log.log($scope.SelectedPayBaht);
@@ -247,7 +265,13 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
           $scope.PaySuccess = true;
           
           setTimeout(function(){
-            window.location.replace('');
+            // window.location.replace('');
+            $scope.PaySuccess = false;
+            $scope.Pay.to_ref_id = null;
+            if($scope.Pay.pay_type == 2){
+              $scope.Pay.to_ref_id_2 = null;
+            }
+            $scope.checkPayType();
           }, 3000);
           
         }else{
@@ -257,6 +281,60 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
         IndexOverlayFactory.overlayHide();
       });
     }
+
+  $scope.toggleSelectionType2 = function toggleSelection(obj, index) {
+    if($scope.Pay.selectedPayList==undefined){
+      $scope.Pay.selectedPayList = [obj];
+    }else{
+    
+        var idx = $scope.Pay.selectedPayList.indexOf(obj);
+    
+        if (idx > -1) {
+          $scope.Pay.selectedPayList.splice(idx, 1);
+        }
+        else {
+          $scope.Pay.selectedPayList.push(obj);
+        }
+    }
+
+    // re calc pay amount 
+
+    $scope.Pay.pay_amount_thb = 0;
+    for(var i = 0; i < $scope.Pay.selectedPayList.length; i++){
+      $scope.Pay.pay_amount_thb += $scope.Pay.selectedPayList[i].totalBaht;//parseFloat((parseFloat($scope.Pay.selectedPayList[i].import_fee) + parseFloat($scope.Pay.selectedPayList[i].transport_cost_china) + parseFloat($scope.Pay.selectedPayList[i].transport_cost_thai)).toFixed(2));
+    }
+
+    $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
+    $log.log($scope.SelectedPayBaht);
+    // console.log($scope.Pay.selectedPayList, index);
+  };
+
+  $scope.toggleSelectionType5 = function toggleSelection(obj, index) {
+    if($scope.Pay.selectedPayList==undefined){
+      $scope.Pay.selectedPayList = [obj];
+    }else{
+    
+        var idx = $scope.Pay.selectedPayList.indexOf(obj);
+    
+        if (idx > -1) {
+          $scope.Pay.selectedPayList.splice(idx, 1);
+        }
+        else {
+          $scope.Pay.selectedPayList.push(obj);
+        }
+    }
+
+    // re calc pay amount 
+
+    $scope.Pay.pay_amount_thb = 0;
+    for(var i = 0; i < $scope.Pay.selectedPayList.length; i++){
+      $scope.Pay.pay_amount_thb += $scope.Pay.selectedPayList[i].totalBaht;//parseFloat((parseFloat($scope.Pay.selectedPayList[i].import_fee) + parseFloat($scope.Pay.selectedPayList[i].transport_cost_china) + parseFloat($scope.Pay.selectedPayList[i].transport_cost_thai)).toFixed(2));
+    }
+
+    $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
+    $log.log($scope.SelectedPayBaht);
+    // console.log($scope.Pay.selectedPayList, index);
+  };
 
     $scope.PaySuccess = false;
     ShowDialogConfirmPay = false;

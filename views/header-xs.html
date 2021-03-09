@@ -26,8 +26,12 @@
         <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" style="background-color: #FFF; left:0%;">
         
           <ul class="nav navbar-nav" style="background-color: #ED2224; color: #FFF; padding:20px; font-size: 1.3em;">
-            <li ><a href="home"  style="border-left: 0px solid #000000;">
-              {{'MENU_HOME'| translate}}</a></li>
+            <li >
+              <a href="home" ng-show="UserData == undefined || UserData == null" style="border-left: 0px solid #000000;">
+              {{'MENU_HOME'| translate}}</a>
+              <a href="member-dashboard" ng-show="UserData != undefined && UserData != null" style="border-left: 0px solid #000000;">
+              {{'MENU_HOME'| translate}}</a>
+            </li>
             <!-- <li ><a href="product-info" style="border-left: 1px solid #FFF;"  ng-show="UserData != undefined && UserData != null">
               ค้นหาสินค้า</a></li> -->
             <li ><a href="importer" style="border-left: 1px solid #FFF;"  ng-show="UserData != undefined && UserData != null">

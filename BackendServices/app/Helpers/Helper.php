@@ -4,6 +4,7 @@
 	use App\MoneyBag;
 	use App\ExchangeRate;
 	use App\ExchangeRateTransfer;
+	use App\Models\OrderActivityLog;
 
 	function generateID(){
 		return rand(1000000000,8999999999) . date('Ym');
@@ -53,7 +54,7 @@
 
 	function getLastChinaRate(){
 		$exchange_rate = ExchangeRate::orderBy('created_at', 'DESC')->first();
-		return $exchange_rate->exchange_rate;
+		return ['exchange_rate'=> $exchange_rate->exchange_rate, 'last_update_exrate' => $exchange_rate->created_at->toDateTimeString()];
 	}
 
 	function getLastChinaRateTransfer(){
@@ -70,7 +71,7 @@
         $params['username'] = env('SMS_USERNAME');
         $params['password'] = env('SMS_PASSWORD');
  
-        $params['from']     = '0000';
+        $params['from']     = 'Cargo Mall';
         $params['to']       = $to;
         $params['message']  = $message;
  
@@ -119,4 +120,49 @@
 	    }
 
 	    return $array;
+	}
+
+	function addOrderActivityLog($log_type, $order_id, $admin_id, $admin_name = null,$order_no = null, $old_status = null, $new_status = null, $tracking_no = null, $subject = null){
+
+		$data = [];
+		$data['log_type'] = $log_type;
+		$data['order_id'] = $order_id;
+		$data['description'] = orderActivityLogTemplate($log_type, $admin_name, $order_no, $old_status, $new_status, $tracking_no, $subject);
+		$data['admin_id'] = $admin_id;
+		$data['admin_name'] = $admin_name;
+
+		OrderActivityLog::create($data);
+	}
+
+	function orderActivityLogTemplate($log_type, $admin_name,$order_no = null, $old_status = null, $new_status = null, $tracking_no = null, $subject = null){
+		switch ($log_type) {
+			case 'cus_update_order_detail': $description = 'ลูกค้า : ' . $admin_name . ' แก้ไขข้อมูลรายละเอียดเลขที่ใบสั่งซื้อ ' . $order_no . ' เรื่อง ' . $subject;break;
+			case 'update_order_detail': $description = $admin_name . ' แก้ไขข้อมูลรายละเอียด' . 
+					(($subject != null)?' เรื่อง ' . $subject:'');break;
+			case 'update_product': $description = $admin_name . ' แก้ไขข้อมูลจำนวน, ราคาของสินค้า';break;
+			case 'cancel_order': $description = $admin_name . ' ทำการยกเลิกเลขที่ใบสั่งซื้อ ' . $order_no;break;
+			case 'cancel_cancel_order': $description = $admin_name . ' ทำการยกเลิก การยกเลิกเลขที่ใบสั่งซื้อ ' . $order_no;break;
+			case 'update_status': $description = $admin_name . ' แก้ไขสถานะจาก ' . getOrderStatusName($old_status) . ' เป็น ' . getOrderStatusName($new_status);break;
+			case 'delete_tracking' : $description = $admin_name . ' ลบข้อมูลรายการแทรคเลข ' . $tracking_no;break;
+			default: break;
+		}
+
+		return $description;
+	}
+
+	function getOrderStatusName($status){
+
+		switch ($status) {
+			case 0: return 'ตรวจสอบคำสั่งซื้อ';break;
+			case 1: return 'รอการชำระเงินค่าสินค้า';break;
+			case 2: return 'ชำระเงินค่าสินค้าแล้ว';break;
+			case 3: return 'ดำเนินการสั่งซื้อสินค้า';break;
+			case 4: return 'สินค้าออกจากโกดังจีน';break;
+			case 5: return 'สินค้าถึงโกดังไทย';break;
+			case 6: return 'อยู่ระหว่างกระบวนการจัดส่ง';break;
+			case 7: return 'เสร็จสิ้น';break;
+			case 8: return 'ยกเลิก';break;
+			default:break;
+		}
+		
 	}

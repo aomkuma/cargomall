@@ -7,10 +7,12 @@ use App\MoneyBag;
 use App\MoneyUse;
 use App\Order;
 use App\OrderDesc;
+use App\OrderTracking;
 use App\Importer;
 use App\User;
 use App\WithdrawnHistory;
 use App\RefundHistory;
+use App\ImporterPayGroup;
 
 use App\Mail\OrderRequestMailable;
 use App\Mail\OrderTransportCostMailable;
@@ -141,11 +143,14 @@ class MoneyBagsController extends Controller
     public function pay(Request $request){
 
         $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
 
         $Data = $params['obj']['Data'];
         $Data['user_id'] = ''.$Data['user_id'];
         $Data['to_ref_id'] = trim($Data['to_ref_id']);
 
+        $TotalPayThb = $Data['pay_amount_thb'];
+        
         $SelectedPayBaht = $params['obj']['SelectedPayBaht'];
         $CurrentExchangeRate = $params['obj']['CurrentExchangeRate'];
 
@@ -167,31 +172,77 @@ class MoneyBagsController extends Controller
 
             }
         }
+        // exit;
 
-        $Data['id'] = generateID();
+        if($Data['pay_type'] == '2'){
 
-        if($Data['pay_type'] == '1' || $Data['pay_type'] == '2' || $Data['pay_type'] == '5'){
-            $Data['pay_status'] = 2;
-        }else{
-            $Data['pay_status'] = 1;
+            $_data = [];
+
+            foreach ($Data['selectedPayList'] as $key => $value) {
+                # code...
+                $_data = $Data;
+
+                $_data['id'] = generateID();
+                $_data['pay_status'] = 2;
+                $_data['exchange_rate'] = null;
+                $_data['to_ref_id'] = $value['order_id'];
+                $_data['to_ref_id_2'] = $value['tracking_no'];
+                $_data['pay_amount_thb'] = $value['totalBaht'];
+
+                $result = MoneyUse::create($_data);
+
+            }
+
+            $Data = $_data;
+
+        }else if($Data['pay_type'] == '5'){
+
+            $_data = [];
+            
+            foreach ($Data['selectedPayList'] as $key => $value) {
+                # code...
+                $_data = $Data;
+
+                $_data['id'] = generateID();
+                $_data['pay_status'] = 2;
+                $_data['exchange_rate'] = null;
+                $_data['to_ref_id'] = $value['id'];
+                $_data['pay_amount_thb'] = $value['totalBaht'];
+
+                $result = MoneyUse::create($_data);
+
+            }
+
+            $Data = $_data;
+
+        } else{
+
+            $Data['id'] = generateID();
+
+            if($Data['pay_type'] == '1' || $Data['pay_type'] == '2' || $Data['pay_type'] == '5'){
+                $Data['pay_status'] = 2;
+            }else{
+                $Data['pay_status'] = 1;
+            }
+
+            if($Data['pay_type'] == '3' || $Data['pay_type'] == '4'){
+                $Data['exchange_rate'] = null;//getLastChinaRateTransfer();
+                $Data['pay_amount_thb'] = null;
+                $Data['to_ref_id'] = null;
+            }
+
+            if($Data['pay_type'] == '2' || $Data['pay_type'] == '5'){
+                $Data['exchange_rate'] = null;
+            }
+            
+            $result = MoneyUse::create($Data);
+
         }
-
-        if($Data['pay_type'] == '3' || $Data['pay_type'] == '4'){
-            $Data['exchange_rate'] = null;//getLastChinaRateTransfer();
-            $Data['pay_amount_thb'] = null;
-            $Data['to_ref_id'] = null;
-        }
-
-        if($Data['pay_type'] == '2' || $Data['pay_type'] == '5'){
-            $Data['exchange_rate'] = null;
-        }
-        
-        $result = MoneyUse::create($Data);
 
         if($result){
 
             if($Data['pay_status'] == 2 && ($Data['pay_type'] == '1' || $Data['pay_type'] == '2' || $Data['pay_type'] == '5')){
-                $balance = $this->reCalcMoneyBagBalance($Data['user_id'], $Data['pay_amount_thb']);
+                $balance = $this->reCalcMoneyBagBalance($Data['user_id'], $TotalPayThb);
             }
             //
             if($Data['pay_type'] == '1'){
@@ -207,7 +258,7 @@ class MoneyBagsController extends Controller
                     $order_desc = OrderDesc::where('order_id', $Data['to_ref_id'])->first();
                     
                     if($order_desc){
-                        $order_desc->china_ex_rate = getLastChinaRate();
+                        $order_desc->china_ex_rate = getLastChinaRate()['exchange_rate'];
                         $order_desc->save();
                         
                     }
@@ -223,72 +274,115 @@ class MoneyBagsController extends Controller
                                 ->first();
                     
                     if($order_data->orderDesc->china_ex_rate == 0){
-                        $order_data->orderDesc->china_ex_rate = getLastChinaRate();
+                        $order_data->orderDesc->china_ex_rate = getLastChinaRate()['exchange_rate'];
                     }
 
                     $email_to = $order_data->customer->email;
 
-                    Mail::to($email_to)->send(new OrderRequestMailable($order_data));
+                    try{
+                        
+                        Mail::to($email_to)->send(new OrderRequestMailable($order_data));
 
+                    }catch(\Exception $e){
+
+                        Log::error("ERROR :: " . $e->getMessage());
+                        
+                    }
                 }
                 
             }
 
             if($Data['pay_type'] == '2'){
 
+                foreach ($Data['selectedPayList'] as $key => $value) {
                 // update order status to 7 (Already pay)
-                $order = Order::find($Data['to_ref_id']);
+                    $order = Order::find($value['order_id']);
 
-                if($order){
-                    $order->order_status = 7;
-                    $order->save();
+                    if($order){
 
-                    $order_data = Order::with('customer')
-                                ->where('id', $Data['to_ref_id'])
-                                ->first();
-                    
-                    $Data['id'] = trim($Data['id']);
-                    $pay_data = MoneyUse::find($Data['id']);
+                        // update payment_status in order_tracking
+                        $order_tracking = OrderTracking::where('tracking_no', $value['tracking_no'])
+                                        ->where('order_id', $value['order_id'])
+                                        ->first();
+                        // print_r($order_tracking );exit;
+                        if($order_tracking){
+                            $order_tracking->payment_status = 1;
+                            $order_tracking->save();
+                        }
+                        // $order->order_status = 7;
+                        // $order->save();
 
-                    $user_id = trim($order_data->customer->id);
-                    $money_bag_data = MoneyBag::where('user_id', $user_id)->first();
+                        $order_data = Order::with('customer')
+                                    ->where('id', $value['order_id'])
+                                    ->first();
+                        
+                        $Data['id'] = trim($Data['id']);
+                        $pay_data = MoneyUse::where('to_ref_id', $value['order_id'])
+                                            ->where('to_ref_id_2', $value['tracking_no'])
+                                            ->first();//MoneyUse::find($Data['id']);
 
-                    $email_to = $order_data->customer->email;
+                        $user_id = trim($order_data->customer->id);
+                        $money_bag_data = MoneyBag::where('user_id', $user_id)->first();
 
-                    Mail::to($email_to)->send(new OrderTransportCostMailable($order_data, $pay_data, $money_bag_data));
-                    
+                        $email_to = $order_data->customer->email;
+
+                        try{
+                            Mail::to($email_to)->send(new OrderTransportCostMailable($order_data, $pay_data, $money_bag_data));
+                        }catch(\Exception $e){
+
+                            Log::error("ERROR :: " . $e->getMessage());
+                            
+                        }
+                    }
                 }
                 
             }
 
             if($Data['pay_type'] == '5'){
 
-                // update order status to 7 (Already pay)
-                $importer = Importer::find($Data['to_ref_id']);
+                $importer_group_id = [];
 
-                if($importer){
-                    $importer->exchange_rate = $CurrentExchangeRate;
-                    $importer->importer_status = 5;
-                    $importer->save();
+                foreach ($Data['selectedPayList'] as $key => $value) {
+                    // update order status to 7 (Already pay)
+                    $value['id'] = trim($value['id']);
+                    $importer = Importer::find($value['id']);
 
-                    $importer_data = Importer::with('customer')
-                                    ->where('id', $Data['to_ref_id'])
-                                    ->first();
+                    if($importer){
+                        $importer->exchange_rate = $CurrentExchangeRate;
+                        $importer->importer_status = 5;
+                        $importer->save();
 
-                    $pay_data = MoneyUse::find($Data['id']);
+                        $importer_data = Importer::with('customer')
+                                        ->where('id', $value['id'])
+                                        ->first();
 
-                    $user_id = trim($importer_data->customer->id);
-                    $money_bag_data = MoneyBag::where('user_id', $user_id)->first();
+                        $pay_data = MoneyUse::where('to_ref_id', $value['id'])->first();
 
-                    $email_to = $importer_data->customer->email;
+                        $user_id = trim($importer_data->customer->id);
+                        $money_bag_data = MoneyBag::where('user_id', $user_id)->first();
 
-                    Mail::to($email_to)->send(new ImporterCostMailable($importer_data, $pay_data, $money_bag_data));
+                        $email_to = $importer_data->customer->email;
 
+                        try{
+                            Mail::to($email_to)->send(new ImporterCostMailable($importer_data, $pay_data, $money_bag_data));
+                        }catch(\Exception $e){
+
+                            Log::error("ERROR :: " . $e->getMessage());
+                            
+                        }
+                    }
+
+                    $importer_group_id[] = $value['tracking_no'];
                 }
                 
+                // update importer pay group
+                $importer_pay_group = new ImporterPayGroup;
+                $importer_pay_group->importer_group_id = implode(' / ', $importer_group_id);
+                $importer_pay_group->user_id = $user_data['id'];
+                $importer_pay_group->user_code = $user_data['user_code'];
+                $importer_pay_group->save();
+
             }
-
-
             
             $this->data_result['DATA'] = base64_encode(getUserProfile($Data['user_id']));
             
@@ -337,6 +431,7 @@ class MoneyBagsController extends Controller
                     ->count();
 
         $list = MoneyUse::with('customer')
+                    ->select("money_use.*")
                     ->join('user', 'user.id', '=', 'money_use.user_id')
                     ->where('user_id', $user_id)
                     ->where(function($query) use ($condition){
@@ -346,7 +441,7 @@ class MoneyBagsController extends Controller
                         }
 
                         if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
-                            $query->where('pay_type', $condition['pay_type']);
+                            $query->where('pay_type', floatval($condition['pay_type']));
                         }
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
@@ -459,8 +554,15 @@ class MoneyBagsController extends Controller
 
             $email_to = $topup->customer->email;
 
-            Mail::to($email_to)->send(new TopupNotiMailable($topup, $money_bag_data));
-            
+            try{
+
+                Mail::to($email_to)->send(new TopupNotiMailable($topup, $money_bag_data));
+
+            }catch(\Exception $e){
+
+                Log::error("ERROR :: " . $e->getMessage());
+
+            }
 
             $this->data_result['DATA'] = 'Topup success';
 
@@ -498,6 +600,8 @@ class MoneyBagsController extends Controller
 
                     $this->data_result['STATUS'] = 'ERROR';
                     $this->data_result['DATA'] = 'ยอดเงินคงเหลือของลูกค้ารายนี้ไม่พอการชำระโอน';
+                    return $this->returnResponse(200, $this->data_result, response(), false);
+
                 }
 
                 $transfer->pay_amount_thb = $transfer_thb;
@@ -515,8 +619,13 @@ class MoneyBagsController extends Controller
 
             $email_to = $transfer->customer->email;
 
-            Mail::to($email_to)->send(new TransferNotiMailable($transfer, $money_bag_data));
+            try{
+                Mail::to($email_to)->send(new TransferNotiMailable($transfer, $money_bag_data));
+           }catch(\Exception $e){
 
+                Log::error("ERROR :: " . $e->getMessage());
+                
+            }
             $this->data_result['DATA'] = 'Transfer success';
 
         }
@@ -553,6 +662,7 @@ class MoneyBagsController extends Controller
 
                     $this->data_result['STATUS'] = 'ERROR';
                     $this->data_result['DATA'] = 'ยอดเงินคงเหลือของลูกค้ารายนี้ไม่พอการชำระฝากจ่าย';
+                    return $this->returnResponse(200, $this->data_result, response(), false);
                 }
 
                 $deposit->pay_amount_thb = $deposit_thb;
@@ -570,7 +680,15 @@ class MoneyBagsController extends Controller
 
             $email_to = $deposit->customer->email;
 
-            Mail::to($email_to)->send(new DepositNotiMailable($deposit, $money_bag_data));
+            try{
+                
+                Mail::to($email_to)->send(new DepositNotiMailable($deposit, $money_bag_data));
+
+            }catch(\Exception $e){
+
+                Log::error("ERROR :: " . $e->getMessage());
+                
+            }
 
             $this->data_result['DATA'] = 'Deposit success';
 
@@ -597,55 +715,167 @@ class MoneyBagsController extends Controller
         $condition['user_id'] = trim($condition['user_id']);
         $condition['pay_type'] = trim($condition['pay_type']);
 
-        $totalRows = MoneyUse::with('customer')
-                    ->join('user', 'user.id', '=', 'money_use.user_id')
-                    ->where('pay_status', 2)
-                    ->where(function($query) use ($condition){
-                        if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
-                            $query->where('user_id', $condition['user_id']);
-                        }
+        if($condition['pay_type'] == 2){
+            $totalRows = MoneyUse::with('customer')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->join('order', 'money_use.to_ref_id', '=', 'order.id')
+                        ->leftJoin('order_tracking', 'money_use.to_ref_id_2', '=', 'order_tracking.tracking_no')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
 
-                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
-                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
-                            $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
-                        }
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
 
-                        if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
-                            $query->where('pay_type', $condition['pay_type']);
-                        }
-                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
-                            $condition['created_at'] = getDateFromString($condition['created_at']);
-                            $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
-                        }
-                    })
-                    ->count();
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->count();
 
-        $list = MoneyUse::with('customer')
-                    ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname')
-                    ->join('user', 'user.id', '=', 'money_use.user_id')
-                    ->where('pay_status', 2)
-                    ->where(function($query) use ($condition){
-                        if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
-                            $query->where('user_id', $condition['user_id']);
-                        }
+            $list = MoneyUse::with('customer')
+                        ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname', 'order.order_no', 'order_tracking.tracking_no')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->join('order', 'money_use.to_ref_id', '=', 'order.id')
+                        ->leftJoin('order_tracking', 'money_use.to_ref_id_2', '=', 'order_tracking.tracking_no')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
 
-                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
-                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
-                            $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
-                        }
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
 
-                        if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
-                            $query->where('pay_type', $condition['pay_type']);
-                        }
-                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
-                            $condition['created_at'] = getDateFromString($condition['created_at']);
-                            $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
-                        }
-                    })
-                    ->orderBy('money_use.created_at', 'DESC')
-                    ->skip($skip)
-                    ->take($limit)
-                    ->get();
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->orderBy('money_use.created_at', 'DESC')
+                        ->skip($skip)
+                        ->take($limit)
+                        ->get();
+
+        } else if($condition['pay_type'] == 5){
+            $totalRows = MoneyUse::with('customer')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->join('importer', 'money_use.to_ref_id', '=', 'importer.id')
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
+
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
+
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->count();
+
+            $list = MoneyUse::with('customer')
+                        ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname', 'importer.tracking_no')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->join('importer', 'money_use.to_ref_id', '=', 'importer.id')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
+
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
+
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->orderBy('money_use.created_at', 'DESC')
+                        ->skip($skip)
+                        ->take($limit)
+                        ->get();
+
+        }else{
+            $totalRows = MoneyUse::with('customer')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
+
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
+
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->count();
+
+            $list = MoneyUse::with('customer')
+                        ->with('importer')
+                        ->with('order')
+                        ->with('orderTracking')
+                        ->select("money_use.*", 'user.user_code', 'user.firstname', 'user.lastname')
+                        ->join('user', 'user.id', '=', 'money_use.user_id')
+                        ->where('pay_status', 2)
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['user_id']) &&  !empty($condition['user_id'])){
+                                $query->where('user_id', $condition['user_id']);
+                            }
+
+                            if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                                $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                                $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
+                            }
+
+                            if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
+                                $query->where('pay_type', $condition['pay_type']);
+                            }
+                            if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                                $condition['created_at'] = getDateFromString($condition['created_at']);
+                                $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                            }
+                        })
+                        ->orderBy('money_use.created_at', 'DESC')
+                        ->skip($skip)
+                        ->take($limit)
+                        ->get();
+        }
 
         $this->data_result['DATA']['DataList'] = $list;
         $this->data_result['DATA']['Total'] = $totalRows;
@@ -1025,8 +1255,8 @@ class MoneyBagsController extends Controller
 
             // update balance
             $money_bag->balance -= $transter_amount;
-
-            if($money_bag->balance >= 0){
+            // echo $money_bag->balance . ' ' . $transter_amount;exit;
+            if(floatval($money_bag->balance) >= 0){
 
                 $result = true;
                 $money_bag->save();    

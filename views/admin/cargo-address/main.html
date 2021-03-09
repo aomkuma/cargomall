@@ -1,0 +1,68 @@
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
+
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-md-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group">
+	<div class="col-md-12">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">ข้อมูลอยู่โกดังจีน</span><br>
+					<button class="btn btn-info ิbtn-sm" data-ng-click="addData()">เพิ่ม</button>&nbsp;
+				</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-4" data-ng-repeat="data in AddressList track by $index">
+				<div class="card">
+					<div class="row form-group">
+						<label class="col-md-12">
+							ชื่อ / ประเภท
+						</label>
+						<div class="col-md-12">
+							<input type="text" class="form-control" data-ng-model="data.title">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-12">
+							ที่อยู่
+						</label>
+						<div class="col-md-12">
+							<textarea class="form-control" data-ng-model="data.address"></textarea>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-6 text-left">
+							<input type="radio" data-ng-model="data.is_active" data-ng-value="true"> ใช้งาน
+							<input type="radio" data-ng-model="data.is_active" data-ng-value="false"> ไม่ใช้งาน
+						</div>
+						<div class="col-md-6 text-right">
+							<button class="btn btn-primary ิbtn-sm" data-ng-click="updateData(data)">บันทึก</button>&nbsp;
+							<button class="btn btn-default ิbtn-sm" data-ng-click="deleteData($index, data.id)">ลบ</button>&nbsp;
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style type="text/css">
+	.card{
+		border: 1px solid #ccc;
+		border-radius: 10px;
+		padding:10px;
+		margin: 2px;
+		margin-top: 10px;
+		background-color: #e6d5d5;
+	}
+</style>

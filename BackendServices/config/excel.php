@@ -163,7 +163,7 @@ return [
         | storing reading or downloading. Here you can customize that path.
         |
         */
-        'local_path'  => sys_get_temp_dir(),
+        'local_path'  => '/Applications/XAMPP/xamppfiles/htdocs/cargomall/files/',//sys_get_temp_dir(),
 
         /*
         |--------------------------------------------------------------------------

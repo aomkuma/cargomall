@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "aurawindsurfing/google-translate": "^1.0",
+        "doctrine/dbal": "^2.0",
         "fideloper/proxy": "^4.0",
         "joggapp/laravel-google-translate": "^5.0",
         "laravel/framework": "^6.2",

@@ -89,6 +89,7 @@ app.config(function($controllerProvider, $compileProvider, $filterProvider, $log
     REMARK_TXT : 'รายละเอียดเพิ่มเติม',
     CANCEL_ORDER_TXT : 'ต้องการยกเลิกการทำรายการสั่งซื้อ ใช่หรือไม่?',
     CONFIRM_ORDER_TXT : 'ต้องการทำรายการสั่งซื้อ ใช่หรือไม่?',
+    REMEMBER_PASSWORD_TXT : 'จำรหัสผ่าน'
   });
 
   $translateProvider.preferredLanguage('th');
@@ -97,6 +98,24 @@ app.config(function($controllerProvider, $compileProvider, $filterProvider, $log
 
   $compileProvider.debugInfoEnabled(false);    
   $logProvider.debugEnabled(false);
+});
+
+app.config(['$httpProvider', function($httpProvider) {
+     $httpProvider.interceptors.push('noCacheInterceptor');
+}]).factory('noCacheInterceptor', function () {
+        return {
+            request: function (config) {
+                console.log(config.method);
+                console.log(config.url);
+                if(config.method=='GET'){
+                    var separator = config.url.indexOf('?') === -1 ? '?' : '&';
+                    config.url = config.url+separator+'noCache=' + new Date().getTime();
+                }
+                console.log(config.method);
+                console.log(config.url);
+                return config;
+           }
+       };
 });
 
 app.run(function($rootScope, $templateCache) {
@@ -111,15 +130,16 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
   $localStorage.$reset();
   // var CurDateTime = new Date();
   // $scope.CURDATETIME = CurDateTime.getYear() + CurDateTime.getMonth() + CurDateTime.getDate() + CurDateTime.getHours() +CurDateTime.getMinutes() + CurDateTime.getSeconds() ;    
-  $scope.ORDER_STATUS = [{'id' : 1, 'value' : 'รอการชำระเงินค่าสินค้า'},
+  $scope.ORDER_STATUS = [{'id' : 0, 'value' : 'ตรวจสอบคำสั่งซื้อ'},
+                      {'id' : 1, 'value' : 'รอการชำระเงินค่าสินค้า'},
                       {'id' : 2, 'value' : 'ชำระเงินค่าสินค้าแล้ว'},
                       {'id' : 3, 'value' : 'ดำเนินการสั่งซื้อสินค้า'},
                       {'id' : 4, 'value' : 'สินค้าออกจากโกดังจีน'},
                       {'id' : 5, 'value' : 'สินค้าถึงโกดังไทย'},
-                      {'id' : 6, 'value' : 'รอการชำระค่าขนส่ง'},
-                      {'id' : 7, 'value' : 'รอการจัดส่งสินค้า'},
-                      {'id' : 8, 'value' : 'เสร็จสิ้น'},
-                      {'id' : 9, 'value' : 'ยกเลิก'}
+                      {'id' : 6, 'value' : 'อยู่ระหว่างกระบวนการจัดส่ง'},
+                      // {'id' : 7, 'value' : 'รอการจัดส่งสินค้า'},
+                      {'id' : 7, 'value' : 'เสร็จสิ้น'},
+                      {'id' : 8, 'value' : 'ยกเลิก'}
                     ];
 
   $scope.IMPORTER_STATUS = [{'id' : 1, 'value' : 'คำขอบริการนำเข้าสินค้า'},
@@ -128,6 +148,11 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
                       {'id' : 4, 'value' : 'รอการชำระค่าขนส่ง'},
                       {'id' : 5, 'value' : 'รอการจัดส่งสินค้า'},
                       {'id' : 6, 'value' : 'เสร็จสิ้น'}
+                    ];
+
+  $scope.TRACK_NONE_OWNER_STATUS = [{'id' : 1, 'value' : 'แจ้งหาเจ้าของสินค้า'},
+                      {'id' : 2, 'value' : 'มีผู้รับสินค้าแล้ว'},
+                      {'id' : 3, 'value' : 'ยกเลิกการแจ้งหาผเจ้าของ'}
                     ];
 
   $scope.TRANSPORT_COMPANY = [{'id' : 'nim', 'value' : 'Nim Express'},
@@ -161,6 +186,14 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     }
   }
 
+  $scope.getTrackingNoneOwnerStatus = function(status){
+     for(var i = 0; i < $scope.TRACK_NONE_OWNER_STATUS.length; i++){
+      if(status == $scope.TRACK_NONE_OWNER_STATUS[i].id){
+        return $scope.TRACK_NONE_OWNER_STATUS[i].value;
+      }
+    }
+   }
+
   $scope.currentUser = null;
 	$scope.overlayShow = false;
 	$scope.menu_selected = '';
@@ -182,12 +215,16 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.exchange_rate = 0.000;
   $scope.exchange_rate_transfer = 0.000;
+  $scope.Login = {'email' : null, 'password' : null, 'remember_password' : false};
 
   $scope.session_storage = angular.fromJson($cookies.get('user_session'));
 
   if($scope.session_storage != undefined){
     console.log($scope.session_storage);
     if(checkEmptyField($scope.session_storage.user_data)){
+      if(window.location.pathname == '' || window.location.pathname == '/' || window.location.pathname == '/cargomall/'){
+        window.location.replace('member-dashboard');
+      }
       $scope.UserData = angular.fromJson(atob($scope.session_storage.user_data));
       $log.log($scope.UserData); 
     }
@@ -228,7 +265,8 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.closeSuccessOrderDialog = function(){
     $scope.ShowDialogSuccessOrder = false;
-    window.location.replace('pay/1/' + $scope.OrderID);
+    // window.location.replace('pay/1/' + $scope.OrderID);
+    window.location.replace('');
   }
 
   $scope.registerDialog = function(){
@@ -241,6 +279,14 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.loginDialog = function(){
     $scope.ShowLoginDialog = true;
+    console.log('cookie user :' + $cookies.get('username'));
+    console.log('cookie password :' + $cookies.get('password'));
+
+    if($cookies.get('username') != undefined && $cookies.get('password') != undefined){
+      $scope.Login.email = $cookies.get('username');
+      $scope.Login.password = $cookies.get('password');
+      $scope.Login.remember_password = true;
+    }
   }
 
   $scope.closeLoginDialog = function(){
@@ -259,7 +305,8 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     HTTPService.clientRequest('forgot-pass/request', params).then(function(result){
 
       if(result.data.STATUS == 'OK'){
-        alert(result.data.DATA);
+        // alert(result.data.DATA.MSG);
+        window.location.href = result.data.DATA.URL;
         $scope.closeForgotPassDialog();
       }
       else{
@@ -309,16 +356,18 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
   }
 
   $scope.addAddress = function(UserProfile){
-    UserProfile.addresses.push({'user_id' : UserProfile.id, 
-        'address1' : '',
-        'address2' : '',
-        'address3' : '',
-        'address4' : '',
-        'address5' : '',
-        'address6' : '',
-        'address7' : '',
-        'address_no' : (UserProfile.addresses.length + 1)
-      });
+    if(UserProfile.addresses.length < 3){
+      UserProfile.addresses.push({'user_id' : UserProfile.id, 
+          'address1' : '',
+          'address2' : '',
+          'address3' : '',
+          'address4' : '',
+          'address5' : '',
+          'address6' : '',
+          'address7' : '',
+          'address_no' : (UserProfile.addresses.length + 1)
+        });
+    }
   }
 
   $scope.closeUserProfileDialog = function(){
@@ -435,6 +484,18 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.checkLogin = function(loginObj){
     IndexOverlayFactory.overlayShow();
+
+    if(loginObj.remember_password){
+      // alert('trmember me !');
+      // console.log(loginObj);
+      $cookies.put('username', loginObj.email);
+      $cookies.put('password', loginObj.password);
+
+    }else{
+      $cookies.remove('username');
+      $cookies.remove('password');
+    }
+    // return ;
     var params = {'LoginObj' : loginObj};
       HTTPService.clientRequest('login', params).then(function(result){
         if(result.data.STATUS == 'OK'){
@@ -443,6 +504,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
           $cookies.put('user_session' , JSON.stringify({'token' : result.data.DATA.token, 'user_data' : result.data.DATA.UserData}));
           // $scope.UserDara = result.data.DATA.UserData;
           window.location.reload();
+          // window.location.replace('member-dashboard'); 
         }else{
           var alertMsg = result.data.DATA;
           alert(alertMsg);
@@ -638,6 +700,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     HTTPService.clientRequest('exchange-rate/get', null).then(function(result){
     if(result.data.STATUS == 'OK'){
       $scope.exchange_rate = parseFloat(result.data.DATA.exchange_rate);
+      $scope.last_update_exrate = (result.data.DATA.last_update_exrate);
       $scope.exchange_rate_transfer = parseFloat(result.data.DATA.exchange_rate_transfer);
     }
     });

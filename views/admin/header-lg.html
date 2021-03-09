@@ -73,12 +73,31 @@
               ข้อมูลลูกค้า</a></li>
             <li ><a href="admin/exchange-rate" style="border-left: 1px solid #FFF;" ng-show="UserData != undefined && UserData != null && UserData.role == 1">
               อัตราแลกเปลี่ยน</a></li>
-            <li ><a href="admin/transport-rate" style="border-left: 1px solid #FFF;" ng-show="UserData != undefined && UserData != null">
-              อัตราค่าบริการขนส่ง</a></li>
             <li ><a href="admin/manage-admin" style="border-left: 1px solid #FFF;" ng-show="UserData != undefined && UserData != null && UserData.role == 1">
               จัดการ admin</a></li>
-            <li ><a href="admin/landing-page" style="border-left: 1px solid #FFF;">
-              Landing Page</a></li>
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle"  data-toggle="dropdown" 
+            role="button" 
+            aria-haspopup="true" 
+            aria-expanded="false" 
+            style="border-left: 1px solid #FFF;" ng-show="UserData != undefined && UserData != null">
+              จัดการ  <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="admin/landing-page">Landing Page</a>
+                </li>
+                <li>
+                  <a href="admin/transport-rate">อัตราค่าบริการขนส่ง</a>
+                </li>
+                <li>
+                  <a href="admin/cargo-address">ข้อมูลที่อยู่โกดังจีน</a>
+                </li>
+                <li>
+                  <a href="admin/tracking-none-owner/list">รายการสินค้าไม่มีเจ้าของ</a>
+                </li>
+                
+              </ul>
+            </li>
 
             <span class="pull-right" ng-show="session_storage.token == undefined || session_storage.token == null">
               <button class="btn btn-login" data-ng-click="loginDialog()"><i class="fas fa-user"></i> {{'SIGNIN_BTN_TXT' | translate}}</button>

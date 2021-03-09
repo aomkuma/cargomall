@@ -1,0 +1,119 @@
+<div data-ng-include src="'views/header-lg.html'"></div>
+<div data-ng-include src="'views/header-xs.html'"></div>
+<div class="inner-overlay" ng-show="ShowDialogConfirmTopup">
+	<div class="dialog-confirm-form">
+		<div class="row form-group">
+			<div class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12 text-center">
+				ต้องการทำรายการเติมเงิน ใช่หรือไม่ ?
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12 text-center">
+				<button class="btn btn-default" data-ng-click="closeConfirmTopupDialog()">ยกเลิก</button>
+				<button class="btn btn-primary" data-ng-click="confirmTopup(Topup, AttachFile)">ยืนยันการเติมเงิน</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row form-group visible-xs" style="height: 50px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row form-group hidden-xs" style="height: 150px;">
+  <div class="col-lg-12">
+    &nbsp;
+  </div>
+</div>
+<div class="row" style="padding: 8px; padding-top:20px;" ng-form="frm">
+	<div class="col-md-8 col-md-offset-2" ng-show="TopupSuccess" style="padding-bottom:300px;">
+		<br><br>
+		<span style="color: green; font-weight: bolder;"><i class="fas fa-check"></i> ระบบได้รับการแจ้งเติมเงินแล้ว ยอดเงินของคุณจะถูกอัพเดทภายในไม่ช้านี้</span>
+		<br>ระบบกำลังพาคุณไปยังหน้าหลัก..
+	</div>
+	<div class="col-md-8 col-md-offset-2" ng-hide="TopupSuccess">
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<div class="page-header">
+					<span style="font-size: 1.3em; font-weight: bolder;">แจ้งการเติมเงิน</span>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="row form-group">
+			<label class="col-md-3 col-sm-4 col-xs-12">เลขบัญชีที่ทำการโอนเข้ามา</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" type="text" data-ng-model="Topup.from_account" maxlength="20" placeholder="เลขบัญชีต้นทาง" required="true">
+			</div>
+		</div> -->
+		
+		<div class="row form-group">
+			<label class="col-md-12" style="color: red;">ระบบจะทำการอนุมัติการเติมเงินในช่วงเวลา 8.00 - 21.00น.</label>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-3 col-sm-4 col-xs-12">โอนไปยังเลขบัญชี</label>
+			<div class="col-md-6 col-sm-6 col-xs-12">
+				<!-- <input class="form-control" type="text" data-ng-model="Topup.to_account" maxlength="20" placeholder="เลขบัญชีปลายทาง" required="true"> -->
+				<select class="form-control"  data-ng-model="Topup.to_account"  required="true"><!--ng-options="data.account_no as (data.account_no + ' ' + data.bank_name + ' ' + data.account_name) for data in ToAccountList"-->
+					<!-- <option value="">กรุณาเลือก..</option> -->
+					<option value="4190815076">4190815076 - ธนาคารไทยพาณิชย์ (นางสาวกวินนาฎ ฉัตรอุทัย)</option>
+					<option value="0668339999">0668339999 - ธนาคารกสิกรไทย (บจก. คาร์โก้ มอลล์)</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-3 col-sm-4 col-xs-12">จำนวนเงินที่โอน (บาท)</label>
+			<div class="col-md-4 col-sm-4 col-xs-12">
+				<input class="form-control" type="number" data-ng-model="Topup.topup_amount" required="true">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-3 col-sm-4 col-xs-12">วัน - เวลาที่โอน</label>
+			<div class="col-md-4 col-sm-4 col-xs-6">
+				<input class="form-control" type="date" data-ng-model="Topup.topup_date" required="true">
+			</div>
+			<!-- <div class="col-md-2 col-sm-3 col-xs-6">
+				<input class="form-control" type="time" data-ng-model="Topup.topup_time" required="true">
+			</div> -->
+			<div class="col-md-2 col-sm-3 col-xs-6">
+				<select class="form-control" data-ng-model="Hour" data-ng-options="data.display as data.value for data in HourList" required="true">
+					<option value="">ชั่วโมง..</option>
+				</select>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-6">
+				<select class="form-control" data-ng-model="Minute" data-ng-options="data.display as data.value for data in MinuteList" required="true">
+					<option value="">นาที..</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-3 col-sm-4 col-xs-12">
+				แนบไฟล์ slip โอนเงิน
+			</label>
+			<div class="col-md-4 col-sm-4 col-xs-12" >
+				<p class="input-group" style="">
+		          <input type="text" readonly="true" class="form-control" ng-model="AttachFile.name" required="true" />
+		          <span class="input-group-btn">
+		            <button class="btn btn-default" style="border-color: red;" ngf-select ng-model="AttachFile" ngf-max-size="5MB"  ngf-model-invalid="AttachFile.invalidFile" accept="image/*" ngf-pattern="'.png,.jpg,.jpeg,.gif'" >เลือก</button>
+		          </span>
+		        </p>
+			</div>
+			<div class="col-lg-3">
+				<div class="file-alert" ng-show="AttachFile.invalidFile.$error === 'maxSize'">ขนาดไฟล์ต้องไม่เกิน : {{AttachFile.invalidFile.$errorParam}}</div>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-md-12 text-center">
+				<button class="btn btn-primary btn-sm"  ng-click="topup()" data-ng-disabled="frm.$invalid || AttachFile == null"><i class="fas fa-wallet"></i> เติมเงิน</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div data-ng-include src="'views/footer.html'"></div>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-161508645-1');
+</script>

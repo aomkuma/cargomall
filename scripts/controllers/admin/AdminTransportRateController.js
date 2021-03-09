@@ -21,7 +21,7 @@ angular.module('app').controller('AdminTransportRateController', function($scope
         var params = null;
         HTTPService.clientRequest('admin/transport-rate/list', params).then(function(result){
             if(result.data.STATUS == 'OK'){
-                $scope.Data = result.data.DATA;
+                $scope.DataList = result.data.DATA;
             }else{
               var alertMsg = result.data.DATA;
               alert(alertMsg);

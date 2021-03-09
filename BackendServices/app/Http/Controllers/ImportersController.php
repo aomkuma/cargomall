@@ -44,10 +44,12 @@ class ImportersController extends Controller
         $skip = $offset * $limit;
 
         $totalRows = Importer::
-                    where(function($query) use ($condition){
+                    join('user', 'user.id', '=', 'importer.user_id')
+                    ->where(function($query) use ($condition){
 
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('tracking_no', $condition['keyword']);
+                            $query->orWhere('user_code', $condition['keyword']);
                         }
 
                         if(isset($condition['importer_status']) &&  !empty($condition['importer_status'])){
@@ -56,16 +58,18 @@ class ImportersController extends Controller
                     })
                     ->count();
 
-        $list = Importer::
+        $list = Importer::select('importer.*', 'user.user_code')
                     // with('customer')
-                    with(array('customer'=>function($query){
+                    ->with(array('customer'=>function($query){
                             $query->with('addresses');
                         }
                     ))
+                    ->join('user', 'user.id', '=', 'importer.user_id')
                     ->where(function($query) use ($condition){
 
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('tracking_no', $condition['keyword']);
+                            $query->orWhere('user_code', $condition['keyword']);
                         }
 
                         if(isset($condition['importer_status']) &&  !empty($condition['importer_status'])){
@@ -73,7 +77,7 @@ class ImportersController extends Controller
                         }
 
                     })
-                    ->orderBy('created_at', 'DESC')
+                    ->orderBy('importer.created_at', 'DESC')
                     ->skip($skip)
                     ->take($limit)
                     ->get();
@@ -107,6 +111,25 @@ class ImportersController extends Controller
                         $query->where('tracking_no' , $condition['tracking_no']);  
                     } 
                 })
+                ->orderBy('thai_arrival', 'DESC')
+                ->orderBy('updated_at', 'DESC')
+                ->get();
+
+        $this->data_result['DATA'] = $list;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+    }
+
+    public function listByUserLimit(Request $request){
+
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+
+        $list = Importer::where('user_id', $user_data['id'])
+                ->orderBy('thai_arrival', 'DESC')
+                ->orderBy('updated_at', 'DESC')
+                ->take(5)
                 ->get();
 
         $this->data_result['DATA'] = $list;
@@ -129,6 +152,20 @@ class ImportersController extends Controller
                 ->where('id', $importer_id)->first();
 
         $this->data_result['DATA'] = $data;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+    }
+
+
+    public function delete(Request $request){
+        
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $importer_id = $params['obj']['id'];
+
+        $result = Importer::find($importer_id)->delete();
+
+        $this->data_result['DATA'] = $result;
 
         return $this->returnResponse(200, $this->data_result, response(), false);
     }
@@ -158,7 +195,11 @@ class ImportersController extends Controller
 
         if(!isset($Data['id'])){
             $Data['id'] = generateID();
-            $Data['user_id'] = $user_data['id'];
+            
+            if(!isset($Data['user_id'])){
+                $Data['user_id'] = $user_data['id'];
+            }
+            
             $Data['importer_status'] = 1;
             $result = Importer::create($Data);
         }else{

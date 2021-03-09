@@ -102,6 +102,27 @@
 								</div>
 							</div>
 						</div>
+						<div class="row form-group">
+							<label class="col-lg-12"><h4>
+								<span class="badge" style="background-color: #EBCCCC; padding: 10px; color: #000; margin-bottom: 10px; font-size: 0.8em;">รูปแบบการจัดส่ง</span>
+							</h4></label>
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="package_type1" type="radio" value="all" data-ng-model="ship_option.package_type" aria-label="..." required="true">&nbsp;&nbsp;&nbsp;
+									        <label for="package_type1">รวมกล่อง</label>&nbsp;<span style="color:red;">(ในกรณีสินค้าชินเล็กที่สามารถรวมได้)</span>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="input-group">
+									        <input id="package_type2" type="radio" value="single" data-ng-model="ship_option.package_type" aria-label="..." required="true">&nbsp;&nbsp;&nbsp;
+									        <label for="package_type2">แยกกล่อง</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 						<div class="row form-group"  data-ng-show="ship_option.receive_order_type == 'current'">
 							<label class="col-lg-12"><h4>
 								<span class="badge" style="background-color: #B9DEF0; padding: 10px; color: #000; margin-bottom: 10px; font-size: 0.8em;">บริษัทขนส่ง</span>

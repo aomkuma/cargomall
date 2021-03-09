@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h3>ประวัติการแก้ไข</h3>
+</div>
+<div class="modal-body">
+    <div class="row form-group">
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped">
+				<tr class="default">
+					<th style="text-align: center;">ลำดับ</th>
+					<th style="text-align: center;">วัน / เวลา</th>
+					<th style="text-align: center;">ประเภทการแก้ไข</th>
+					<th style="text-align: center;">รายละเอียด</th>
+				</tr>
+				<tr data-ng-repeat="item in ActivityLog track by $index" style="font-size: 0.9em;">
+					<td>{{$index + 1}}</td>
+					<td>{{item.created_at}}</td>
+					<td>{{getLogType(item.log_type)}}</td>
+					<td>{{item.description}}</td>
+				</tr>
+			</table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()">ปิด</button>
+</div>
