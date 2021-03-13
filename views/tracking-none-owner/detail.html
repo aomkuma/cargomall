@@ -30,7 +30,7 @@
 		</div>
 		<div class="row form-group">
 			<label class="col-md-12" style="color: #999;"> 
-				<h4>สถานะสินค้า  :  {{getOrderStatus(OrderData.order_status)}} </h4>
+				<h4>สถานะสินค้า  :  {{getOrderStatus(OrderTrackingDataNoneOwner.order_status)}} </h4>
 			</label>
 		</div>
 		
@@ -42,19 +42,19 @@
 					</label>
 				</div>
 				<fieldset>
-					<legend>{{ OrderDrackingData.tracking_no }} ({{OrderDrackingData.goods_desc_en}} / {{OrderDrackingData.goods_desc_th}})</legend>
+					<legend>{{ OrderTrackingDataNoneOwner.tracking_no }} ({{OrderTrackingDataNoneOwner.goods_desc_en}} / {{OrderTrackingDataNoneOwner.goods_desc_th}})</legend>
 					<div class="row form-group">
 						<label class="col-md-2 blue-label">
 							วันที่สินค้าถึงโกดังจีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_arrival_date}}
+							{{OrderTrackingDataNoneOwner.china_arrival_date}}
 						</div>
 						<label class="col-md-2 blue-label">
 							โกดัง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.cargo}}
+							{{OrderTrackingDataNoneOwner.cargo}}
 						</div>
 					</div>
 					<div class="row form-group">
@@ -62,13 +62,13 @@
 							จำนวนกล่อง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.package_amount}}
+							{{OrderTrackingDataNoneOwner.package_amount}}
 						</div>
 						<label class="col-md-2 blue-label">
 							น้ำหนัก (KG)
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.weight_kg}}
+							{{OrderTrackingDataNoneOwner.weight_kg}}
 						</div>
 					</div>
 					<div class="row form-group">
@@ -76,13 +76,13 @@
 							ยาว
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.longs}}
+							{{OrderTrackingDataNoneOwner.longs}}
 						</div>
 						<label class="col-md-2 blue-label">
 							กว้าง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.widths}}
+							{{OrderTrackingDataNoneOwner.widths}}
 						</div>
 					</div>
 					<div class="row form-group">
@@ -90,13 +90,13 @@
 							สูง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.heights}}
+							{{OrderTrackingDataNoneOwner.heights}}
 						</div>
 						<label class="col-md-2 blue-label">
 							CBM
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.cbm}}
+							{{OrderTrackingDataNoneOwner.cbm}}
 						</div>
 					</div>
 					<div class="row form-group">
@@ -104,13 +104,13 @@
 							วันที่ของเข้าจีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_arrival_date}}
+							{{OrderTrackingDataNoneOwner.china_arrival_date}}
 						</div>
 						<label class="col-md-2 blue-label">
 							เลขที่ตู้
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.bill_no}}
+							{{OrderTrackingDataNoneOwner.bill_no}}
 						</div>
 					</div>
 
@@ -119,13 +119,13 @@
 							สูง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.heights}}
+							{{OrderTrackingDataNoneOwner.heights}}
 						</div>
 						<label class="col-md-2 blue-label">
 							CBM
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.cbm}}
+							{{OrderTrackingDataNoneOwner.cbm}}
 						</div>
 					</div>
 					<div class="row form-group">
@@ -133,13 +133,13 @@
 							วันที่ของออกจีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_departure_date}}
+							{{OrderTrackingDataNoneOwner.china_departure_date}}
 						</div>
 						<label class="col-md-2 blue-label">
 							เลขตู้
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.container_no}}
+							{{OrderTrackingDataNoneOwner.container_no}}
 						</div>
 					</div>
 					<div class="row form-group">
@@ -147,7 +147,7 @@
 							เลข order จีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_order_no}}
+							{{OrderTrackingDataNoneOwner.china_order_no}}
 						</div>
 						
 					</div>
@@ -156,7 +156,7 @@
 							วันที่เข้าไทย
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.thai_arrival}}
+							{{OrderTrackingDataNoneOwner.thai_arrival_date}}
 						</div>
 					</div>
 					<div class="row form-group">
@@ -164,13 +164,13 @@
 							เลขแทรคจีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_tracking_no}}
+							{{OrderTrackingDataNoneOwner.china_tracking_no}}
 						</div>
 						<label class="col-md-2 blue-label">
 							เลขแทรคไทย
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.tracking_no_thai}}
+							{{OrderTrackingDataNoneOwner.tracking_no_thai}}
 						</div>
 						
 					</div>
@@ -179,13 +179,13 @@
 							ค่าขนส่งจากจีนมาไทย
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.transport_cost_china}}
+							{{OrderTrackingDataNoneOwner.transport_cost_china}}
 						</div>
 						<label class="col-md-2 blue-label">
 							ค่าขนส่งในไทย
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.transport_cost_thai}}
+							{{OrderTrackingDataNoneOwner.transport_cost_thai}}
 						</div>
 					</div>
 					

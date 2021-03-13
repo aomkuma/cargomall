@@ -31,7 +31,7 @@ class TrackingNoneOwner extends Model
 	protected $table = 'tracking_none_owner';
 
 	protected $casts = [
-		'tracking_id' => 'int',
+		// 'tracking_id' => 'int',
 		'track_status' => 'int',
 		'admin_approve_by' => 'int',
 		'created_by' => 'int'
@@ -66,4 +66,10 @@ class TrackingNoneOwner extends Model
     {
         return $this->hasOne('App\UserAdmin','id','admin_approve_by');
     }
+
+    public function orderTrackingNotOwner()
+    {
+        return $this->hasOne('App\Models\OrderTrackingNotOwner','id','tracking_id');
+    }
+    
 }

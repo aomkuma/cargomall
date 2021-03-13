@@ -151,17 +151,17 @@
 	<label class="col-md-12 col-sm-12 col-xs-12 text-center" data-ng-show="MoneyBalance > 0" style="color: green;"><i class="fas fa-check"></i> ยอดเงินที่ใช้ได้ของคุณคือ {{UserData.money_bags.balance | number:2}} บาท</label>
 	<label class="col-md-12 col-sm-12 col-xs-12 text-center" data-ng-show="MoneyBalance == 0" style="color: red;">ยอดเงินที่ใช้ได้ของคุณคือ {{UserData.money_bags.balance | number:2}} บาท</label>
 </div>
-<div class="row form-group">
+<!-- <div class="row form-group">
 	<label class="col-md-12 col-sm-12 col-xs-12 text-center" data-ng-show="MoneyBalance < sumBaht" style="color: red; font-weight: bolder;">ยอดเงินที่ใช้ได้ของคุณไม่เพียงพอต่อการชำระการสั่งซื้อนี้ กรุณาทำการเติมเงิน 
 	<a href="topup">คลิกที่นี่</a>
 	</label>
-</div>
+</div> -->
 <div class="row form-group">
 	<div class="col-lg-12 text-center">
 		<!-- <button class="btn btn-default" data-ng-click="cancelOrder()">ยกเลิก</button> -->
 		<a href="shipping-options" class="btn btn-default" >ย้อนกลับ</a>
 		<a class="btn btn-info" data-ng-click="cancelOrderDialog()">ยกเลิกการสั่งซื้อ</a>
-		<button class="btn btn-primary" data-ng-click="confirmOrderDialog()" data-ng-disabled="MoneyBalance < sumBaht">ยืนยันการสั่งซื้อ</button>
+		<button class="btn btn-primary" data-ng-click="confirmOrderDialog()" >ยืนยันการสั่งซื้อ</button>
 		<br>
 		<br>
 	</div>

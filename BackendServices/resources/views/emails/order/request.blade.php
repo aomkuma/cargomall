@@ -140,6 +140,19 @@
 			<td align="right"><b style="font-size: 1.1em;">{{ number_format($sumBaht, 2) }}</b></td>
 			<td>&nbsp;</td>
 		</tr>
+		<tr>
+			<td colspan="7" align="right"><b style="font-size: 1.1em;">ค่าขนส่งในจีน</b></td>
+			<td align="right"><b style="font-size: 1.1em;">{{ number_format($order->orderDesc->total_china_transport_cost, 2) }}</b></td>
+			<td>&nbsp;</td>
+		</tr>
+
+		<tr>
+			<td colspan="7" align="right"><b style="font-size: 1.1em;">รวมทั้งสิ้น</b></td>
+			<td align="right"><b style="font-size: 1.1em;">
+				{{ number_format(floatval($sumBaht) + floatval($order->orderDesc->total_china_transport_cost), 2) }}</b>
+			</td>
+			<td>&nbsp;</td>
+		</tr>
 	</tfoot>
 </table>
 

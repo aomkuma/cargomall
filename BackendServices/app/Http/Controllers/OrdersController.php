@@ -223,9 +223,14 @@ class OrdersController extends Controller
                 ->with('orderDetails')
                 ->where('user_id', $user_data['id'])
                 ->where(function($query) use ($condition){
-                    if(isset($condition['pay_type']) && $condition['pay_type'] == 1){
+
+                    if(isset($condition['order_status']) && !empty($condition['order_status'])){
+                        $query->where('order_status' , $condition['order_status']);
+                    }
+                    else if(isset($condition['pay_type']) && $condition['pay_type'] == 1){
                         $query->where('order_status' , 1);    
-                    }else if(isset($condition['pay_type']) && $condition['pay_type'] == 2){
+                    }
+                    else if(isset($condition['pay_type']) && $condition['pay_type'] == 2){
                         $query->where('order_status' , 6);
                     }   
 
@@ -236,6 +241,9 @@ class OrdersController extends Controller
                     if(isset($condition['order_no']) && !empty($condition['order_no'])){
                         $query->where('order_no' , $condition['order_no']);
                     }
+
+                    
+
                     if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                         $condition['created_at'] = getDateFromString($condition['created_at']);
                         $query->where('created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -363,16 +371,16 @@ class OrdersController extends Controller
 
         $cost = $this->calcCost($ProductList);
 
-        $money_balance = checkAccountBalance($user_data['id']);
+        // $money_balance = checkAccountBalance($user_data['id']);
 
-        if($money_balance < $cost){
+        // if($money_balance < $cost){
 
-            $this->data_result['STATUS'] = 'ERROR';
-            $this->data_result['DATA'] = 'ยอดเงินคงเหลือของคุณไม่พอสำหรับการทำรายการสั่งซื้อ กรุณาเติมเงินแล้วกลับมาทำการยืนยันอีกคร้ัง';
+        //     $this->data_result['STATUS'] = 'ERROR';
+        //     $this->data_result['DATA'] = 'ยอดเงินคงเหลือของคุณไม่พอสำหรับการทำรายการสั่งซื้อ กรุณาเติมเงินแล้วกลับมาทำการยืนยันอีกคร้ัง';
 
-            return $this->returnResponse(200, $this->data_result, response(), false);
+        //     return $this->returnResponse(200, $this->data_result, response(), false);
 
-        }
+        // }
 
     	$order_id = generateID();
 

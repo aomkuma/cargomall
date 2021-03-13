@@ -139,6 +139,7 @@ Route::post('cart/get', 'ProductsController@getCartSession');
 Route::post('cart/update', 'ProductsController@updateCartSession');
 
 Route::post('admin/carg-address/list/manage', 'CargoAddressController@getListManage');
+Route::post('admin/carg-address/create/manage', 'CargoAddressController@createeDAta');
 Route::post('admin/carg-address/update/manage', 'CargoAddressController@updateDAta');
 Route::post('admin/carg-address/delete/manage', 'CargoAddressController@deleteData');
 
@@ -154,6 +155,13 @@ Route::post('tracking-none-owner/upload-image', 'TrackingNoneOwnerController@upl
 
 Route::post('tracking-none-owner/request-to-be-owner', 'TrackingNoneOwnerController@requestToBeOwner');
 Route::post('tracking-none-owner/add-to-be-owner', 'TrackingNoneOwnerController@addToBeOwner');
+
+Route::post('admin/bank-account/list/manage', 'BankController@getListManage');
+Route::post('admin/bank-account/create/manage', 'BankController@createeDAta');
+Route::post('admin/bank-account/update/manage', 'BankController@updateDAta');
+Route::post('admin/bank-account/delete/manage', 'BankController@deleteData');
+
+Route::post('bank-account/list', 'BankController@getList');
 
 Route::group(['middleware' => ['before' => 'jwt.auth']], function() {
 

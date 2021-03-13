@@ -504,6 +504,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
+	.when("/admin/bank-account", {
+        templateUrl : "views/admin/bank-account/main.html",
+        controller : "AdminBankAccountController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminBankAccountController.js" ]
+				});
+			} ]
+		}
+	})
+
 	.when("/admin/tracking-none-owner/list", {
         templateUrl : "views/admin/tracking-none-owner/main.html",
         controller : "AdminTrackingNoneOwnerController",
@@ -516,7 +528,19 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
-	.when("/admin/tracking-none-owner/detail/:id", {
+	// .when("/admin/tracking-none-owner/create", {
+ //        templateUrl : "views/admin/tracking-none-owner/create.html",
+ //        controller : "AdminTrackingNoneOwnerCreateController",
+ //        resolve : {
+	// 		loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+	// 			return $ocLazyLoad.load({
+	// 				files : [ "scripts/controllers/admin/AdminTrackingNoneOwnerCreateController.js" ]
+	// 			});
+	// 		} ]
+	// 	}
+	// })
+
+	.when("/admin/tracking-none-owner/detail/:id?", {
         templateUrl : "views/admin/tracking-none-owner/detail.html",
         controller : "AdminTrackingNoneOwnerDetailController",
         resolve : {

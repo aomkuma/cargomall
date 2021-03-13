@@ -16,28 +16,44 @@
 		<div class="row form-group">
 			<div class="col-md-12 text-center">
 				<div class="page-header">
-					<span style="font-size: 1.3em; font-weight: bolder;">ข้อมูลอยู่โกดังจีน</span><br>
+					<span style="font-size: 1.3em; font-weight: bolder;">ข้อมูลบัญชีธนาคาร</span><br>
 					<button class="btn btn-info ิbtn-sm" data-ng-click="addData()">เพิ่ม</button>&nbsp;
 				</div>
 			</div>
 		</div>
 		<div class="row form-group">
-			<div class="col-md-4" data-ng-repeat="data in AddressList track by $index">
+			<div class="col-md-4" data-ng-repeat="data in BankAccountList track by $index">
 				<div class="card">
 					<div class="row form-group">
 						<label class="col-md-12">
-							ชื่อ / ประเภท
+							ชื่อบัญชี
 						</label>
 						<div class="col-md-12">
-							<input type="text" class="form-control" data-ng-model="data.title">
+							<input type="text" class="form-control" data-ng-model="data.account_name">
 						</div>
 					</div>
 					<div class="row form-group">
 						<label class="col-md-12">
-							ที่อยู่
+							เลขที่บัญชี
 						</label>
 						<div class="col-md-12">
-							<textarea class="form-control" data-ng-model="data.address" rows="7"></textarea>
+							<input type="text" class="form-control" data-ng-model="data.account_no">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-12">
+							ชื่อธนาคาร
+						</label>
+						<div class="col-md-12">
+							<input type="text" class="form-control" data-ng-model="data.bank_name">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-12">
+							ประเภทบัญชี
+						</label>
+						<div class="col-md-12">
+							<input type="text" class="form-control" data-ng-model="data.account_type">
 						</div>
 					</div>
 					<div class="row form-group">

@@ -11,9 +11,8 @@ angular.module('app').controller('TrackingNoneOwnerDetailController', function($
         if(result.data.STATUS == 'OK'){
           
           $scope.Data = result.data.DATA.Data;
-          $scope.OrderDrackingData = result.data.DATA.OrderDrackingData;
+          $scope.OrderTrackingDataNoneOwner = result.data.DATA.OrderTrackingData;
           $scope.CustomerRequestOwner = result.data.DATA.CustomerRequestOwner;
-          $scope.OrderData = result.data.DATA.OrderData;
           
         }else{
           var alertMsg = result.data.DATA;

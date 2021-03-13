@@ -99,6 +99,10 @@ class ImportersController extends Controller
         $list = Importer::where('user_id', $user_data['id'])
                 ->where(function($query) use ($condition){
 
+                    if(isset($condition['importer_status']) && !empty($condition['importer_status'])){
+                        $query->where('importer_status' , $condition['importer_status']);
+                    }
+                    
                     if(isset($condition['pay_type']) && $condition['pay_type'] == 5){
                         $query->where('importer_status' , 4);    
                     }

@@ -51,8 +51,10 @@ angular.module('app').controller('SummaryOrderController', function($scope, $coo
         }
     }*/
 
-    $scope.calcSum();
+    
 
     $scope.MoneyBalance = parseFloat($scope.UserData.money_bags.balance);
 
+    $scope.calcSum();
+    
 });

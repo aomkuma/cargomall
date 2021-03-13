@@ -1,5 +1,5 @@
-<div data-ng-include src="'views/header-lg.html'"></div>
-<div data-ng-include src="'views/header-xs.html'"></div>
+<div data-ng-include src="'views/admin/header-lg.html'"></div>
+<div data-ng-include src="'views/admin/header-xs.html'"></div>
 
 <div class="row form-group visible-xs" style="height: 50px;">
   <div class="col-lg-12">
@@ -17,7 +17,7 @@
 			<span style="font-size: 1.3em; font-weight: bolder;">รายการพัสดุไม่มีเจ้าของ</span>
 		</div>
 
-		<div class="row form-group">
+		<div class="row form-group" ng-show="Data.id">
 			<label class="col-md-2 col-sm-3 col-xs-12">
 				<h4>แนบไฟล์ภาพสินค้า</h4>
 			</label>
@@ -50,9 +50,14 @@
 			</div>
 		</div>
 		<div class="row form-group">
-			<label class="col-md-12" style="color: #999;"> 
-				<h4>สถานะสินค้า  :  {{getOrderStatus(OrderData.order_status)}} </h4>
+			<label class="col-md-2" style="color: #999;"> 
+				<h4>สถานะสินค้า  :</h4>
 			</label>
+			<div class="col-lg-4">
+				<select class="form-control" data-ng-model="OrderTrackingDataNoneOwner.order_status" data-ng-options="data.id as data.value for data in ORDER_STATUS">
+					
+				</select>
+			</div>
 		</div>
 		
 		<div class="row form-group">
@@ -63,19 +68,41 @@
 					</label>
 				</div>
 				<fieldset>
-					<legend>{{ OrderDrackingData.tracking_no }} ({{OrderDrackingData.goods_desc_en}} / {{OrderDrackingData.goods_desc_th}})</legend>
+					<legend></legend>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							หมายเลขแทรค
+						</label>
+						<div class="col-md-3">
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.tracking_no" required="true">
+						</div>
+						<label class="col-md-2 blue-label">
+							ประเภทสินค้า (en)
+						</label>
+						<div class="col-md-3">
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.goods_desc_en">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-md-2 blue-label">
+							ประเภทสินค้า (th)
+						</label>
+						<div class="col-md-3">
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.goods_desc_th">
+						</div>
+					</div>
 					<div class="row form-group">
 						<label class="col-md-2 blue-label">
 							วันที่สินค้าถึงโกดังจีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_arrival_date}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.china_arrival_date">
 						</div>
 						<label class="col-md-2 blue-label">
 							โกดัง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.cargo}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.cargo">
 						</div>
 					</div>
 					<div class="row form-group">
@@ -83,13 +110,13 @@
 							จำนวนกล่อง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.package_amount}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.package_amount">
 						</div>
 						<label class="col-md-2 blue-label">
 							น้ำหนัก (KG)
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.weight_kg}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.weight_kg">
 						</div>
 					</div>
 					<div class="row form-group">
@@ -97,13 +124,13 @@
 							ยาว
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.longs}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.longs">
 						</div>
 						<label class="col-md-2 blue-label">
 							กว้าง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.widths}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.widths">
 						</div>
 					</div>
 					<div class="row form-group">
@@ -111,13 +138,13 @@
 							สูง
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.heights}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.heights">
 						</div>
 						<label class="col-md-2 blue-label">
 							CBM
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.cbm}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.cbm">
 						</div>
 					</div>
 					<div class="row form-group">
@@ -125,28 +152,13 @@
 							วันที่ของเข้าจีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_arrival_date}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.china_arrival_date">
 						</div>
 						<label class="col-md-2 blue-label">
 							เลขที่ตู้
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.bill_no}}
-						</div>
-					</div>
-
-					<div class="row form-group">
-						<label class="col-md-2 blue-label">
-							สูง
-						</label>
-						<div class="col-md-3">
-							{{OrderDrackingData.heights}}
-						</div>
-						<label class="col-md-2 blue-label">
-							CBM
-						</label>
-						<div class="col-md-3">
-							{{OrderDrackingData.cbm}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.bill_no">
 						</div>
 					</div>
 					<div class="row form-group">
@@ -154,13 +166,13 @@
 							วันที่ของออกจีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_departure_date}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.china_departure_date">
 						</div>
 						<label class="col-md-2 blue-label">
 							เลขตู้
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.container_no}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.container_no">
 						</div>
 					</div>
 					<div class="row form-group">
@@ -168,7 +180,7 @@
 							เลข order จีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_order_no}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.china_order_no">
 						</div>
 						
 					</div>
@@ -177,7 +189,7 @@
 							วันที่เข้าไทย
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.thai_arrival}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.thai_arrival_date">
 						</div>
 					</div>
 					<div class="row form-group">
@@ -185,13 +197,13 @@
 							เลขแทรคจีน
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.china_tracking_no}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.china_tracking_no">
 						</div>
 						<label class="col-md-2 blue-label">
 							เลขแทรคไทย
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.tracking_no_thai}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.tracking_no_thai">
 						</div>
 						
 					</div>
@@ -200,26 +212,26 @@
 							ค่าขนส่งจากจีนมาไทย
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.transport_cost_china}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.transport_cost_china">
 						</div>
 						<label class="col-md-2 blue-label">
 							ค่าขนส่งในไทย
 						</label>
 						<div class="col-md-3">
-							{{OrderDrackingData.transport_cost_thai}}
+							<input type="text" class="form-control" data-ng-model="OrderTrackingDataNoneOwner.transport_cost_thai">
 						</div>
 					</div>
 					
 					
 				</fieldset>
 			</label>
-			<div class="col-md-5">
+			<div class="col-md-5" data-ng-show="Data.id">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						รายชื่อผู้แสดงความจำนงเป็นเจ้าของ
 					</div>
 					<div class="panel-body">
-						<table class="table table-striped table-bordered">
+						<table class="table table-bordered">
 							<thead>
 								<tr>
 									<th>ชื่อ</th>
@@ -247,7 +259,7 @@
 		<div class="row form-group">
 			<div class="col-md-12 text-center">
 				<a href="admin/tracking-none-owner/list" class="btn btn-default">กลับหน้ารายการ</a>
-				<!-- <button class="btn btn-primary" data-ng-click="updateOrder(Order, OrderDesc)" data-ng-show="Order.order_status != 8">บันทึกข้อมูล</button> -->
+				<button class="btn btn-primary" data-ng-click="updateData(Data, OrderTrackingDataNoneOwner)">บันทึกข้อมูล</button>
 			</div>
 			
 		</div>

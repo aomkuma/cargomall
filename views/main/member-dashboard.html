@@ -132,10 +132,12 @@
 								</tr>
 							</thead>
 							<tr data-ng-repeat="data in OrderList">
-								<td>{{data.order_no}}</td>
+								<td class="text-center">{{data.order_no}}<br>
+									<span class="badge badge-danger">{{getOrderStatus(data.order_status)}}</span>
+								</td>
 								<td>
 									{{getThaiDateTimeFromString(data.created_at)}}<br>
-									{{getOrderStatus(data.order_status)}}
+									
 								</td>
 								<td>
 									<a href="tracking/order/detail/{{data.id}}" class="btn btn-warning btn-block">รายละเอียด</a>
@@ -163,10 +165,12 @@
 								</tr>
 							</thead>
 							<tr data-ng-repeat="data in ImporterList">
-								<td>{{data.tracking_no}}</td>
+								<td class="text-center">{{data.tracking_no}}<br>
+									<span class="badge badge-danger">{{getImporterStatus(data.importer_status)}}</span>
+								</td>
 								<td>
 									{{getThaiDateTimeFromString(data.created_at)}}<br>
-									{{getImporterStatus(data.importer_status)}}
+									
 								</td>
 								<td>
 									<a href="importer/detail/{{data.id}}" class="btn btn-warning btn-block">รายละเอียด</a>
@@ -185,7 +189,7 @@
 				<div class="panel panel-danger">
 					<div class="panel-heading text-center">
 						<span style="font-size: 1em; font-weight: bolder;">พัสดุไม่มีเจ้าของ</span>
-						<button class="btn btn-primary btn-sm pull-right">แจ้งเป็นเจ้าของ</button>
+						<a class="btn btn-primary btn-sm pull-right" href="tracking-none-owner/list">แจ้งเป็นเจ้าของ</a>
 					</div>
 				
 					<div class="panel-body">
@@ -199,8 +203,9 @@
 							</thead>
 							<tr data-ng-repeat="data in TrackingNoneOwnerList track by $index">
 								<td>
+									{{data.order_tracking_not_owner.tracking_no}}<br>
 									<a href="BackendServices/storage/app/{{data.image_path}}" target="_blank"><img src="BackendServices/storage/app/{{data.image_path}}" style="height: 100px;"></a>
-									{{data.order_tracking.tracking_no}}
+									
 								</td>
 								<td>{{getThaiDateTimeFromString(data.created_at)}}</td>
 								<td>
@@ -284,8 +289,8 @@
 						<div class="row form-group">
 							
 							<label class="col-md-12 col-sm-12 col-xs-12 text-center" style="color: #337ab7;">	
-								ราคาคิดตามน้ำหนัก {{rateByKG | number:2}} บาท<br>
-								ราคาคิดตามปริมาตร {{rateByCBM | number:2}} บาท
+								ราคาคิดตามน้ำหนัก <span style="color: red;">{{rateByKG | number:2}}</span> บาท<br>
+								ราคาคิดตามปริมาตร <span style="color: red;">{{rateByCBM | number:2}}</span> บาท
 							</label>
 						</div>
 					</div>
@@ -301,7 +306,7 @@
 				<div class="row form-group" data-ng-repeat="data in CargoAddressList">
 					<div class="col-md-12">
 						<p><h3>{{data.title}}</h3></p>
-						<pre>{{data.address}}</pre>
+						<pre bind-html-compile="data.address"></pre>
 					</div>
 				</div>
 			</div>
@@ -494,6 +499,9 @@
 		float: left;
 		background-color: #c46e6e;
 		font-size: 1.1em;
+	}
+	.badge-danger{
+		background-color: red;
 	}
 
 	/*.contaner{

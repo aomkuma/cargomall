@@ -71,16 +71,21 @@
 							<th>เลือก</th>
 							<th>หมายเลข Order</th>
 							<th>วันที่ทำการสั่งซื้อ</th>
-							<th>จำนวนเงิน (หยวน)</th>
-							<th>จำนวนเงิน (บาท)</th>
+							<!-- <th>จำนวนเงิน (หยวน)</th> -->
+							<th>จำนวนเงินค่าสินค้า (บาท)</th>
+							<th>ค่าขนส่งในจีน (บาท)</th>
+							<th>รวม</th>
 						</tr>
 					</thead>
 					<tr ng-repeat="data in DataList track by $index">
-						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountValue(data.totalYuan, exchange_rate, data.discount)"></td>
+						<td><input id="radio{{$index}}" type="radio" data-ng-model="Pay.to_ref_id" value="{{data.id}}" data-ng-click="setPayAmountValue(data.totalYuan, exchange_rate, data.discount, data)"></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.order_no}}</label></td>
 						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{getThaiDateTimeFromString(data.created_at)}}</label></td>
-						<td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.totalYuan | number:2}}</label></td>
+						<!-- <td><label for="radio{{$index}}" style="font-weight: lighter;">{{data.totalYuan | number:2}}</label></td> -->
 						<td><label for="radio{{$index}}" style="font-weight: bold;">{{(data.totalYuan * exchange_rate) - data.discount | number:2}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: bold;">{{data.order_desc.total_china_transport_cost | number:2}}</label></td>
+						<td><label for="radio{{$index}}" style="font-weight: bold;">{{(data.totalYuan * exchange_rate) - data.discount + data.order_desc.total_china_transport_cost | number:2}}</label></td>
+						
 					</tr>
 				</table>
 			</div>
@@ -152,7 +157,7 @@
 			</div>
 		</div>
 
-		<div class="row form-group" data-ng-hide="Pay.pay_type == 2 || Pay.pay_type == 5">
+		<div class="row form-group" data-ng-hide="Pay.pay_type == 1 || Pay.pay_type == 2 || Pay.pay_type == 5">
 			<label class="col-md-3 col-sm-4 col-xs-12">ยอดเงินที่ชำระ (หยวน)</label>
 			<div class="col-md-4 col-sm-4 col-xs-12">
 				<input class="form-control" type="number" data-ng-model="Pay.pay_amount_yuan" data-ng-keyup="calcTHB()" data-ng-disabled="Pay.pay_type == 1 || Pay.pay_type == 2 || Pay.pay_type == 5" data-ng-required="Pay.pay_type == 3 || Pay.pay_type == 4">

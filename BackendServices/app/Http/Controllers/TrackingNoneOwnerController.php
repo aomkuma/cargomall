@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\TrackingNoneOwner;
 use App\Models\CustomerRequestOwner;
+use App\Models\OrderTrackingNotOwner;
 use App\OrderTracking;
 use App\Order;
 
@@ -19,7 +20,7 @@ class TrackingNoneOwnerController extends Controller
         $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
         $condition = $params['obj']['condition'];
 
-        $list = TrackingNoneOwner::with('orderTracking')
+        $list = TrackingNoneOwner::with('orderTrackingNotOwner')
                 ->where('track_status', 1);
 
         if(!empty($condition['limit'])){
@@ -41,18 +42,17 @@ class TrackingNoneOwnerController extends Controller
 
 
         $list = TrackingNoneOwner::select('tracking_none_owner.id', 
-                                        'order_tracking.tracking_no',
-                                        'order.order_status',
+                                        'order_tracking_not_owner.tracking_no',
+                                        'order_tracking_not_owner.order_status',
                                         'tracking_none_owner.track_status',
-                                        'tracking_none_owner.image_path',
+                                        'tracking_none_owner.image_path'
                                     )
                 ->with('customer')
                 ->where('track_status', 1)
-                ->join('order_tracking', 'order_tracking.id' , '=' , 'tracking_none_owner.tracking_id')
-                ->join('order', 'order_tracking.order_id' , '=' , 'order.id');
+                ->join('order_tracking_not_owner', 'order_tracking_not_owner.id' , '=' , 'tracking_none_owner.tracking_id');
 
         if(!empty($condition['tracking_no'])){
-            $list = $list->where('order_tracking.tracking_no', $condition['tracking_no']);
+            $list = $list->where('order_tracking_not_owner.tracking_no', $condition['tracking_no']);
         }
 
         $list = $list->get();
@@ -69,17 +69,16 @@ class TrackingNoneOwnerController extends Controller
         $condition = $params['obj']['condition'];
 
         $list = TrackingNoneOwner::select('tracking_none_owner.id', 
-                                        'order_tracking.tracking_no',
-                                        'order.order_status',
+                                        'order_tracking_not_owner.tracking_no',
+                                        'order_tracking_not_owner.order_status',
                                         'tracking_none_owner.track_status',
-                                        'tracking_none_owner.image_path',
+                                        'tracking_none_owner.image_path'
                                     )
                 ->with('customer')
-                ->join('order_tracking', 'order_tracking.id' , '=' , 'tracking_none_owner.tracking_id')
-                ->join('order', 'order_tracking.order_id' , '=' , 'order.id');
+                ->join('order_tracking_not_owner', 'order_tracking_not_owner.id' , '=' , 'tracking_none_owner.tracking_id');
 
         if(!empty($condition['tracking_no'])){
-            $list = $list->where('order_tracking.tracking_no', $condition['tracking_no']);
+            $list = $list->where('order_tracking_not_owner.tracking_no', $condition['tracking_no']);
         }
 
         $list = $list->get();
@@ -95,32 +94,58 @@ class TrackingNoneOwnerController extends Controller
         $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
         $id = $params['obj']['id'];
 
-        $data = TrackingNoneOwner::find($id);
-        $order_tracking_data = OrderTracking::find($data->tracking_id);
-        $order_data = Order::find($order_tracking_data->order_id);
+        $data = TrackingNoneOwner::/*with('orderTrackingNotOwner')->*/find($id);
+        $order_tracking_data = OrderTrackingNotOwner::find($data->tracking_id);
+        // $order_data = Order::find($order_tracking_data->order_id);
 
         // get who request
         $customer_req_owner = CustomerRequestOwner::with('customer')->where('tracking_none_owner_id', $id)->get();
 
         $this->data_result['DATA']['Data'] = $data;
-        $this->data_result['DATA']['OrderData'] = $order_data;
-        $this->data_result['DATA']['OrderDrackingData'] = $order_tracking_data;
+        // $this->data_result['DATA']['OrderData'] = $order_data;
+        $this->data_result['DATA']['OrderTrackingData'] = $order_tracking_data;
         $this->data_result['DATA']['CustomerRequestOwner'] = $customer_req_owner;
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 
     }
 
-    public function updateDataManage(Request $request){
+    public function updateData(Request $request){
 
         $params = $request->all();
         $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
-        $id = $params['obj']['id'];
+        $Data = $params['obj']['Data'];
+        $OrderTrackingDataNoneOwner = $params['obj']['OrderTrackingDataNoneOwner'];
 
-        $data = TrackingNoneOwner::find($id);
+        $id = null;
+        $tracking_id = null;
 
-        $this->data_result['DATA']['Data'] = $data;
-        $this->data_result['DATA']['CustomerRequestOwner'] = $customer_req_owner;
+        if(empty($Data['id'])){
+
+            $OrderTrackingDataNoneOwner['id'] = generateID();
+            $tracking_data = OrderTrackingNotOwner::create($OrderTrackingDataNoneOwner);
+
+            $tracking_id = $OrderTrackingDataNoneOwner['id'];
+            $Data['tracking_id'] = $tracking_id;
+            $Data['created_by'] = $user_data['id'];
+            // print_r($Data);exit;
+            $data = TrackingNoneOwner::create($Data);
+            $id = $data->id;
+            
+
+        }else{
+            $data = TrackingNoneOwner::find($Data['id']);
+            $data->update($Data);
+            $id = $data->id;
+            $tracking_data = OrderTrackingNotOwner::find($OrderTrackingDataNoneOwner['id']);
+            $tracking_data->update($OrderTrackingDataNoneOwner);
+            $tracking_id = $tracking_data->id;
+
+        }
+        
+
+        $this->data_result['DATA']['id'] = $id;
+        $this->data_result['DATA']['tracking_id'] = $tracking_id;
 
         return $this->returnResponse(200, $this->data_result, response(), false);
         

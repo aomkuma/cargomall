@@ -15,8 +15,9 @@ angular.module('app').controller('AdminTrackingNoneOwnerDetailController', funct
 
     $templateCache.removeAll();
 
-    $scope.id = $routeParams.id;
-
+    if($routeParams.id){
+        $scope.id = $routeParams.id;
+    }
     $scope.getData = function(){
       var params = {'id' : $scope.id};
       IndexOverlayFactory.overlayShow();
@@ -24,7 +25,7 @@ angular.module('app').controller('AdminTrackingNoneOwnerDetailController', funct
         if(result.data.STATUS == 'OK'){
           
           $scope.Data = result.data.DATA.Data;
-          $scope.OrderDrackingData = result.data.DATA.OrderDrackingData;
+          $scope.OrderTrackingDataNoneOwner = result.data.DATA.OrderTrackingData;
           $scope.CustomerRequestOwner = result.data.DATA.CustomerRequestOwner;
           $scope.OrderData = result.data.DATA.OrderData;
           
@@ -36,15 +37,17 @@ angular.module('app').controller('AdminTrackingNoneOwnerDetailController', funct
       });
     }
 
-    $scope.updateData = function(data){
+    $scope.updateData = function(Data, OrderTrackingDataNoneOwner){
 
-      var params = {'Data' : data};
+      var params = {'Data' : Data, 'OrderTrackingDataNoneOwner' : OrderTrackingDataNoneOwner};
 
       IndexOverlayFactory.overlayShow();
-      HTTPService.clientRequest('admin/carg-address/update/manage', params).then(function(result){
+      HTTPService.clientRequest('tracking-none-owner/update', params).then(function(result){
         if(result.data.STATUS == 'OK'){
           
           // $scope.AddressList = result.data.DATA;
+          $scope.Data.id = result.data.DATA.id;
+          $scope.OrderTrackingDataNoneOwner.tracking_id = result.data.DATA.tracking_id;
           
         }else{
           var alertMsg = result.data.DATA;
@@ -139,8 +142,11 @@ angular.module('app').controller('AdminTrackingNoneOwnerDetailController', funct
       });
     }
 
+    $scope.Data = {'id' : null, 'track_status' : 1, 'order_status' : 5};
     $scope.condition = {'tracking_no' : ''};
 
-    $scope.getData();
+    if($scope.id){
+      $scope.getData();
+    }
 
 });

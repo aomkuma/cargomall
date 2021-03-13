@@ -388,7 +388,9 @@ class ProductsController extends Controller
 
 						$res = [];
 						$res['name'] = $color_val;
-						$res['vid'] = $vid;
+						if(isset($vid)){
+							$res['vid'] = $vid;
+						}
 
 						$arr_color_check[] = $res;
 					 }
@@ -409,7 +411,7 @@ class ProductsController extends Controller
 					foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
 
 						$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Vid;
-						if($value['vid'] == $price_vid){
+						if(isset($value['vid']) && $value['vid'] == $price_vid){
 							// echo  . "<br>";
 
 							// $res = [];

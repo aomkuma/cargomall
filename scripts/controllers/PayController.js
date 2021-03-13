@@ -116,13 +116,13 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
       $scope.ShowChooseToPay = true;
     }
 
-    $scope.setPayAmountValue = function(totalYuan, exchange_rate, discount){
+    $scope.setPayAmountValue = function(totalYuan, exchange_rate, discount, Data){
       if(!checkEmptyField(discount)){
         discount = 0;
       }
 
       $scope.Pay.pay_amount_yuan = parseFloat(totalYuan);
-      $scope.Pay.pay_amount_thb = parseFloat((parseFloat(totalYuan) * parseFloat(exchange_rate) - parseFloat(discount)).toFixed(2));
+      $scope.Pay.pay_amount_thb = Data.order_desc.total_china_transport_cost + parseFloat((parseFloat(totalYuan) * parseFloat(exchange_rate) - parseFloat(discount)).toFixed(2));
       $scope.SelectedPayBaht = angular.copy($scope.Pay.pay_amount_thb);
       $log.log($scope.SelectedPayBaht);
     }
