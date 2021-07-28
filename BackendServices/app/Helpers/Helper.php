@@ -68,8 +68,8 @@
         // $message = 'ทดสอบส่งข้อความจาก Cargo Mall';   
 
         $params['method']   = 'send';
-        $params['username'] = env('SMS_USERNAME');
-        $params['password'] = env('SMS_PASSWORD');
+        $params['username'] = env('SMS_USERNAME', 'juneugen');
+        $params['password'] = env('SMS_PASSWORD', '0c7c6f');
  
         $params['from']     = 'Cargo Mall';
         $params['to']       = $to;
@@ -82,14 +82,18 @@
  
         $result = curl( $params);
         $xml = @simplexml_load_string( $result);
+        \Log::info($result);
         if (!is_object($xml))
         {
+            \Log::error($xml->send->send->uuid);
             return array( FALSE, 'Respond error');
         } else {
             if ($xml->send->status == 'success')
             {
+            	\Log::info($xml->send->send->uuid);
                 return array( TRUE, $xml->send->uuid);
             } else {
+            	\Log::error($xml->send->message);
                 return array( FALSE, $xml->send->message);
             }
         }

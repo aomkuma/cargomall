@@ -17,7 +17,7 @@
 		Remove this if you use the .htaccess -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-		<title>Cargo Mall ฝากสั่งสินค้าจาก taobao, tmall, 1688 นำเข้า จีน-ไทย แลกเงินหยวน เรทถูกที่สุด</title>
+		<title >{{$root.title}}Cargo Mall ฝากสั่งสินค้าจาก taobao, tmall, 1688 นำเข้า จีน-ไทย แลกเงินหยวน เรทถูกที่สุด</title>
 
 		<meta name="fragment" content="!">
 
@@ -57,6 +57,8 @@
 		<script src="scripts/node_modules/angular-bind-html-compile-ci-dev/angular-bind-html-compile.min.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
 		<script src="scripts/node_modules/angular-translate/angular-translate.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
 		<script src="scripts/node_modules/ng-youtube/src/ng-youtube-embed.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>"></script>
+		<script src="scripts/node_modules/pdfmake/build/pdfmake.js"></script>
+		<script src="scripts/html2canvas.js"></script>
 		<script type="text/javascript" src='scripts/node_modules/ngstorage/ngStorage.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>' charset="utf-8"></script>
 		<script type="text/javascript" src='scripts/node_modules/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js?version=<?=strtotime(date('YmdHis')).rand(9,99999999) ?>' charset="utf-8"></script>
 		

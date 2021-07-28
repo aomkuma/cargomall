@@ -67,6 +67,7 @@
 							<th class="text-center">เลขออร์เดอร์</th>
 							<th class="text-center">เลขแทรค</th>
 							<th class="text-center">ประเภทการชำระ</th>
+							<th class="text-center">จัดการ</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -79,6 +80,7 @@
 							<td>{{data.order_no}}{{data.order.order_no}}</td>
 							<td>{{data.tracking_no}}{{data.order_tracking.tracking_no}}{{data.importer.tracking_no}}</td>
 							<td>{{getPayType(data.pay_type)}}</td>
+							<td><a href="admin/print-receipt/{{data.id}}" class="btn btn-primary btn-sm" data-ng-show="data.pay_type == 2 || data.pay_type == 5" target="_blank">พิมพ์ใบเสร็จ</a></td>
 						</tr>
 					</tbody>
 				</table>

@@ -1,0 +1,64 @@
+	<div class="modal-header">
+		<h5 class="modal-title">ข้อมูลการแจ้งปัญหา</h5>
+	</div>
+	<div class="modal-body">
+		<div class="row form-group">
+			<label class="col-md-2">
+				ผู้แจ้ง
+			</label>
+			<label class="col-md-4">
+				{{ ProblemData.user_code }}
+			</label>
+			<label class="col-md-2">
+				เบอร์โทร
+			</label>
+			<label class="col-md-4">
+				{{ ProblemData.mobile_no }}
+			</label>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12">
+				หัวข้อ
+			</label>
+			<div class="col-md-12">
+				<input class="form-control" data-ng-model="ProblemData.title" maxlength="255">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12">
+				รายละเอียด (ลูกค้า)
+			</label>
+			<div class="col-md-12">
+				<textarea class="form-control" data-ng-model="ProblemData.user_comment" readonly="true"></textarea>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12">
+				รายละเอียด (แอดมิน)
+			</label>
+			<div class="col-md-12">
+				<textarea class="form-control" data-ng-model="ProblemData.admin_comment"></textarea>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12">
+				สถานะ
+			</label>
+			<div class="col-md-4">
+				<select class="form-control" data-ng-model="ProblemData.status">
+					<option value="notify">notify</option>
+					<option value="close">close</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">ยกเลิก</button>
+	<button class="btn btn-primary" ng-click="ok(ProblemData)">บันทึกข้อมูล</button>
+	</div>
+
+	<style type="text/css">
+	.modal{
+		top:30%;
+	}
+</style>

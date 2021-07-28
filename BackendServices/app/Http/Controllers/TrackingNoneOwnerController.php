@@ -99,7 +99,11 @@ class TrackingNoneOwnerController extends Controller
         // $order_data = Order::find($order_tracking_data->order_id);
 
         // get who request
-        $customer_req_owner = CustomerRequestOwner::with('customer')->where('tracking_none_owner_id', $id)->get();
+        // $customer_req_owner = CustomerRequestOwner::with('customer')->where('tracking_none_owner_id', $id)->get();
+        $customer_req_owner = CustomerRequestOwner::select('customer_request_owner.*', 'user.firstname', 'user.lastname', 'user.mobile_no', 'user_code')
+                            ->join('user', 'user.id', '=', 'customer_request_owner.user_id')
+                            ->where('tracking_none_owner_id', $id)
+                            ->get();
 
         $this->data_result['DATA']['Data'] = $data;
         // $this->data_result['DATA']['OrderData'] = $order_data;
@@ -138,8 +142,11 @@ class TrackingNoneOwnerController extends Controller
             $data->update($Data);
             $id = $data->id;
             $tracking_data = OrderTrackingNotOwner::find($OrderTrackingDataNoneOwner['id']);
-            $tracking_data->update($OrderTrackingDataNoneOwner);
-            $tracking_id = $tracking_data->id;
+            if($tracking_data){
+                $tracking_data->update($OrderTrackingDataNoneOwner);
+                $tracking_id = $tracking_data->id;
+            }
+            
 
         }
         

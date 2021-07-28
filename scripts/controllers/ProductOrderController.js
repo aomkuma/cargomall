@@ -21,6 +21,16 @@ angular.module('app').controller('ProductOrderController', function($scope, $coo
     $scope.autoUpdateOrder = function(index, product){
         $scope.ProductListStorage[index] = product;
         $localStorage.product_list_storage = JSON.stringify($scope.ProductListStorage);
+        var params = {'cart_desc' : JSON.stringify($scope.ProductListStorage)};
+        HTTPService.clientRequest('cart/update', params).then(function(result){
+
+          if(result.data.STATUS == 'OK'){
+            // window.location.reload();
+            // window.location.href = 'view-orders';
+          }
+          
+          IndexOverlayFactory.overlayHide();
+        });
     }
 
     // $scope.calcSum = function (){

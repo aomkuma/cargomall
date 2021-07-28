@@ -194,6 +194,21 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     }
    }
 
+
+  $scope.getThaiDateFromString = function(date){
+      // $log.log(date);
+      if(checkEmptyField(date)){
+          return convertSQLDateTimeToReportDate(date);
+      }
+  }
+
+  $scope.getThaiDateTimeFromString = function(date){
+      // $log.log(date);
+      if(checkEmptyField(date)){
+          return convertSQLDateTimeToReportDate(date);
+      }
+  }
+
   $scope.currentUser = null;
 	$scope.overlayShow = false;
 	$scope.menu_selected = '';
@@ -443,8 +458,10 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
 
   $scope.calcSum = function (){
         $scope.sumBaht = 0;
-        angular.forEach($scope.ProductListStorage, function(value, key) {
-            $log.log(value.product_size_choose);
+        $scope.sumQty = 0;
+        angular.forEach($scope.product_list_storage, function(value, key) {
+            $scope.sumQty += value.product_qty;
+            // $log.log(value.product_size_choose);
             if(parseFloat(value.product_promotion_price) > 0){
                 $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
             }else{
@@ -471,9 +488,36 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
     var params = {'link_url' : link_url};
     HTTPService.clientRequest('item/get', params).then(function(result){
       if(result.data.STATUS == 'OK'){
-        $log.log(result.data.DATA);
+        // $log.log(result.data.DATA);
         sessionStorage.setItem('product_info' , JSON.stringify(result.data.DATA));
-        window.location.href = 'product-info';
+        window.location.href = 'product-info/new';
+      }else{
+        var alertMsg = result.data.DATA;
+        alert(alertMsg);
+      }
+      IndexOverlayFactory.overlayHide();
+    });
+  }
+
+  $scope.getProductNewDesign = function(link_url){
+
+    if(!checkEmptyField($scope.session_storage.user_data)){
+      alert('กรุณาลงชื่อเข้าใช้งานระบบก่อนทำการสั่งซื้อสินค้า');
+      return false;
+    }
+
+    if(!checkEmptyField(link_url)){
+      alert('กรุณาใส่ลิ้งค์สินค้า');
+      return false;
+    }
+
+    IndexOverlayFactory.overlayShow();
+    var params = {'link_url' : link_url};
+    HTTPService.clientRequest('item/get', params).then(function(result){
+      if(result.data.STATUS == 'OK'){
+        // $log.log(result.data.DATA);
+        sessionStorage.setItem('product_info' , JSON.stringify(result.data.DATA));
+        window.location.href = 'product-info/new-design';
       }else{
         var alertMsg = result.data.DATA;
         alert(alertMsg);

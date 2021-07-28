@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 // });
 
 // test zone
+Route::any('line.php', 'LineController@index');
 Route::get('testmail', 'OrdersController@testSendMail');
 Route::get('testsms', 'OrdersController@sendSms');
 //
@@ -47,6 +48,7 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 	Route::post('admin/order/cancel', 'OrdersController@cancelOrder');
 	Route::post('admin/order/sms/transport-payment', 'OrdersController@sendTransportPaymentSMS');
 	Route::post('admin/order/sms/product-payment', 'OrdersController@sendProductPaymentSMS');
+	Route::post('admin/order/line/notify-payment', 'OrdersController@sendPaymentLine');
 	Route::post('admin/order/tracking/delete', 'OrdersController@deleteTrack');
 	Route::post('admin/order/cancel/cancel-status', 'OrdersController@cancelCancelStatus');
 	Route::post('admin/order/product/update', 'OrdersController@updateProductList');
@@ -85,6 +87,8 @@ Route::post('admin/logout', 'UserAdminsController@logout');
 
 	Route::post('admin/transfer/list', 'MoneyBagsController@getTransferList');
 	Route::post('admin/transfer/status/update', 'MoneyBagsController@updateTransferStatus');
+	Route::post('admin/transfer/upload', 'MoneyBagsController@uploadTransferSlip');
+	
 
 	Route::post('admin/deposit/list', 'MoneyBagsController@getDepositList');
 	Route::post('admin/deposit/status/update', 'MoneyBagsController@updateDepositStatus');
@@ -124,6 +128,8 @@ Route::post('topup/inform', 'MoneyBagsController@topup');
 Route::post('topup/inform/test', 'MoneyBagsController@topupTest');
 Route::post('pay/inform', 'MoneyBagsController@pay');
 Route::post('pay/history', 'MoneyBagsController@payHistory');
+Route::post('topup/history', 'MoneyBagsController@topupHistory');
+Route::post('refund/history', 'MoneyBagsController@getRefundHistory');
 
 Route::post('order/list/by-user', 'OrdersController@listByUser');
 Route::post('order/list/by-user/limit', 'OrdersController@listByUserLimit');
@@ -161,7 +167,18 @@ Route::post('admin/bank-account/create/manage', 'BankController@createeDAta');
 Route::post('admin/bank-account/update/manage', 'BankController@updateDAta');
 Route::post('admin/bank-account/delete/manage', 'BankController@deleteData');
 
+Route::post('admin/receipt/get-data', 'MoneyBagsController@getReceiptData');
+
 Route::post('bank-account/list', 'BankController@getList');
+
+Route::post('transfer/list/by-user', 'MoneyBagsController@getListTransferByUser');
+
+Route::post('problems/list/by-user', 'ProblemsController@getListByUser');
+Route::post('problems/list', 'ProblemsController@getList');
+Route::post('problems/update/by-user', 'ProblemsController@updateDataUser');
+Route::post('problems/update/by-admin', 'ProblemsController@updateDataAdmin');
+
+Route::post('money-bag/payment-history/list', 'MoneyBagsController@getPaymentHistoryList');
 
 Route::group(['middleware' => ['before' => 'jwt.auth']], function() {
 

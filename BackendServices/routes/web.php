@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::any('line.php', 'LineController@index');
+Route::any('reRecieptRunning', 'MoneyBagsController@reRecieptRunning');
+

@@ -13,6 +13,6 @@ class MoneyBag extends Model
 	public $incrementing = false;
     
     protected $fillable = [
-        'id', 'user_id', 'balance', 'created_at', 'updated_at'
+        'id', 'user_id', 'balance', 'slip_path', 'created_at', 'updated_at'
     ];
 }

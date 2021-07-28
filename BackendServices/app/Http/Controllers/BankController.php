@@ -22,9 +22,6 @@ class BankController extends Controller
 
     public function getList(Request $request){
 
-    	$params = $request->all();
-        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
-
         $list = BankAccount::where('is_active', true)->get();
 
         $this->data_result['DATA']['DataList'] = $list;

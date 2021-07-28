@@ -1,0 +1,39 @@
+	<div class="modal-header">
+		<h5 class="modal-title">ข้อมูลการแจ้งปัญหา</h5>
+	</div>
+	<div class="modal-body">
+		<div class="row form-group">
+			<label class="col-md-12">
+				หัวข้อ
+			</label>
+			<div class="col-md-12">
+				<input class="form-control" data-ng-model="ProblemData.title" maxlength="255">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12">
+				รายละเอียด (ลูกค้า)
+			</label>
+			<div class="col-md-12">
+				<textarea class="form-control" data-ng-model="ProblemData.user_comment"></textarea>
+			</div>
+		</div>
+		<div class="row form-group" data-ng-show="ProblemData.admin_comment != null">
+			<label class="col-md-12">
+				รายละเอียด (แอดมิน)
+			</label>
+			<div class="col-md-12">
+				<textarea class="form-control" data-ng-model="ProblemData.admin_comment" readonly="true"></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">ยกเลิก</button>
+	<button class="btn btn-primary" ng-click="ok(ProblemData)">บันทึกข้อมูล</button>
+	</div>
+
+	<style type="text/css">
+	.modal{
+		top:30%;
+	}
+</style>

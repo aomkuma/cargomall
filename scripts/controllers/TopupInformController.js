@@ -59,14 +59,28 @@ angular.module('app').controller('TopupInformController', function($scope, $cook
       });
     }
 
+    $scope.getBankAccountList = function(){
+      HTTPService.uploadRequest('bank-account/list', null).then(function(result){
+        if(result.data.STATUS == 'OK'){
+
+          $scope.ToAccountList = result.data.DATA.DataList;
+          
+        }else{
+          var alertMsg = result.data.DATA;
+          alert(alertMsg);
+        }
+        IndexOverlayFactory.overlayHide();
+      });
+    }
+
     $scope.ShowDialogConfirmTopup = false;
     $scope.TopupSuccess = false;
-    $scope.Topup = {'to_account' : '4190815076'};
-    $scope.ToAccountList = [{'account_no' : '7181187531', 'bank_name' : 'ธนาคารกรุงศรี', 'account_name' : 'จันทิรา งามเลิศสรรพกิจ'},
+    $scope.Topup = {'to_account' : null};
+    $scope.ToAccountList = [/*{'account_no' : '7181187531', 'bank_name' : 'ธนาคารกรุงศรี', 'account_name' : 'จันทิรา งามเลิศสรรพกิจ'},*/
                             /*{'account_no' : '4048118471', 'bank_name' : 'ธนาคารไทยพานิชย์', 'account_name' : 'บริษัท คาร์โก้ มอลล์ จำกัด'}*/
                             ];
 
     $scope.HourList = getHourList();
     $scope.MinuteList = getMinuteList();
-
+    $scope.getBankAccountList();
 });

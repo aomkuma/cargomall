@@ -134,7 +134,7 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
       var importer = angular.copy($scope.Importer);
       var transport_rate_kg = null;
       var transport_rate_cbm = null;
-      if(importer.transport_type == 'car'){
+      if(importer.transport_type == 'sea'){
         // calc by kg 
 
         // find by prod desc
@@ -147,7 +147,7 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
         // $scope.TransportRateData.rate_sea_kg 
         // calc by cbm
 
-      }else if(importer.transport_type == 'sea'){
+      }else if(importer.transport_type == 'car'){
         var index = $scope.findProductRate($scope.TransportRateData.rate_sea_kg , importer.product_type);
         transport_rate_kg = $scope.TransportRateData.rate_sea_kg[index];
 

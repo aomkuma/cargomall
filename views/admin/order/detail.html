@@ -175,7 +175,7 @@
 								<br>
 								ราคาโปรโมชั่น ¥{{product.product_promotion_price}}
 							</span>-->
-							ราคาปกติ<input type="text" data-ng-model="product.product_price_yuan">
+							ราคาปกติ<input type="text" data-ng-model="product.product_price_yuan"><br>
 							ราคาโปร<input type="text" data-ng-model="product.product_promotion_price">
 						</td>
 						<td data-ng-show="product.product_choose_color_img.length > 0">
@@ -240,8 +240,16 @@
 						<tr>
 							<td colspan="6" align="right"><b style="font-size: 1.1em;">จำนวนสินค้ารวม</b></td>
 							<td align="right"><b style="font-size: 1.1em;">{{sumAmount | number:0}}</b></td>
-							<td align="right"><b style="font-size: 1.1em;">ราคารวม</b></td>
-							<td align="right"><b style="font-size: 1.1em;">{{sumBaht | number:2}}</b></td>
+							<td align="right"><b style="font-size: 1.1em;">
+								ราคารวม (CNY)<br>
+								Exchange Rate<br>
+								ราคารวม (THB)</b>
+							</td>
+							<td align="right"><b style="font-size: 1.1em;">
+								{{sumYuan | number:2}}<br>
+								{{Order.order_desc.china_ex_rate | number:2}}<br>
+								{{sumBaht | number:2}}</b>
+							</td>
 							<td>
 								<button class="btn btn-info btn-block" data-ng-click="calcSum()">คำนวนราคาใหม่</button>
 								<button class="btn btn-primary btn-block" data-ng-click="updateProductItem(ProductList)">บันทึกการแก้ไขรายการสินค้า</button>
@@ -458,7 +466,7 @@
 	<div class="col-lg-12 text-center">
 		<a href="admin/order" class="btn btn-default">กลับหน้ารายการ</a>
 		<button class="btn btn-warning" data-ng-click="updateOrderStatus(Order.id, Order.order_status, 'back')" data-ng-show="Order.order_status > 1 && Order.order_status != 8">ย้อนสถานะ order</button>
-		
+		<button class="btn btn-success" data-ng-click="sendPaymentLine()" data-ng-show="(Order.order_status == 1 || Order.order_status == 6) && Customer.line_user_id != null">ส่ง Line แจ้งชำระค่าใช้จ่าย</button>
 		<button class="btn btn-default" data-ng-click="sendProductPaymentSMS()" data-ng-show="Order.order_status == 1">ส่ง SMS แจ้งชำระค่าสินค้า</button>
 		<button class="btn btn-default" data-ng-click="sendTransportPaymentSMS()" data-ng-show="Order.order_status == 6">ส่ง SMS แจ้งชำระค่าขนส่ง</button>
 		<button class="btn btn-info" data-ng-click="updateOrderStatus(Order.id, Order.order_status, 'next')" data-ng-show="Order.order_status < 7 && Order.order_status != 8">อัพเดทสถานะ order</button>

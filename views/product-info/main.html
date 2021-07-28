@@ -41,16 +41,17 @@
 		&nbsp;
 	</div>
 </div>
-<div class="row" ng-show="ProductDetail != undefined && ProductDetail != null" data-ng-form="form">
+<div class="row product-detail" ng-show="ProductDetail != undefined && ProductDetail != null" data-ng-form="form">
 	<div class="col col-md-10 col-md-offset-1">
 		<div class="panel panel-default">
 		<div class="panel-heading" style="font-size: 1.3em; background-color: #FF6C6C; color: #FFFFFF;"><b>{{ 'SEARCH_RESULT_TXT' | translate }}</b></div>
 		  <div class="panel-body" style="font-size: 1em;">
 		  	<div class="row">
-		  		<div class="col-md-4">
-		  			<img ng-src="{{ProductDetail.product_image}}" border="0" style=" border:#999 1px solid; width: 100%;">
+		  		<div class="col-md-12 text-center">
+		  			<img ng-src="{{ProductDetail.product_image}}" border="0" style=" border:#999 1px solid; width: 30%;">
+		  			<br><br>
 		  		</div>
-		  		<div class="col-md-8">
+		  		<div class="col-md-12">
 		  			<div class="row form-group">
 						<label class="col-md-3 col-sm-4 col-xs-12" style="text-align: left;">{{ 'LINK_URL_TXT' | translate}}</label>
 						<div class="col-md-9" style="white-space: -moz-pre-wrap !important; 
@@ -68,6 +69,199 @@
 						<label class="col-md-3 col-sm-4 col-xs-12" style="text-align: left;">{{ 'PRODUCT_NAME_TXT' | translate}}</label>
 						<div class="col-md-9 col-sm-9 col-xs-12">{{(ProductDetail.product_en_name == null || ProductDetail.product_en_name == undefined)? ProductDetail.product_original_name:ProductDetail.product_en_name }}</div>
 					</div>
+
+					<div data-ng-show="ProductDetail.ProductLevelList.length > 0">
+						<div class="row form-group">
+							<label class="col-md-4 col-sm-4 text-center" data-ng-repeat="price_range in ProductDetail.PriceRangeList track by $index" ng-init="range_index = $index" style="font-weight: lighter;">
+								{{ price_range.price }}
+								<br>
+								จำนวน : 
+								<span data-ng-show="ProductDetail.PriceRangeList.length > (range_index + 1)">{{price_range.min_qty}} - {{price_range.max_qty}}</span>
+								<span data-ng-show="ProductDetail.PriceRangeList.length == (range_index + 1)"> >= {{price_range.min_qty}}</span>
+							</label>
+						</div>
+					</div>
+						<!-- <div class="row form-group">
+							<div class="col-md-12">
+								<div class="input-group">
+							      <span class="input-group-addon" style="width: 200px; text-align: left; font-size: 0.9em;">
+							        <input type="radio" value="normal" ng-model="ProductDetail.price_type" aria-label="..." ng-click="checkPriceType(ProductDetail.price_type)"> {{ 'NORMAL_PRICE_TXT' | translate }} (RMB)
+							      </span>
+							      <input type="number" ng-value="{{ProductDetail.product_normal_price}}" ng-model="ProductDetail.product_normal_price" class="form-control input-sm" readonly="readonly">
+							    </div>
+								<div class="input-group">
+							      <span class="input-group-addon" style="width: 200px; text-align: left; font-size: 0.9em;">
+							        <input type="radio"  value="promotion" ng-model="ProductDetail.price_type" aria-label="..." ng-click="checkPriceType(ProductDetail.price_type)"> {{ 'PROMOTION_PRICE_TXT' | translate }} (RMB)
+							      </span>
+							      <input type="number" value="{{ProductDetail.product_promotion_price}}" ng-model="ProductDetail.product_promotion_price" class="form-control input-sm" ng-disabled="ProductDetail.price_type=='normal'">
+							    </div>
+							    <span style="color: orange;">กรณีระบบไม่ขึ้นราคาโปรโมชั่น กรุณาเลือกและกรอกที่ "ราคาโปรโมชั่น"</span>
+							</div>
+						</div> -->
+
+					
+
+					<div class="row form-group">
+						<div class="col-md-12 table-responsive">
+							<table class="table table-bordered">
+								<caption><h4>Exchange rate = {{ ProductDetail.exchange_rate }}</h4></caption>
+								<thead>
+									<tr>
+										<th>ลำดับ</th>
+										<th>
+											<!-- <input type="checkbox" name="color_img" ng-model="all_selected" value="all" ng-click="selectedAll()" /> -->
+										</th>
+										<th>สี</th>
+										<th width="40%">ขนาด</th>
+										<th>จำนวน</th>
+										<th>ราคาต่อหน่วย (CNY)</th>
+										<th>รวม (THB)</th>
+										<th>Remark</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr data-ng-repeat="item in ListProductTable track by $index" ng-init="firstIndex = $index">
+										<td>{{firstIndex + 1}}</td>
+										<td data-ng-show="item.product_color_img_display != null">
+											<input type="checkbox" ng-model="item.product_color_img_choose"  ng-true-value="'{{item.product_color_img_display}}'" ng-false-value="null"  />
+										</td>
+										<td data-ng-show="item.product_color_img_display == null">
+											<input type="checkbox" ng-model="item.product_color_img_choose"  ng-true-value="'{{item.size}}'" ng-false-value="null"  />
+										</td>
+										<td><img ng-src="{{item.product_color_img_display}}" border="0" style="max-width: 90px; border:#999 1px solid" alt="{{color_img}}" ng-show="item.product_color_img_display.startsWith('http')" />
+											<span ng-show="!item.product_color_img_display.startsWith('http')" >{{item.product_color_img_display}}</span>
+											<br>
+											{{item.product_color_display}}
+										</td>
+										<!-- <td data-ng-show="item.product_size > 0">
+											<label class="col-md-2" ng-repeat="size in item.product_size track by $index"  ng-init="secondIndex = $index">
+												<div class="input-group" style="font-size: 1em; font-weight: lighter;">
+												<input type="radio" ng-model="item.product_size_choose" value="{{size}}"  /> {{size}}
+												</div>
+											</label>
+										</td> -->
+										<td>
+
+											<label class="col-md-6">
+												<div class="input-group" style="font-size: 1em; font-weight: lighter;">
+												<input type="radio" ng-model="item.product_size_choose" value="{{item.size}}"  /> {{item.size}}
+												</div>
+											</label>
+										</td>
+										<td>
+											<input type="number" ng-value="item.product_qty" ng-model="item.product_qty" class="form-control input-sm" data-ng-keyup="checkPriceLength(item, item.product_qty)" required="true">
+										</td>
+										<td>
+											<input type="number" ng-model="item.product_normal_price" class="form-control input-sm" readonly="readonly">
+										</td>
+										
+										<td>
+											<input type="number" ng-model="item.product_price_thb"class="form-control input-sm" readonly="readonly">
+										</td>
+										<td>
+											<textarea class="form-control" ng-model="item.remark"></textarea>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+<!--
+					<div ng-show="ProductDetail.product_color_img.length > 0">
+						
+						<div class="row form-group" data-ng-repeat="color_img in ProductDetail.product_color_img">
+							<div class="col-md-12 table-responsive">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>
+												<input type="checkbox" name="color_img" ng-model="ProductDetail.product_color_img_choose"  ng-value="color_img" ng-click="changePrice(-1, color_img)" />
+											</th>
+											<th>สี</th>
+											<th>ขนาด</th>
+											<th>จำนวน</th>
+											<th>ราคาต่อหน่วย</th>
+											<th>รวม (CNY)</th>
+											<th>รวม (THB)</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><input type="checkbox" name="color_img" ng-model="ProductDetail.product_color_img_choose"  ng-value="color_img" ng-click="changePrice($index, color_img)" /></td>
+											<td><img ng-src="{{color_img}}" border="0" style="max-width: 50px; border:#999 1px solid" alt="{{color_img}}" ng-show="color_img.startsWith('http')" />
+												<span ng-show="!color_img.startsWith('http')" >{{color_img}}</span>
+											</td>
+											<td>
+												<label class="col-md-2" ng-repeat="size in ProductDetail.product_size track by $index" >
+													<div class="input-group" style="font-size: 1em; font-weight: lighter;">
+													<input type="radio" name="size" ng-model="ProductDetail.product_size_choose" ng-checked="$index==0" ng-value="size" ng-click="changePriceBySize($index)" /> {{size}}
+													</div>
+												</label>
+											</td>
+											<td>
+												<input type="number" ng-value="ProductDetail.product_qty" ng-model="ProductDetail.product_qty" class="form-control input-sm" data-ng-keyup="checkPriceLength(ProductDetail.product_qty)" required="true">
+											</td>
+											<td>
+												<input type="number" ng-model="ProductDetail.product_price_yuan" ng-model="ProductDetail.product_price_yuan" class="form-control input-sm" readonly="readonly">
+											</td>
+											<td>
+												<input type="number" ng-model="ProductDetail.product_price_yuan" ng-model="ProductDetail.product_price_yuan" class="form-control input-sm" readonly="readonly">
+											</td>
+											<td>
+												<input type="number" ng-model="ProductDetail.product_normal_price" ng-model="ProductDetail.product_normal_price" class="form-control input-sm" readonly="readonly">
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					</div>
+
+					<div ng-show="ProductDetail.product_color_img.length == 0 || ProductDetail.product_color_img.length == null">
+						<div class="row form-group" data-ng-repeat="color in ProductDetail.product_color">
+							<div class="col-md-12 table-responsive">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+
+											<th>สี</th>
+											<th>ขนาด</th>
+											<th>จำนวน</th>
+											<th>ราคาต่อหน่วย</th>
+											<th>รวม (CNY)</th>
+											<th>รวม (THB)</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>{{color}}</td>
+											<td>
+												<label class="col-md-2" ng-repeat="size in ProductDetail.product_size track by $index" >
+													<div class="input-group" style="font-size: 1em; font-weight: lighter;">
+													<input type="radio" name="size" ng-model="ProductDetail.product_size_choose" ng-checked="$index==0" ng-value="size" ng-click="changePriceBySize($index)" /> {{size}}
+													</div>
+												</label>
+											</td>
+											<td>
+												<input type="number" ng-value="ProductDetail.product_qty" ng-model="ProductDetail.product_qty" class="form-control input-sm" data-ng-keyup="checkPriceLength(ProductDetail.product_qty)" required="true">
+											</td>
+											<td>
+												<input type="number" ng-model="ProductDetail.product_price_yuan" ng-model="ProductDetail.product_price_yuan" class="form-control input-sm" readonly="readonly">
+											</td>
+											<td>
+												<input type="number" ng-model="ProductDetail.product_price_yuan" ng-model="ProductDetail.product_price_yuan" class="form-control input-sm" readonly="readonly">
+											</td>
+											<td>
+												<input type="number" ng-model="ProductDetail.product_normal_price" ng-model="ProductDetail.product_normal_price" class="form-control input-sm" readonly="readonly">
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!--
 					<div class="row form-group" ng-show="ProductDetail.product_color_img.length > 0">
 						<label class="col-md-3 form-control-static" style="text-align: left;">{{ 'COLOR_TXT' | translate}}
 						</label>
@@ -149,15 +343,14 @@
 								    </div>
 								    <span style="color: orange;">กรณีระบบไม่ขึ้นราคาโปรโมชั่น กรุณาเลือกและกรอกที่ "ราคาโปรโมชั่น"</span>
 								</div>
-							</div>
-							<div class="row form-group">
+							</div> -->
+							<!--<div class="row form-group">
 								<div class="col-md-12">
 
 									<table class="table table-striped">
 										<thead>
 											<th class="text-center">ราคา</th>
 											<th class="text-center">รายละเอียด</th>
-											<!-- <th>จำนวนคงเหลือ</th> -->
 											<th class="text-center">เลือก</th>
 										</thead>
 										<tbody>
@@ -196,11 +389,11 @@
 						<div class="col-md-6">
 							<textarea class="form-control" ng-model="ProductDetail.remark"></textarea>
 						</div>
-					</div>
+					</div>-->
 					<div class="row form-group">
-						<div class="col-md-9 text-center">
+						<div class="col-md-12 text-center">
 							<button class="btn btn-default btn-sm" onclick="window.location.href=''"> {{ 'CANCEL_TXT' | translate }}</button>
-							<button class="btn btn-primary btn-sm"  ng-click="addCart(ProductDetail)" data-ng-disabled="form.$invalid || (ProductDetail.product_normal_price == 0 && ProductDetail.product_promotion_price == 0) "><i class="fas fa-cart-plus"></i> {{ 'ADD_TO_CART' | translate }}</button>
+							<button class="btn btn-primary btn-sm"  ng-click="addCart(ListProductTable)"><i class="fas fa-cart-plus"></i> {{ 'ADD_TO_CART' | translate }}</button>
 						</div>
 					</div>
 
@@ -218,3 +411,8 @@
 
   gtag('config', 'UA-161508645-1');
 </script>
+<style type="text/css">
+	.product-detail{
+		font-size: 0.8em;
+	}
+</style>

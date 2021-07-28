@@ -10,14 +10,22 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
   
     $templateCache.removeAll();
 
+    $scope.ListProductTable = [];
     $scope.ProductDetail = sessionStorage.getItem('product_info');
-
+    // $scope.ProductListStorages = angular.fromJson($localStorage.product_list_storage);
+    // console.log($scope.ProductDetail);
 
     $scope.checkPriceByColor = function(index){
       if($scope.ProductDetail.price_list_by_color.length > 0 && $scope.ProductDetail.price_list_by_color[index] > 0){
         // $log.log($scope.ProductDetail.price_list_by_color[index]);
         $scope.ProductDetail.product_normal_price = parseFloat($scope.ProductDetail.price_list_by_color[index]);
       }
+
+      for(var i = 0; i < $scope.ProductDetail.price_list_by_color.length; i++){
+        $scope.ListProductTable.push($scope.ProductDetail);
+        $scope.ListProductTable[i].product_price_yuan = $scope.ProductDetail.price_list_by_color[i];
+      }
+      console.log($scope.ListProductTable);
     }
 
     $scope.changePrice = function(index, pic_color_url){
@@ -83,6 +91,10 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
       //   $scope.ProductDetailList = angular.fromJson($cookies.get('product_list_storage'));
       }
 
+      if($scope.ProductDetailList.length == 20){
+        alert('ขออภัยค่ะ ไม่สามารถเพิ่มสินค้าลงตะกร้่าได้ เนื่องจากมีการจำกัด 20 รายการสินค้าต่อ 1 การสั่งซื้อ');
+        return false;
+      }
       $scope.ProductDetail.exchange_rate = $scope.$parent.exchange_rate;
 
       if($scope.ProductDetail.product_color_img_choose != '' && !$scope.ProductDetail.product_color_img_choose.startsWith('http')){
@@ -93,7 +105,7 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
       }
 
       $scope.ProductDetailList.push(ProductDetail);
-      $log.log($scope.ProductDetailList);
+      // $log.log($scope.ProductDetailList);
       // $localStorage.product_list_storage = JSON.stringify($scope.ProductDetailList);
       // $cookies.put('product_list_storage', JSON.stringify($scope.ProductDetailList));
       // $log.log($cookies.get('product_list_storage'));
@@ -104,8 +116,10 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
       HTTPService.clientRequest('cart/update', params).then(function(result){
 
         if(result.data.STATUS == 'OK'){
-          window.location.href = 'view-orders';
+          window.location.reload();
+          // window.location.href = 'view-orders';
         }
+        
         IndexOverlayFactory.overlayHide();
       });
 
@@ -114,7 +128,7 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
     if($scope.ProductDetail != null && $scope.ProductDetail != ''){
       $scope.ProductDetail = angular.fromJson($scope.ProductDetail);
       $scope.ProductImage = angular.copy($scope.ProductDetail.product_image);
-      $log.log($scope.ProductDetail);
+      // $log.log($scope.ProductDetail);
       if(!checkEmptyField($scope.ProductDetail['price_type'])){
         $scope.ProductDetail['price_type'] = 'normal';
         // $log.log($scope.ProductDetail.ProductLevelList);
@@ -126,6 +140,32 @@ angular.module('app').controller('ProductInfoController', function($scope, $cook
 
       $scope.checkPriceByColor(0);
       
+    }
+
+    $scope.dialogRemoveItem = function(index){
+        
+        if(!$scope.$parent.ShowDialogRemoveItem){
+            $scope.$parent.ShowDialogRemoveItem = true;
+            $scope.$parent.RemoveItemIndex = index;
+        }
+    }
+
+    $scope.autoUpdateOrder = function(index, product){
+
+        $scope.ProductListStorage[index] = product;
+        $localStorage.product_list_storage = JSON.stringify($scope.ProductListStorage);
+        
+        // console.log(angular.fromJson($localStorage.product_list_storage));
+        var params = {'cart_desc' : JSON.stringify($scope.ProductListStorage)};
+        HTTPService.clientRequest('cart/update', params).then(function(result){
+
+          if(result.data.STATUS == 'OK'){
+            // window.location.reload();
+            // window.location.href = 'view-orders';
+          }
+          
+          IndexOverlayFactory.overlayHide();
+        });
     }
 
 });

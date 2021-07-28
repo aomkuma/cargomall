@@ -67,12 +67,13 @@
 							<th class="text-center">ชื่อบัญชีผู้โอน</th>
 							<th class="text-center">เลขที่บัญชี / E-mail Alipay</th>
 							<th class="text-center">ธนาคารปลายทาง / Alipay</th>
+							<th class="text-center">สลิป</th>
 							<th class="text-center">สถานะ</th>
 							<th class="text-center">Action</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr data-ng-repeat="data in DataList">
+					<tbody data-ng-repeat="data in DataList">
+						<tr >
 							<td>{{data.customer.user_code}}</td>
 							<td>{{data.customer.firstname}} {{data.customer.lastname}}</td>
 							<td>{{data.customer.mobile_no}}</td>
@@ -83,10 +84,30 @@
 							<td>{{data.payer_name}}</td>
 							<td>{{data.to_bank_acc_no}}</td>
 							<td>{{data.to_bank_name}}</td>
+							<td><a href="{{data.slip_path}}" target="_blank"><img src="{{data.slip_path}}" style="height: 100px;"></a></td>
 							<td>{{getTransferStatus(data.pay_status)}}</td>
 							<td>
 								<button class="btn btn-primary" data-ng-click="approveTransfer(data.id)" title="อนุมัติการโอนเงิน" data-ng-show="data.pay_status == 1"><i class="fas fa-check"></i></button>
 								<button class="btn btn-info" data-ng-click="rejectTransfer(data.id)" title="ปฏิเสธการโอนเงิน" data-ng-show="data.pay_status == 1"><i class="fas fa-ban"></i></button>
+								<button class="btn btn-default" data-ng-click="data.show_upload_file = true" title="แนบสลิป" data-ng-show="data.pay_status == '2'">แนบสลิป</button>
+								
+							</td>
+						</tr>
+						<tr ng-show="data.show_upload_file">
+							<td colspan="12">
+								<div class="row">
+									<div class="col-md-5">
+										<p class="input-group" style="">
+								          <input type="text" readonly="true" class="form-control" ng-model="data.AttachFile.name" required="true" />
+								          <span class="input-group-btn">
+								            <button class="btn btn-default" style="border-color: red;" ngf-select ng-model="data.AttachFile" ngf-max-size="5MB"  ngf-model-invalid="data.AttachFile.invalidFile" accept="image/*" ngf-pattern="'.png,.jpg,.jpeg,.gif'" >เลือก</button>
+								          </span>
+								        </p>
+								    </div>
+								    <div class="col-md-2">
+								    	<button class="btn btn-primary" data-ng-click="uploadSlip(data)"> อัพโหลด</button>
+								    </div>
+								</div>
 							</td>
 						</tr>
 					</tbody>
@@ -96,3 +117,18 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/ng-template" id="attach_slip.html">
+	
+	<div class="modal-header">
+		<h5 class="modal-title">แนบรูปสลิป</h5>
+	</div>
+	<div class="modal-body">
+		<div  class="obj_center" bind-html-compile="alertMessage"></div>
+	</div>
+	<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-primary" ng-click="ok()">OK</button>
+	</div>
+
+</script>

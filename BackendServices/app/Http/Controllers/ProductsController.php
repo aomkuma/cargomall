@@ -69,9 +69,9 @@ class ProductsController extends Controller
 
 	private function translateWord($keyword){
 		// return $keyword;
-		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyC-aor9zNlmSXKJb-2iIz8wMsLrJzvcxdo', 'default_target_translation' => 'th']);
+		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyCNdgYB9ssHXpWCEWXTy8xwXsTwq7r8SX4', 'default_target_translation' => 'en']);
 		$trans = new GoogleTranslate($translateClient);
-		$result = $trans->justTranslate($keyword);
+		$result = $trans->justTranslate($keyword, 'en');
 		return trim($result);
     }
 
@@ -174,10 +174,10 @@ class ProductsController extends Controller
 
 					$description = ((array) $value->Value)[0];
 
-					$translate_description = $this->translateWord($description);
-					if(!empty($translate_description)){
-						$description = $translate_description;
-					}
+					// $translate_description = $this->translateWord($description);
+					// if(!empty($translate_description)){
+					// 	$description = $translate_description;
+					// }
 
 					$ProductLevelList[] = ['vid' => (string) $value->Attributes()->Vid, 'description' => $description, 'quantity' => 0, 'price' => 0];
 				}
@@ -314,6 +314,7 @@ class ProductsController extends Controller
 									,'price_list_by_color'=>$price_list_by_color
 									,'ProductLevelList' => $ProductLevelList
 									,'PriceRangeList' => $price_range_list
+									,'exchange_rate' =>getLastChinaRate()['exchange_rate']
 								);
 
 			return $product_result;
@@ -328,7 +329,7 @@ class ProductsController extends Controller
 			$itemId = $queryArray['id'];
 		}
 
-			define('CFG_SERVICE_INSTANCEKEY', 'opendemo');
+			define('CFG_SERVICE_INSTANCEKEY', '52b832ea-3eb7-40fb-a66b-dc0114876a94');
 			define('CFG_REQUEST_LANGUAGE', 'en');
 			 
 			//$itemId = (isset($_REQUEST['itemId'])) ? $_REQUEST['itemId'] : 38237454486;
@@ -352,7 +353,7 @@ class ProductsController extends Controller
 			    // echo json_encode($RETURN_DATA);die();
 			}
 			$xmlObject = simplexml_load_string($result);
-			 
+			// print_r($xmlObject);exit;
 			curl_close($curl);
 			 
 			if ((string)$xmlObject->ErrorCode !== 'Ok') {
@@ -451,6 +452,7 @@ class ProductsController extends Controller
 									,'price_list_by_color'=>$price_list_by_color
 									,'ProductLevelList' => $ProductLevelList
 									,'PriceRangeList' => $price_range_list
+									,'exchange_rate' =>getLastChinaRate()['exchange_rate']
 								);
 
 			return $product_result;
@@ -602,6 +604,7 @@ class ProductsController extends Controller
 								,'price_list_by_color'=>$price_list_by_color
 								,'ProductLevelList' => $ProductLevelList
 								,'PriceRangeList' => $price_range_list
+								,'exchange_rate' =>getLastChinaRate()['exchange_rate']
 							);
 
 		return $product_result;

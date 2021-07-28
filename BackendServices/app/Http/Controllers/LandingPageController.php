@@ -73,8 +73,9 @@ class LandingPageController extends Controller
         		->where('start_date', '<=', $cur_date)
         		->where('end_date', '>=', $cur_date)
         		->first();
-
-        $data['text_desc'] = base64_decode($data['text_desc']);
+        if($data){
+            $data['text_desc'] = base64_decode($data['text_desc']);
+        }
         
         $this->data_result['DATA'] = $data;
 

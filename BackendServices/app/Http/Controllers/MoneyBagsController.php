@@ -13,6 +13,7 @@ use App\User;
 use App\WithdrawnHistory;
 use App\RefundHistory;
 use App\ImporterPayGroup;
+use App\UserAddress;
 
 use App\Mail\OrderRequestMailable;
 use App\Mail\OrderTransportCostMailable;
@@ -20,6 +21,8 @@ use App\Mail\ImporterCostMailable;
 use App\Mail\TopupNotiMailable;
 use App\Mail\TransferNotiMailable;
 use App\Mail\DepositNotiMailable;
+use App\Models\ReceiptRunnung;
+use App\Models\PaymentHistory;
 
 use Mail;
 
@@ -34,10 +37,165 @@ class MoneyBagsController extends Controller
     //
     //
 
+    private function savePaymentHistory($obj, $payment_type){
+        //
+
+        $Data = [];
+        $Data['user_id'] = $obj->user_id;
+        $Data['reference_id'] = $obj->id;
+        $Data['payment_type'] = $payment_type;
+
+        if($payment_type == 6){
+
+            
+            $Data['url'] = 'topup-detail/' . $obj->id;
+
+        }else{
+
+            $Data['url'] = 'topup-detail/' . $obj->id;
+
+        }
+
+        PaymentHistory::create($Data);
+
+    }
+
+    public function getPaymentHistoryList(Request $request){
+
+        $params = $request->all();
+
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+
+        $condition = $params['obj']['condition'];
+        $currentPage = $params['obj']['currentPage'];
+        $limitRowPerPage = $params['obj']['limitRowPerPage'];
+
+        $currentPage = $currentPage - 1;
+
+        $limit = $limitRowPerPage;
+        $offset = $currentPage;
+        $skip = $offset * $limit;
+
+        $totalRows = PaymentHistory::where('user_id', $user_data['id'])
+                        ->where(function($query) use ($condition){
+                            if(isset($condition['payment_type']) && !empty($condition['payment_type'])){
+                                $query->where('payment_type', $condition['payment_type']);
+                            }
+                        })
+                        ->count();
+
+        $list = PaymentHistory::with('moneyUse')
+                ->with('moneyTopup')
+                ->where('user_id', $user_data['id'])
+                ->where(function($query) use ($condition){
+                    if(isset($condition['payment_type']) && !empty($condition['payment_type'])){
+                        $query->where('payment_type', $condition['payment_type']);
+                    }
+                })
+                ->orderBy('created_at', 'DESC')
+                ->skip($skip)
+                ->take($limit)
+                ->get();
+
+        $this->data_result['DATA']['DataList'] = $list;
+        $this->data_result['DATA']['Total'] = $totalRows;
+        
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+
+    public function getReceiptData(Request $request){
+
+        $params = $request->all();
+        $pay_id = $params['obj']['pay_id'];
+
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+
+        $money_use = MoneyUse::with(['customer' => function($q){
+                            $q->with('addresses');
+                        }])->find($pay_id);
+        $data = UserAddress::where('user_id', $money_use->user_id)->get();
+        // $money['user_address'] = $data;
+        $item_list = [];
+        $item_list[0]['qty'] = '1';
+        $data_type = null;
+
+        if($money_use->pay_type == 2){
+            $data_type = 'order';
+            $item_list[0]['item_desc'] = 'ค่าบริการขนส่งสินค้า';
+        }else if($money_use->pay_type == 5){
+            $data_type = 'importer';
+            $item_list[0]['item_desc'] = 'ค่าบริการนำเข้าสินค้า';
+        }
+        $item_list[0]['unit'] = '1';
+        $item_list[0]['pay_amount_thb'] = $money_use->pay_amount_thb;
+
+        $SumPayAmount = $money_use->pay_amount_thb;
+
+        for($i = 0; $i < 9; $i++){
+            // $item_list[] = [];
+            $data = [];
+            $data['qty'] = ' ';
+            $data['item_desc'] = ' ';
+            $data['unit'] = ' ';
+            $data['pay_amount_thb'] = ' ';
+
+            array_push($item_list, $data);
+        }
+
+        $running_data = ReceiptRunnung::where('data_id', $money_use->id)->first();
+
+        if(empty($running_data)){
+
+            $cur_year = date('Y');
+            $total_running_no = (ReceiptRunnung::where('years', $cur_year)
+                                // ->where('data_type', $data_type)
+                                ->count()) + 1;
+
+            $total_running_no = str_pad($total_running_no, 5, '0', STR_PAD_LEFT);
+
+            $new_data = [];
+            $new_data['data_id'] = $money_use->id;
+            $new_data['data_type'] = $data_type;
+            $new_data['years'] = $cur_year;
+            $new_data['running_no'] = $cur_year . '/' . $total_running_no;
+
+            $running_data = ReceiptRunnung::create($new_data);
+
+        }
+
+        $this->data_result['DATA']['ReceiptData'] = $money_use;
+        $this->data_result['DATA']['RunningData'] = $running_data;
+        $this->data_result['DATA']['ItemList'] = $item_list;
+        $this->data_result['DATA']['SumPayAmount'] = $SumPayAmount;
+        
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    public function getListTransferByUser(Request $request){
+
+        $params = $request->all();
+        
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+
+        $list = MoneyUse::where('user_id', $user_data['id'])
+                ->where('pay_type', 3)
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+        $this->data_result['DATA'] = $list;
+        
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
     public function topupPendingList(){
 
-        $list = MoneyTopup::with('customer')
-                ->where('topup_status', 1)
+        $list = MoneyUse::with('customer')
+                ->where('pay_type', 3)
+                ->where('pay_status', 1)
                 ->orderBy('created_at', 'ASC')
                 ->get();
 
@@ -130,6 +288,9 @@ class MoneyBagsController extends Controller
         if($result){
             
             $this->data_result['DATA'] = base64_encode(getUserProfile($Data['user_id']));
+
+            // save to payment_history
+            $this->savePaymentHistory($result, 6);
             
         }else{
             $this->data_result['STATUS'] = 'ERROR';
@@ -383,6 +544,8 @@ class MoneyBagsController extends Controller
                 $importer_pay_group->save();
 
             }
+
+            $this->savePaymentHistory($result, intval($Data['pay_type']));
             
             $this->data_result['DATA'] = base64_encode(getUserProfile($Data['user_id']));
             
@@ -394,6 +557,109 @@ class MoneyBagsController extends Controller
         return $this->returnResponse(200, $this->data_result, response(), false);
 
     }  
+
+    public function topupHistory(Request $request){
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_id = trim($user_data['id']);
+        $condition = $params['obj']['condition'];
+        $currentPage = $params['obj']['currentPage'];
+        $limitRowPerPage = $params['obj']['limitRowPerPage'];
+
+        $currentPage = $currentPage - 1;
+
+        $limit = $limitRowPerPage;
+        $offset = $currentPage;
+        $skip = $offset * $limit;
+
+        $condition['pay_type'] = trim($condition['pay_type']);
+
+        $totalRows = MoneyTopup::with('customer')
+                    ->join('user', 'user.id', '=', 'money_topup.user_id')
+                    ->where('user_id', $user_id)
+                    ->where('topup_status', 2)
+                    ->where(function($query) use ($condition){
+
+                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                        }
+
+                        if(isset($condition['topup_status']) &&  !empty($condition['topup_status'])){
+                            $query->where('topup_status', $condition['topup_status']);
+                        }
+
+                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                            $condition['created_at'] = getDateFromString($condition['created_at']);
+                            $query->where('money_topup.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                        }
+                    })
+                    ->count();
+
+        $list = MoneyTopup::with('customer')
+                    ->select("money_topup.*")
+                    ->join('user', 'user.id', '=', 'money_topup.user_id')
+                    ->where('user_id', $user_id)
+                    ->where('topup_status', 2)
+                    ->where(function($query) use ($condition){
+
+                        if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
+                            $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                        }
+
+                        if(isset($condition['topup_status']) &&  !empty($condition['topup_status'])){
+                            $query->where('topup_status', $condition['topup_status']);
+                        }
+
+                        if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
+                            $condition['created_at'] = getDateFromString($condition['created_at']);
+                            $query->where('money_topup.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
+                        }
+                    })
+                    ->orderBy('money_topup.created_at', 'DESC')
+                    ->skip($skip)
+                    ->take($limit)
+                    ->get();
+
+        $this->data_result['DATA']['DataList'] = $list;
+        $this->data_result['DATA']['Total'] = $totalRows;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+    }
+
+    public function getRefundHistory(Request $request){
+        $params = $request->all();
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_id = trim($user_data['id']);
+        $condition = $params['obj']['condition'];
+        $currentPage = $params['obj']['currentPage'];
+        $limitRowPerPage = $params['obj']['limitRowPerPage'];
+
+        $currentPage = $currentPage - 1;
+
+        $limit = $limitRowPerPage;
+        $offset = $currentPage;
+        $skip = $offset * $limit;
+
+        $condition['pay_type'] = trim($condition['pay_type']);
+
+        $totalRows = RefundHistory::join('user', 'user.id', '=', 'refund_history.user_id')
+                    ->where('user_id', $user_id)
+                    ->count();
+
+        $list = RefundHistory::select("refund_history.*", 'user_admin.firstname', 'user_admin.lastname')
+                    ->join('user', 'user.id', '=', 'refund_history.user_id')
+                    ->join('user_admin', 'user_admin.id', '=', 'refund_history.refund_by')
+                    ->where('user_id', $user_id)
+                    ->orderBy('refund_history.created_at', 'DESC')
+                    ->skip($skip)
+                    ->take($limit)
+                    ->get();
+
+        $this->data_result['DATA']['DataList'] = $list;
+        $this->data_result['DATA']['Total'] = $totalRows;
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+    }
 
     public function payHistory(Request $request){
         $params = $request->all();
@@ -414,6 +680,7 @@ class MoneyBagsController extends Controller
         $totalRows = MoneyUse::with('customer')
                     ->join('user', 'user.id', '=', 'money_use.user_id')
                     ->where('user_id', $user_id)
+                    ->where('pay_status', 2)
                     ->where(function($query) use ($condition){
 
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
@@ -434,6 +701,7 @@ class MoneyBagsController extends Controller
                     ->select("money_use.*")
                     ->join('user', 'user.id', '=', 'money_use.user_id')
                     ->where('user_id', $user_id)
+                    ->where('pay_status', 2)
                     ->where(function($query) use ($condition){
 
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
@@ -1227,6 +1495,44 @@ class MoneyBagsController extends Controller
 
     }
 
+    public function uploadTransferSlip(Request $request){
+
+        $params = $request->all();
+        $id = $params['obj']['id'];
+        $file = $request->file();
+        $AttachFile = $file['obj']['AttachFile'];
+        // print_r($AttachFile);
+        // exit;
+        if(empty($AttachFile->getClientOriginalExtension())){
+            $this->data_result['STATUS'] = 'ERROR';
+            $this->data_result['DATA'] = 'Invalid request';
+            return $this->returnResponse(200, $this->data_result, response(), false);
+        }
+
+        $transfer_data = MoneyUse::find($id);
+        // print_r($transfer_data);exit;
+        if($transfer_data){
+
+            $slip_path = $AttachFile->storeAs(
+                'transfer-slip', $id . '_' . date('YmdHis')  . '.' . $AttachFile->getClientOriginalExtension()
+            );
+
+            $slip_path = 'BackendServices/storage/app/' . $slip_path;
+
+            $transfer_data->slip_path = $slip_path;
+            $transfer_data->save();
+
+            $this->data_result['DATA']['result'] = $transfer_data->slip_path;
+
+        }else{
+            $this->data_result['STATUS'] = 'ERROR';
+            $this->data_result['DATA'] = 'Cannot find transaction : ' . $id;
+        }
+
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
     private function approveTopup($user_id, $topup_amount){
 
         $money_bag = MoneyBag::where('user_id', $user_id)->first();
@@ -1256,7 +1562,7 @@ class MoneyBagsController extends Controller
             // update balance
             $money_bag->balance -= $transter_amount;
             // echo $money_bag->balance . ' ' . $transter_amount;exit;
-            if(floatval($money_bag->balance) >= 0){
+            if(floatval($money_bag->balance) >= -1){
 
                 $result = true;
                 $money_bag->save();    
@@ -1280,6 +1586,17 @@ class MoneyBagsController extends Controller
         }
 
         return $money_bag->balance;
+    }
+
+    public function reRecieptRunning(){
+        $list = ReceiptRunnung::orderBy('id', 'DESC')->get(); 
+
+        foreach ($list as $key => $value) {
+
+            $total_running_no = str_pad($value->id, 5, '0', STR_PAD_LEFT);
+            $value->running_no = '2021/' . $total_running_no;
+            $value->save();
+        }
     }
 
 }

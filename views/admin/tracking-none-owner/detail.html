@@ -242,10 +242,10 @@
 							</thead>
 							<tbody>
 								<tr data-ng-repeat="data in CustomerRequestOwner" ng-class="{'selected_row' : data.status}">
-									<td>{{data.customer.firstname}} {{data.customer.lastname}} ({{data.customer.user_code}})</td>
-									<td>{{data.customer.mobile_no}}</td>
+									<td>{{data.firstname}} {{data.lastname}} ({{data.user_code}})</td>
+									<td>{{data.mobile_no}}</td>
 									<td>{{ getThaiDateTimeFromString(data.created_at) }}</td>
-									<td><button class="btn btn-default btn-sm" data-ng-show="Data.track_status == 1" data-ng-click="addToOwner(Data.id, data.id, data.customer.firstname)">กำหนดให้เป็นเจ้าของ</button></td>
+									<td><button class="btn btn-default btn-sm" data-ng-show="Data.track_status == 1" data-ng-click="addToOwner(Data.id, data.id, data.firstname)">กำหนดให้เป็นเจ้าของ</button></td>
 								</tr>
 							</tbody>
 						</table>

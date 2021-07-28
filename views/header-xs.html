@@ -38,6 +38,8 @@
               บริการนำเข้าสินค้า</a></li>
             <li ><a href="tracking/order"  style="border-left: 1px solid #FFF;" ng-show="UserData != undefined && UserData != null">
               บริการฝากสั่งสินค้า</a></li>
+            <li ><a href="problems" style="border-left: 1px solid #FFF;"  ng-show="UserData != undefined && UserData != null">
+              แจ้งปัญหา</a></li>
             <li class="dropdown">
               <a href="" class="dropdown-toggle"  data-toggle="dropdown" 
             role="button" 
@@ -48,6 +50,12 @@
               <ul class="dropdown-menu">
                 <li>
                   <a href="money-bag">กระเป๋าเงินของฉัน ({{UserData.money_bags.balance | number:2}} บาท)</a>
+                </li>
+                <li>
+                  <a href="money-bag/statement">Statement</a>
+                </li>
+                <li>
+                  <a href="money-bag/payment-history">ประวัติการชำระเงิน</a>
                 </li>
                 <li>
                   <a href="topup">เติมเงิน</a>

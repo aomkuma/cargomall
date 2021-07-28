@@ -1,0 +1,176 @@
+
+<div class="bg A4" >
+	<div class="row">
+		<div class="col-md-12">
+			<button class="btn btn-primary pull-right" data-ng-click="export()">Export to PDF</button>
+		</div>
+	</div>
+	<section class="sheet padding-10mm" id="exportthis">
+		<div class="row form-group ">
+			<div class="col-md-3 text-center">
+
+			</div>
+			<div class="col-md-6 text-center">
+				<h3>บริษัท ซีจีเอ็ม 168 จำกัด</h3>
+				<h5>เลขที่ 8 ซอย8 ถนนเจริญเมือง ตำบลท่าศาลา อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50000</h5>
+				<h5>เลขประจำตัวผู้เสียภาษี 0505564006165</h5>
+			</div>
+			<div class="col-md-3 text-center">
+				<br>
+				<h3>ใบเสร็จรับเงิน</h3>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-1 col-md-offset-8">
+				เลขที่ 
+			</div>
+			<div class="col-md-2 text-right">
+				{{ RunningData.running_no }}
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-2">
+				นามลูกค้า
+			</div>
+			<div class="col-md-4">
+				{{ ReceiptData.customer.firstname }} {{ ReceiptData.customer.lastname }}
+			</div>
+			<div class="col-md-2">
+				วันที่
+			</div>
+			<div class="col-md-4">
+				{{ getThaiDateFromString(ReceiptData.updated_at) }}
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-2">
+				ที่อยู่
+			</div>
+			<div class="col-md-10">
+				 เลขที่ &nbsp; {{ReceiptData.customer.addresses[0].address1}} หมู่บ้าน &nbsp;{{ReceiptData.customer.addresses[0].address2}} หมู่ที่ &nbsp; {{ReceiptData.customer.addresses[0].address3}} แขวง/ตำบล &nbsp; {{ReceiptData.customer.addresses[0].address4}} 
+
+				<br>อำเภอ/เขต &nbsp; {{ReceiptData.customer.addresses[0].address5}} จังหวัด &nbsp; {{ReceiptData.customer.addresses[0].address6}} รหัสไปรษณีย์ &nbsp; {{ReceiptData.customer.addresses[0].address7}}
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				 <table class="table table-bordered">
+				 	<thead>
+				 		<tr>
+				 			<th class="text-center">จำนวน<br>Quantity</th>
+				 			<th class="text-center">รายการ<br>Description</th>
+				 			<th class="text-center">หน่วย<br>Unit</th>
+				 			<th class="text-center">จำนวนเงิน<br>Amount</th>
+				 		</tr>
+				 	</thead>
+				 	<tbody>
+				 		<tr data-ng-repeat="data in ItemList" style="height: 30px;">
+				 			<td class="text-center">{{data.qty}}</td>
+				 			<td>{{data.item_desc}}</td>
+				 			<td class="text-center">{{data.unit}}</td>
+				 			<td class="text-center">{{data.pay_amount_thb}}</td>
+				 		</tr>
+				 	</tbody>
+				 	<tfoot>
+				 		<tr>
+				 			<td colspan="3" class="text-right"><b>รวมเงิน</b></td>
+				 			<td class="text-center"><b>{{SumPayAmount}}</b></td>
+				 		</tr>
+				 	</tfoot>
+				 </table>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				&nbsp;
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-3 text-center">
+				
+				
+				<span style="text-decoration: underline;">( จันทิรา งามเลิศสรรพกิจ )</span>
+				<br>
+				ผู้รับเงิน
+			</div>
+		</div>
+	</section>
+
+</div>
+
+<style type="text/css">
+@page { margin: 0 }
+div { margin: 0 }
+.sheet {
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  page-break-after: always;
+}
+
+/** Paper sizes **/
+div.A3               .sheet { width: 297mm; height: 419mm }
+div.A3.landscape     .sheet { width: 420mm; height: 296mm }
+div.A4               .sheet { width: 210mm; height: 296mm }
+div.A4.landscape     .sheet { width: 297mm; height: 209mm }
+div.A5               .sheet { width: 110mm; height: 250mm; font-size: 0.8em; }
+div.A5.landscape     .sheet { width: 210mm; height: 147mm }
+div.letter           .sheet { width: 216mm; height: 279mm }
+div.letter.landscape .sheet { width: 280mm; height: 215mm }
+div.legal            .sheet { width: 216mm; height: 356mm }
+div.legal.landscape  .sheet { width: 357mm; height: 215mm }
+
+/** Padding area **/
+.sheet.padding-10mm { padding: 10mm }
+.sheet.padding-15mm { padding: 15mm }
+.sheet.padding-20mm { padding: 20mm }
+.sheet.padding-25mm { padding: 25mm }
+
+/** For screen preview **/
+@media screen {
+  div.bg { background: #e0e0e0 }
+  .sheet {
+    background: white;
+    box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+    margin: 5mm auto;
+  }
+}
+
+/** Fix for Chrome issue #273306 **/
+@media print {
+           div.A3.landscape { width: 420mm }
+  div.A3, div.A4.landscape { width: 297mm }
+  div.A4, div.A5.landscape { width: 210mm }
+  div.A5                    { width: 110mm }
+  div.letter, div.legal    { width: 216mm }
+  div.letter.landscape      { width: 280mm }
+  div.legal.landscape       { width: 357mm }
+}
+
+</style>

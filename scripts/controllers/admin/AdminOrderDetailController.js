@@ -19,13 +19,16 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
 
     $scope.calcSum = function (){
         $scope.sumBaht = 0;
+        $scope.sumYuan = 0;
         $scope.sumAmount = 0;
         angular.forEach($scope.ProductList, function(value, key) {
             $log.log(value.product_size_choose);
             if(parseFloat(value.product_promotion_price) > 0){
                 $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat($scope.OrderDesc.china_ex_rate)) * parseFloat(value.product_choose_amount)));
+                $scope.sumYuan += parseFloat(value.product_promotion_price) * parseFloat(value.product_choose_amount);
             }else{
                 $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_price_yuan) * parseFloat($scope.OrderDesc.china_ex_rate)) * parseFloat(value.product_choose_amount)));
+                $scope.sumYuan += parseFloat(value.product_price_yuan)  * parseFloat(value.product_choose_amount);
             }
 
             $scope.sumAmount += parseFloat(value.product_choose_amount);
@@ -298,13 +301,54 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
         });
     }
 
+
+    $scope.sendPaymentLine = function(){
+
+      $scope.alertMessage = 'ต้องการส่ง Line แจ้งเตือนชำระเงินแก่ลูกค้า ใช่หรือไม่ ?';
+
+      var modalInstance = $uibModal.open({
+          animation : false,
+          templateUrl : 'views/dialog-confirm-sent-line.html',
+          size : 'md',
+          scope : $scope,
+          backdrop : 'static',
+          controller : 'ModalDialogCtrl',
+          resolve : {
+              params : function() {
+                  return {};
+              } 
+          },
+      });
+      modalInstance.result.then(function (valResult) {
+          $scope.confirmSendPaymentLine();
+      });
+    }
+
+    
+    $scope.confirmSendPaymentLine = function(){
+        IndexOverlayFactory.overlayShow();
+        var params = {'order_id' : $scope.Order.id, 'line_admin_remark' : $scope.Order.line_admin_remark};
+        HTTPService.clientRequest('admin/order/line/notify-payment', params).then(function(result){
+            if(result.data.STATUS == 'OK'){
+                // window.location.replace('admin/order');
+                var alertMsg = 'แจ้ง Line เตือนลูกค้าเรียบร้อยแล้ว';
+                alert(alertMsg);
+            }
+            else{
+              var alertMsg = result.data.DATA;
+              alert(alertMsg);
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+
     $scope.calcPrice = function(item){
       // var item = item;//angular.copy($scope.Order);
       // console.log(item);
       if(checkEmptyField(item.product_type)){
         var transport_rate_kg = null;
         var transport_rate_cbm = null;
-        if($scope.Order.transport_type == 'car'){
+        if($scope.Order.transport_type == 'sea'){
           // calc by kg 
 
           // find by prod desc
@@ -318,7 +362,7 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
           // $scope.TransportRateData.rate_sea_kg 
           // calc by cbm
 
-        }else if($scope.Order.transport_type == 'sea'){
+        }else if($scope.Order.transport_type == 'car'){
           var index = $scope.findProductRate($scope.TransportRateData.rate_sea_kg , item.product_type);
           transport_rate_kg = $scope.TransportRateData.rate_sea_kg[index];
 

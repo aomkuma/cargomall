@@ -133,6 +133,10 @@ class OrdersController extends Controller
         $offset = $currentPage;
         $skip = $offset * $limit;
 
+        if(isset($condition['order_status']) && $condition['order_status'] == 0){
+            $condition['order_status'] = '0';
+        }
+
         $totalRows = Order::with('orderDesc')
                 ->join('user' , 'user.id', '=', 'order.user_id')
                 ->where(function($query) use ($condition){
@@ -141,7 +145,7 @@ class OrdersController extends Controller
                         $query->orWhere('tracking_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         $query->orWhere('user_code' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                     }
-                    if(isset($condition['order_status']) &&  !empty($condition['order_status'])){
+                    if(isset($condition['order_status']) &&  (!empty($condition['order_status']) || $condition['order_status'] == '0')){
                         $query->where('order_status', $condition['order_status']);
                     }else{
                         $query->where('order_status', '<>', 9);
@@ -154,6 +158,7 @@ class OrdersController extends Controller
                 })
                 ->count();
 
+
         $list = Order::select('order.*')
                 ->with('orderDesc')
                 ->with('customer')
@@ -164,7 +169,7 @@ class OrdersController extends Controller
                         $query->orWhere('tracking_no' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         $query->orWhere('user_code' , 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                     }
-                    if(isset($condition['order_status']) &&  !empty($condition['order_status'])){
+                    if(isset($condition['order_status']) &&  (!empty($condition['order_status']) || $condition['order_status'] == '0')){
                         $query->where('order_status', $condition['order_status']);
                     }else{
                         $query->where('order_status', '<>', 9);
@@ -249,6 +254,7 @@ class OrdersController extends Controller
                         $query->where('created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
                     }
                 })
+                ->orderBy('created_at', 'DESC')
                 ->get();
 
         $this->data_result['DATA'] = $list;
@@ -611,6 +617,114 @@ class OrdersController extends Controller
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 
+    }
+
+
+    public function sendPaymentLine(Request $req){
+        
+        $params = Request::all();
+
+        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        $user_data['id'] = ''.$user_data['id'];
+        $order_id = trim($params['obj']['order_id']);
+        $line_admin_remark = $params['obj']['line_admin_remark'];
+        $order = Order::with('customer')->find($order_id);
+
+        $send_result = false;
+
+        $ACCESS_TOKEN = env('LINE_ACCESS_TOKEN', '7z3T93tZJwQq+8icmJA4hNrefidb0FW5eVWldjX7aHEGbfrubUJ/FEsJL9GAupmMHlnLO0kg7EZlEWm4ymDwJhuZDf8NRxdLeALSun5dXt5vtnVsTtaeV7VEQrnEcpKOfJztvzonaJFCu/f2oAsR2QdB04t89/1O/w1cDnyilFU=');
+        $CHANEL_SECRET = env('LINE_CHANEL_SECRET', '4a78b86e4bd85c783f4697deba5d0bc3');
+        
+        $POST_HEADER = array('Content-Type: application/json', 'Authorization: Bearer ' . $ACCESS_TOKEN);
+        $message_type = 'text';
+        $API_URL = env('LINE_PUSH_MASSAGE_URL', 'https://api.line.me/v2/bot/message/push');
+        
+
+        if(!empty($order->customer->line_user_id)){
+            if($order && $order->order_status == 1){
+
+                $message_desc = 'รายการฝากสั่ง เลขที่ ' . $order->order_no . " \r\nขณะนี้อยู่ในสถานะ \"รอการชำระเงินค่าสินค้า\"\r\nกรุณาเข้าสู่ระบบ เพื่อดำเนินการชำระค่าสินค้า ขอบคุณค่ะ";
+                // sendSms($mobile_no, $message);
+                // $to_user_id = $order->customer->line_user_id;
+
+                // // $line_config = LineConfigItem::where('id', $line_config_item_id)->first();
+                // $send_data = [];
+                // $send_data['to'] = $to_user_id;
+                // $send_data['messages'] = [['type' => $message_type, 'text' => $message_desc]];
+
+                // $post_body = json_encode($send_data, JSON_UNESCAPED_UNICODE);
+                // $this->data_result['DATA'] = true;
+                // $send_result = $this->send_line_message($API_URL, $POST_HEADER, $post_body);
+            
+            }else if($order && $order->order_status == 6){
+
+                $mobile_no = $order->customer->mobile_no;
+
+                // get waiting payment tracking status
+                $tracking_no_list = OrderTracking::select('tracking_no')
+                                    ->where('order_id', $order_id)
+                                    ->whereNotNull('order_tracking.transport_cost_china')
+                                    ->whereNotNull('order_tracking.transport_cost_thai')
+                                    ->whereNotNull('order_tracking.import_fee')
+                                    ->where('order_tracking.transport_cost_china' , '>=', 0)
+                                    ->where('order_tracking.transport_cost_thai' , '>=', 0)
+                                    ->where('order_tracking.import_fee' , '>=', 0)
+                                    ->where('order_tracking.payment_status', false)
+                                    ->get()->toArray();
+
+                // print_r($tracking_no_list);exit;
+                $track_arr = [];
+                foreach ($tracking_no_list as $key => $value) {
+                    $track_arr[] = $value['tracking_no'];
+                }
+
+                $message_desc = 'รายการฝากสั่ง ' . implode(',', $track_arr) . "\r\nขณะนี้อยู่ในสถานะ \"รอการชำระค่าขนส่ง\"\r\nกรุณาเข้าสู่ระบบเพื่อดำเนินการชำระค่าขนส่งสินค้า ขอบคุณค่ะ";
+                // sendSms($mobile_no, $message);
+
+                
+            }
+
+            $to_user_id = $order->customer->line_user_id;
+
+            if(!empty($line_admin_remark)){
+                $line_admin_remark = 'หมายเหตุเพิ่มเติม : ' . $line_admin_remark;
+            }
+
+            $line_admin_remark .= "\r\n\r\nhttps://cargomall.co.th";
+
+            // $line_config = LineConfigItem::where('id', $line_config_item_id)->first();
+            $send_data = [];
+            $send_data['to'] = $to_user_id;
+            $send_data['messages'] = [['type' => $message_type, 'text' => $message_desc . "\r\n\r\n" . $line_admin_remark]];
+
+            $post_body = json_encode($send_data, JSON_UNESCAPED_UNICODE);
+
+            $send_result = $this->send_line_message($API_URL, $POST_HEADER, $post_body);
+
+            Log::info($send_result);
+        }
+
+        // if($send_result){
+        // $this->saveLineMessage($message_type, $message_group, $message_desc, $line_user_account, $admin_id);    
+        // }
+        $this->data_result['DATA'] = $send_result;
+        
+        return $this->returnResponse(200, $this->data_result, response(), false);
+
+    }
+
+    private function send_line_message($url, $post_header, $post_body)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $post_header);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_body);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
     }
 
     public function testSendMail(){

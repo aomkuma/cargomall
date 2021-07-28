@@ -131,6 +131,23 @@ angular.module('app').controller('AdminTransferController', function($scope, $co
         });
     }
 
+    $scope.uploadSlip = function(data){
+
+      var params = {'id' : data.id, 'AttachFile' : data.AttachFile};
+
+      HTTPService.uploadRequest('admin/transfer/upload', params).then(function(result){
+        if(result.data.STATUS == 'OK'){
+
+          $scope.getTransferList();
+
+        }else{
+          var alertMsg = result.data.DATA;
+          alert(alertMsg);
+        }
+        IndexOverlayFactory.overlayHide();
+      });
+    }
+
     $scope.condition = {'user_id' : null, 'pay_status' : '1'};
 
     $scope.Pagination = {'totalPages' : 0, 'currentPage' : 0, 'limitRowPerPage' : 15, 'limitDisplay' : 10};

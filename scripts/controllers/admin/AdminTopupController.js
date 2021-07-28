@@ -93,7 +93,7 @@ angular.module('app').controller('AdminTopupController', function($scope, $cooki
 
     $scope.rejectTopup = function(topup_id){
 
-      $scope.alertMessage = 'ต้องการอนุมัติการแจ้งเติมเงินนี้ ใช่หรือไม่ ?';
+      $scope.alertMessage = 'ไม่ต้องการอนุมัติการแจ้งเติมเงินนี้ ใช่หรือไม่ ?';
 
       var modalInstance = $uibModal.open({
           animation : false,

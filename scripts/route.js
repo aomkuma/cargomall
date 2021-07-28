@@ -72,6 +72,30 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
+	.when("/product-info/new", {
+        templateUrl : "views/product-info/main.html",
+        controller : "ProductInfoNewController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/ProductInfoNewController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/product-info/new-design", {
+        templateUrl : "views/product-info/new-design.html",
+        controller : "ProductInfoNewDesignController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/ProductInfoNewDesignController.js" ]
+				});
+			} ]
+		}
+	})
+
 	.when("/view-orders", {
         templateUrl : "views/product-order/view-order.html",
         controller : "ProductOrderController",
@@ -187,6 +211,42 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
 				return $ocLazyLoad.load({
 					files : [ "scripts/controllers/MoneyBagController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/money-bag/statement", {
+        templateUrl : "views/money-bag/statement.html",
+        controller : "MemberStatementController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/MemberStatementController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/money-bag/payment-history", {
+        templateUrl : "views/money-bag/payment-history.html",
+        controller : "MemberPaymentHistoryController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/MemberPaymentHistoryController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/problems", {
+        templateUrl : "views/other/problems.html",
+        controller : "ProblemsController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/ProblemsController.js" ]
 				});
 			} ]
 		}
@@ -528,17 +588,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 		}
 	})
 
-	// .when("/admin/tracking-none-owner/create", {
- //        templateUrl : "views/admin/tracking-none-owner/create.html",
- //        controller : "AdminTrackingNoneOwnerCreateController",
- //        resolve : {
-	// 		loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
-	// 			return $ocLazyLoad.load({
-	// 				files : [ "scripts/controllers/admin/AdminTrackingNoneOwnerCreateController.js" ]
-	// 			});
-	// 		} ]
-	// 	}
-	// })
+	.when("/admin/print-receipt/:pay_id", {
+        templateUrl : "views/admin/pay/receipt.html",
+        controller : "AdminPrintReceiptController",
+        title: 'Cargomall-ใบเสร็จรับเงิน',
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminPrintReceiptController.js" ]
+				});
+			} ]
+		}
+	})
 
 	.when("/admin/tracking-none-owner/detail/:id?", {
         templateUrl : "views/admin/tracking-none-owner/detail.html",
@@ -547,6 +608,18 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
 				return $ocLazyLoad.load({
 					files : [ "scripts/controllers/admin/AdminTrackingNoneOwnerDetailController.js" ]
+				});
+			} ]
+		}
+	})
+
+	.when("/admin/problems", {
+        templateUrl : "views/admin/problems/problems.html",
+        controller : "AdminProblemsController",
+        resolve : {
+			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					files : [ "scripts/controllers/admin/AdminProblemsController.js" ]
 				});
 			} ]
 		}

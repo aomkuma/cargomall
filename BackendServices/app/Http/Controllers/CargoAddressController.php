@@ -25,7 +25,7 @@ class CargoAddressController extends Controller
 
     	$params = $request->all();
         $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
-
+        
         $list = CargoAddress::where('is_active', true)->get();
 
         $CargoList = [];

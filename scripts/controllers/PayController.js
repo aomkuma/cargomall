@@ -42,10 +42,27 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
       if($scope.Pay.pay_type == 1 || $scope.Pay.pay_type == 2){
         $scope.getOrderList();
       }
+      else if($scope.Pay.pay_type == 3){
+        $scope.getTransferHistoryList();
+      }
       else if($scope.Pay.pay_type == 5){
         $scope.Pay['selectedPayList'] = [];
         $scope.getImporterList();
       }
+    }
+
+    $scope.getTransferHistoryList = function(){
+      IndexOverlayFactory.overlayShow();
+      HTTPService.clientRequest('transfer/list/by-user', null).then(function(result){
+        if(result.data.STATUS == 'OK'){
+          $scope.TransferDataList = result.data.DATA;
+
+        }else{
+          var alertMsg = result.data.DATA;
+          alert(alertMsg);
+        }
+        IndexOverlayFactory.overlayHide();
+      });
     }
 
     $scope.getOrderList = function(){

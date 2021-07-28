@@ -1,0 +1,22 @@
+	<div class="modal-header">
+		<h5 class="modal-title">Confirm ส่งไลน์</h5>
+	</div>
+	<div class="modal-body">
+		<div class="row form-group">
+			<label class="col-md-12 text-center">
+				<div  class="obj_center" bind-html-compile="alertMessage"></div>
+			</label>
+		</div>
+		<div class="row form-group">
+			<label class="col-md-12">
+				หมายเหตุเพิ่มเติม
+			</label>
+			<div class="col-md-12">
+				<textarea class="form-control" data-ng-model="Order.line_admin_remark"></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+	<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-primary" ng-click="ok()">OK</button>
+	</div>
