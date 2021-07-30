@@ -28,7 +28,9 @@ class CustomerRequestOwner extends Model
 	protected $casts = [
 		'user_id' => 'int',
 		'tracking_none_owner_id' => 'int',
-		'status' => 'int'
+		'status' => 'int',
+        'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
 	];
 
 	protected $fillable = [

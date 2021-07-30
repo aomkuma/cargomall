@@ -28,13 +28,12 @@ class Problem extends Model
 {
 	protected $table = 'problems';
 
-	// protected $casts = [
+	protected $casts = [
 	// 	'user_id' => 'int',
 	// 	'admin_id' => 'int'
-	// ];
-
-	protected $dates = [
-		'close_datetime'
+		'close_datetime' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+		'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
 	];
 
 	protected $fillable = [

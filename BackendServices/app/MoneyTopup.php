@@ -11,6 +11,11 @@ class MoneyTopup extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+    ];
     
     protected $fillable = [
         'id', 'user_id', 'from_account', 'to_account', 'topup_amount', 'topup_date', 'slip_file', 'topup_status', 'created_at', 'updated_at'

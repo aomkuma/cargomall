@@ -29,7 +29,9 @@ class PaymentHistory extends Model
 	protected $casts = [
 		'user_id' => 'int',
 		'reference_id' => 'int',
-		'payment_type' => 'int'
+		'payment_type' => 'int',
+        'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
 	];
 
 	protected $fillable = [

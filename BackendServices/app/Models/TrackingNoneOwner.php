@@ -34,7 +34,9 @@ class TrackingNoneOwner extends Model
 		// 'tracking_id' => 'int',
 		'track_status' => 'int',
 		'admin_approve_by' => 'int',
-		'created_by' => 'int'
+		'created_by' => 'int',
+        'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
 	];
 
 	protected $dates = [

@@ -83,7 +83,9 @@ class OrderTrackingNotOwner extends Model
 		'transport_cost_thai' => 'float',
 		'payment_status' => 'bool',
 		'is_tracking_none_owner' => 'bool',
-		'is_tracking_none_owners' => 'bool'
+		'is_tracking_none_owners' => 'bool',
+		'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
 	];
 
 	protected $fillable = [

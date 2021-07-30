@@ -21,6 +21,11 @@ class User extends Authenticatable implements JWTSubject
     protected $keyType = 'string';
     public $incrementing = false;
     
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+    ];
+
     protected $fillable = [
         'id', 'user_code', 'firstname', 'lastname', 'email', 'password', 'mobile_no', 'idcard', 'user_level', 'line_user_id', 'created_at', 'updated_at'
     ];
@@ -39,9 +44,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    
 
     public function addresses()
     {
