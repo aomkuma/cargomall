@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 class UserAddress extends Model
 {
     //
@@ -20,4 +22,9 @@ class UserAddress extends Model
     protected $fillable = [
         'id', 'user_id', 'address1', 'address2', 'address3', 'address4', 'address5', 'address6', 'address7', 'address_no', 'created_at', 'updated_at'
     ];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

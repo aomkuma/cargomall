@@ -2,7 +2,7 @@ angular.module('app').controller('AdminOrderDetailController', function($scope, 
 	//console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
     $templateCache.removeAll();
-
+    $scope.clearTimeout();
     // $log.log($scope.session_storage.user_data);
     if(!checkEmptyField($scope.session_storage.user_data)){
       // alert('คุณไม่มีสิทธิ์ใช้งานเมนูนี้');

@@ -1,6 +1,7 @@
 angular.module('app').controller('AdminProblemsController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, HTTPService, IndexOverlayFactory) {
 	//console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
+        $scope.clearTimeout();
     window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());

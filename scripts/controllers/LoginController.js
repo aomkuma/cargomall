@@ -1,5 +1,5 @@
 angular.module('app').controller('LoginController',function($scope, $routeParams){
-	
+	    $scope.clearTimeout();
 	$scope.user = {'Username':'','Password':''};
 
     var reDirect = 'member-dashboard';

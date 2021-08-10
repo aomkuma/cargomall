@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 class Order extends Model
 {
     //
@@ -15,8 +17,8 @@ class Order extends Model
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
-        'china_arrival_date' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
-        'china_departure_date' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        // 'china_arrival_date' => 'datetime:Y.m.d','modified' => 'datetime:Y-m-d 00:00:00',
+        // 'china_departure_date' => 'datetime:Y.m.d','modified' => 'datetime:Y-m-d 00:00:00',
     ];
     
     protected $fillable = [
@@ -52,5 +54,10 @@ class Order extends Model
     public function orderTrackings()
     {
         return $this->hasMany('App\OrderTracking','order_id','id');
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

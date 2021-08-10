@@ -9,6 +9,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 /**
  * Class Problem
  * 
@@ -54,5 +56,10 @@ class Problem extends Model
     public function admin()
     {
         return $this->hasOne('App\UserAdmin','id','admin_id');
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

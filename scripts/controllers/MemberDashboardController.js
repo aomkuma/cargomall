@@ -1,5 +1,6 @@
 angular.module('app').controller('MemberDashboardController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, $location, HTTPService, IndexOverlayFactory) {
 	//console.log('Hello !');
+      $scope.clearTimeout();
     // $scope.DEFAULT_LANGUAGE = 'TH';
     window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}

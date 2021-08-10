@@ -272,12 +272,14 @@ class MoneyBagsController extends Controller
         $Data = $params['obj']['Data'];
         $Data['user_id'] = ''.$Data['user_id'];
         // upload file
+
+        $filename = $Data['user_id'] . '_' . date('YmdHis')  . '.' . $AttachFile->getClientOriginalExtension();
         $slip_path = $AttachFile->storeAs(
-            'slip', $Data['user_id'] . '_' . date('YmdHis')  . '.' . $AttachFile->getClientOriginalExtension()
+            'public/slip', $filename
         );
         // echo $slip_path;exit;
   //       print_r($Data);exit;
-        $Data['slip_file'] = 'BackendServices/storage/app/' . $slip_path;
+        $Data['slip_file'] = 'BackendServices/storage/slip/' . $filename;
         $Data['topup_status'] = 1;
         $Data['id'] = generateID();
 
@@ -442,7 +444,7 @@ class MoneyBagsController extends Controller
 
                     try{
                         
-                        Mail::to($email_to)->send(new OrderRequestMailable($order_data));
+                        // Mail::to($email_to)->send(new OrderRequestMailable($order_data));
 
                     }catch(\Exception $e){
 
@@ -488,7 +490,7 @@ class MoneyBagsController extends Controller
                         $email_to = $order_data->customer->email;
 
                         try{
-                            Mail::to($email_to)->send(new OrderTransportCostMailable($order_data, $pay_data, $money_bag_data));
+                            // Mail::to($email_to)->send(new OrderTransportCostMailable($order_data, $pay_data, $money_bag_data));
                         }catch(\Exception $e){
 
                             Log::error("ERROR :: " . $e->getMessage());
@@ -525,7 +527,7 @@ class MoneyBagsController extends Controller
                         $email_to = $importer_data->customer->email;
 
                         try{
-                            Mail::to($email_to)->send(new ImporterCostMailable($importer_data, $pay_data, $money_bag_data));
+                            // Mail::to($email_to)->send(new ImporterCostMailable($importer_data, $pay_data, $money_bag_data));
                         }catch(\Exception $e){
 
                             Log::error("ERROR :: " . $e->getMessage());
@@ -824,7 +826,7 @@ class MoneyBagsController extends Controller
 
             try{
 
-                Mail::to($email_to)->send(new TopupNotiMailable($topup, $money_bag_data));
+                // Mail::to($email_to)->send(new TopupNotiMailable($topup, $money_bag_data));
 
             }catch(\Exception $e){
 
@@ -888,7 +890,7 @@ class MoneyBagsController extends Controller
             $email_to = $transfer->customer->email;
 
             try{
-                Mail::to($email_to)->send(new TransferNotiMailable($transfer, $money_bag_data));
+                // Mail::to($email_to)->send(new TransferNotiMailable($transfer, $money_bag_data));
            }catch(\Exception $e){
 
                 Log::error("ERROR :: " . $e->getMessage());
@@ -950,7 +952,7 @@ class MoneyBagsController extends Controller
 
             try{
                 
-                Mail::to($email_to)->send(new DepositNotiMailable($deposit, $money_bag_data));
+                // Mail::to($email_to)->send(new DepositNotiMailable($deposit, $money_bag_data));
 
             }catch(\Exception $e){
 
@@ -1513,11 +1515,12 @@ class MoneyBagsController extends Controller
         // print_r($transfer_data);exit;
         if($transfer_data){
 
+            $filename =  $id . '_' . date('YmdHis')  . '.' . $AttachFile->getClientOriginalExtension();
             $slip_path = $AttachFile->storeAs(
-                'transfer-slip', $id . '_' . date('YmdHis')  . '.' . $AttachFile->getClientOriginalExtension()
+                'public/transfer-slip', $filename
             );
 
-            $slip_path = 'BackendServices/storage/app/' . $slip_path;
+            $slip_path = 'BackendServices/storage/transfer-slip/' . $filename;
 
             $transfer_data->slip_path = $slip_path;
             $transfer_data->save();

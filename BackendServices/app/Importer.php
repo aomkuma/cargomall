@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 class Importer extends Model
 {
     //
@@ -15,10 +17,10 @@ class Importer extends Model
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
-        'china_arrival' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
-        'china_departure' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
-        'thai_arrival' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
-        'thai_departure' => 'datetime:Y-m-d H:i:s','modified' => 'datetime:Y-m-d H:i:s',
+        // 'china_arrival' => 'datetime:Y.m.d','modified' => 'datetime:Y-m-d H:i:s',
+        // 'china_departure' => 'datetime:Y.m.d','modified' => 'datetime:Y-m-d H:i:s',
+        // 'thai_arrival' => 'datetime:Y.m.d','modified' => 'datetime:Y-m-d H:i:s',
+        // 'thai_departure' => 'datetime:Y.m.d','modified' => 'datetime:Y-m-d H:i:s',
     ];
     
     protected $fillable = [
@@ -37,4 +39,8 @@ class Importer extends Model
         return $this->hasOne('App\UserAddress','id','customer_address_id');
     }
     
+     protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

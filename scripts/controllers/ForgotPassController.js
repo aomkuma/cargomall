@@ -1,6 +1,7 @@
 angular.module('app').controller('ForgotPassController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, $routeParams, HTTPService, IndexOverlayFactory) {
 	//console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
+        $scope.clearTimeout();
     window.dataLayer = window.dataLayer || [];
 	function gtag(){dataLayer.push(arguments);}
 	gtag('js', new Date());

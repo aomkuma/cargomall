@@ -1,7 +1,7 @@
 angular.module('app').controller('TrackingNoneOwnerDetailController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, $location, $routeParams, HTTPService, IndexOverlayFactory) {
   
     $templateCache.removeAll();
-
+    $scope.clearTimeout();
     $scope.id = $routeParams.id;
 
     $scope.getData = function(){

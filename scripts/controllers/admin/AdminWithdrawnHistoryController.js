@@ -2,6 +2,7 @@ angular.module('app').controller('AdminWithdrawnHistoryController', function($sc
 	//console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
     // $log.log($scope.session_storage.user_data);
+        $scope.clearTimeout();
     if(!checkEmptyField($scope.session_storage.user_data)){
       // alert('คุณไม่มีสิทธิ์ใช้งานเมนูนี้');
       window.location.replace('admin/signin');

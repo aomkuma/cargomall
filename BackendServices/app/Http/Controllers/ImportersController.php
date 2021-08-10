@@ -263,8 +263,23 @@ class ImportersController extends Controller
         $file = $request->file();
         $AttachFile = $file['obj']['AttachFile'];
 
-        Excel::import(new ImportersImport, $AttachFile);
-        
+        $excel_path = $AttachFile->storeAs(
+                    'importer_excel', 'importer__excel_'. date('YmdHis')  . '.' . $AttachFile->getClientOriginalExtension()
+                );
+
+        // echo "Begin ";
+        \Log::info("Begin call command..");
+        exec('C:\xampp\php\php C:\xampp\htdocs\cargomall\BackendServices\artisan command:read_importer_excel ' . $excel_path);
+        \Log::info("End call command..");
+        // echo "Result ";
+        // var_dump($arr);
+        // exit;
+
+        $this->data_result['STATUS'] = 'ERROR';
+        $this->data_result['DATA'] = 'ระบบกำลังทำการอ่านข้อมูลไฟล์สินค้า กรุณาตรวจสอบข้อมูลอีกครั้งในอีก 5 นาที';
+
+        \Log::info("Return Result");
+
         return $this->returnResponse(200, $this->data_result, response(), false);
 
     }

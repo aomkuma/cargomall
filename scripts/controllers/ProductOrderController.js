@@ -1,7 +1,7 @@
 angular.module('app').controller('ProductOrderController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, HTTPService, IndexOverlayFactory) {
 	//console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
-
+    $scope.clearTimeout();
     window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -32,6 +32,35 @@ angular.module('app').controller('ProductOrderController', function($scope, $coo
           IndexOverlayFactory.overlayHide();
         });
     }
+
+    $scope.checkSelectedItem = function(){
+    // alert(index);
+      var SelectedProduct = [];
+
+      for(var i = 0; i < $scope.ProductListStorage.length; i++){
+        if($scope.ProductListStorage[i].selected == true){
+          SelectedProduct.push($scope.ProductListStorage[i]);
+        }
+      }
+
+      $cookies.put('product_list_storage', JSON.stringify(SelectedProduct));
+
+      var params = {'cart_desc' : JSON.stringify(SelectedProduct)};
+      HTTPService.clientRequest('cart/update', params).then(function(result){
+
+        if(result.data.STATUS == 'OK'){
+          
+            window.location.href = 'shipping-options';
+          
+        }
+
+        IndexOverlayFactory.overlayHide();
+      });
+      
+    }
+    
+
+    //$scope.selectAll();
 
     // $scope.calcSum = function (){
     //     $scope.sumBaht = 0;

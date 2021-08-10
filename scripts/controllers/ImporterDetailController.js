@@ -1,6 +1,7 @@
 angular.module('app').controller('ImporterDetailController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, $routeParams, HTTPService, IndexOverlayFactory) {
 	//console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
+        $scope.clearTimeout();
     window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -60,18 +61,18 @@ angular.module('app').controller('ImporterDetailController', function($scope, $c
 	        	$scope.Importer = result.data.DATA;
             $scope.Customer = result.data.DATA.customer;
 
-	        	if(checkEmptyField($scope.Importer.china_arrival)){
-	        		$scope.Importer.china_arrival = makeDateTime($scope.Importer.china_arrival);
-	        	}
-	        	if(checkEmptyField($scope.Importer.china_departure)){
-	        		$scope.Importer.china_departure = makeDateTime($scope.Importer.china_departure);
-	        	}
-	        	if(checkEmptyField($scope.Importer.thai_arrival)){
-	        		$scope.Importer.thai_arrival = makeDateTime($scope.Importer.thai_arrival);
-	        	}
-	        	if(checkEmptyField($scope.Importer.thai_departure)){
-	        		$scope.Importer.thai_departure = makeDateTime($scope.Importer.thai_departure);
-	        	}
+	        	// if(checkEmptyField($scope.Importer.china_arrival)){
+	        	// 	$scope.Importer.china_arrival = makeDateTime($scope.Importer.china_arrival);
+	        	// }
+	        	// if(checkEmptyField($scope.Importer.china_departure)){
+	        	// 	$scope.Importer.china_departure = makeDateTime($scope.Importer.china_departure);
+	        	// }
+	        	// if(checkEmptyField($scope.Importer.thai_arrival)){
+	        	// 	$scope.Importer.thai_arrival = makeDateTime($scope.Importer.thai_arrival);
+	        	// }
+	        	// if(checkEmptyField($scope.Importer.thai_departure)){
+	        	// 	$scope.Importer.thai_departure = makeDateTime($scope.Importer.thai_departure);
+	        	// }
 
             $scope.Importer.customer_address_id = ''+$scope.Importer.customer_address_id;
 	        	$scope.loadTransportRateData();

@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 class MoneyTopup extends Model
 {
     //
@@ -24,5 +26,10 @@ class MoneyTopup extends Model
     public function customer()
     {
         return $this->hasOne('App\User','id','user_id');
+    }
+
+     protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

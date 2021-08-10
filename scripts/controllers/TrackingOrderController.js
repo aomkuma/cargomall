@@ -10,6 +10,8 @@ angular.module('app').controller('TrackingOrderController', function($scope, $co
   
     $templateCache.removeAll();
 
+    $scope.clearTimeout();
+        
     $scope.getOrderList = function(){
 
       IndexOverlayFactory.overlayShow();

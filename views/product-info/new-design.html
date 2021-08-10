@@ -25,6 +25,7 @@
 			</div>
 			<div class="col-md-3 col-sm-4 col-xs-12">
 				<button class="btn btn-login btn-block" data-ng-click="getProductNewDesign(link_url)" data-ng-disabled="link_url == null || link_url == ''" style="height: 40px;"><i class="fas fa-search"></i> {{'SEARCH_FROM_LINK' | translate}}</button>
+				<button class="btn btn-default btn-block" data-ng-click="getProduct(link_url)" data-ng-disabled="link_url == null || link_url == ''" style="height: 40px;"><i class="fas fa-search"></i> ค้นหาในรูปแบบดั้งเดิม</button>
 			</div>
 		</div>
 	</div>
@@ -72,7 +73,7 @@
 
 					<div data-ng-show="ProductDetail.ProductLevelList.length > 0">
 						<div class="row form-group">
-							<label class="col-md-4 col-sm-4 text-center" data-ng-repeat="price_range in ProductDetail.PriceRangeList track by $index" ng-init="range_index = $index" style="font-weight: lighter;">
+							<label class="col-md-4 col-sm-4 text-center" data-ng-repeat="price_range in ProductDetail.PriceRangeList track by $index" ng-init="range_index = $index" style="font-weight: lighter; color: red;">
 								{{ price_range.price }}
 								<br>
 								จำนวน : 
@@ -107,7 +108,7 @@
 					
 
 					<div class="row form-group">
-						<div class="col-md-6 table-responsive" data-ng-repeat="main_item in ProductColorList" data-ng-show="main_item.item_list.length > 0">
+						<div class="col-md-6 table-responsive" data-ng-repeat="main_item in ProductColorList track by $index" data-ng-show="main_item.item_list.length > 0">
 							<div class="row">
 								<div class=" col-md-3">
 									<img ng-src="{{main_item.img}}" border="0" style="max-width: 110px; border:#999 1px solid" alt="{{main_item.name}}" ng-show="main_item.img.startsWith('http')" />
@@ -127,9 +128,9 @@
 													<!-- <input type="checkbox" name="color_img" ng-model="all_selected" value="all" ng-click="selectedAll()" /> -->
 												</th>
 												<!-- <th>สี</th> -->
-												<th>ขนาด</th>
+												<th>ขนาด / รายละเอียด</th>
 												<th>จำนวน</th>
-												<th>ราคาต่อหน่วย (CNY)</th>
+												<th>ราคาต่อหน่วย (CNY) / Promotion</th>
 												<th>รวม (THB)</th>
 												<th>Remark</th>
 											</tr>
@@ -173,6 +174,8 @@
 												</td>
 												<td>
 													<input type="number" ng-model="item.product_normal_price" class="form-control input-sm" readonly="readonly" style="background-color: #FCF9CF;">
+													<input type="number" ng-model="item.product_promotion_price" class="form-control input-sm" data-ng-keyup="checkPriceLength(item, item.product_qty)">
+													
 												</td>
 												
 												<td>

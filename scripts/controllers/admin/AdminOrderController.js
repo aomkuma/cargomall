@@ -2,6 +2,7 @@ angular.module('app').controller('AdminOrderController', function($scope, $cooki
 	//console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
     // $log.log($scope.session_storage.user_data);
+        $scope.clearTimeout();
     if(!checkEmptyField($scope.session_storage.user_data)){
       // alert('คุณไม่มีสิทธิ์ใช้งานเมนูนี้');
       window.location.replace('admin/signin');

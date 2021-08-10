@@ -157,38 +157,44 @@ class ProductsController extends Controller
 			}
 			 
 			$itemInfo = $xmlObject->Result->Item;
+
+			$price_range_list = [];
+			$cnt = 0;
+
+			if($itemInfo->QuantityRanges->Range){
+				foreach ($itemInfo->QuantityRanges->Range as $key => $value) {
+					// print_r($value);
+
+					if($cnt > 0){
+						$price_range_list[$cnt - 1]['max_qty'] = (string) $value->MinQuantity;
+					}
+
+					$price = [
+								'min_qty' => (string) $value->MinQuantity,
+								'max_qty' => -1,
+								'price' => (string) $value->Price->OriginalPrice,
+							];
+
+					$price_range_list[$cnt] = $price;
+
+					$cnt++;
+				}
+			}
 			
-			// print_r($itemInfo);
+			// \Log::info(print_r($itemInfo, true));
 			// exit;
 			$ProductLevelList = [];
 			foreach ($itemInfo->Attributes->ItemAttribute as $key => $value) {
-				// $quantity = simpleXmlToArray($value)['Quantity'];
-				// $price = simpleXmlToArray($value->Price)['OriginalPrice'];
-				// $description_arr = $value->Configurators;
-				
-				// echo $description;
-				// $detail = ['quantity' => $quantity, 'price' => $price, 'description' => $description];
-				// $ProductLevelList[] = $detail;
 				$description = '';
 				if($value->PropertyName == 'specification' || strpos(strtolower($value->PropertyName), 'size') !== false){
 
 					$description = ((array) $value->Value)[0];
-
-					// $translate_description = $this->translateWord($description);
-					// if(!empty($translate_description)){
-					// 	$description = $translate_description;
-					// }
-
 					$ProductLevelList[] = ['vid' => (string) $value->Attributes()->Vid, 'description' => $description, 'quantity' => 0, 'price' => 0];
 				}
 				// print_r(($value));
 				
 			}
 
-			// print_r($ProductLevelList);
-			// exit;
-
-			// $cnt = 0;
 			for($i = 0; $i < count($ProductLevelList); $i++){
 
 				foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $key => $value) {
@@ -223,9 +229,14 @@ class ProductsController extends Controller
 			if (isset($itemInfo->Attributes->ItemAttribute)) {
 				// $cnt_color_img = 0;
 			    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
-			       	// echo $ItemAttribute->PropertyName;
+
 			       	$vid = null;
-					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'food taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
+					// if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'food taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight' || strtolower(trim($ItemAttribute->PropertyName)) == 'sort by color'){
+
+			       	// if(isset($ItemAttribute->PropertyName) && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
+
+			       	if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true' && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
+
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
@@ -256,13 +267,14 @@ class ProductsController extends Controller
 						$arr_color_check[] = $res;
 					 }
 					 
-					 else if(strtolower($ItemAttribute->PropertyName) == 'size'){
+					 else /*if(strtolower($ItemAttribute->PropertyName) == 'size')*/{
 					 	$arr_size[] = (string)$ItemAttribute->Value;
 					 }
 			    }
 			}
 			
 			$price_list_by_color = array();
+			$price_range_list = [];
 			// print_r($itemInfo->ConfiguredItems);
 			// exit;
 			if(!empty($arr_color_check)){
@@ -273,15 +285,18 @@ class ProductsController extends Controller
 
 						$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Vid;
 						if($value['vid'] == $price_vid){
-							// echo  . "<br>";
-
-							// $res = [];
-							// $res['name'] = $value['name'];
-							// $res['price'] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
-							// $res['vid'] = $vid;
-							// $price_list_by_color[] = $res;
 
 							$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+							$price_range_list[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+						}else{
+
+							$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Id;
+							if($value['vid'] == $price_vid){
+								
+								$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+								$price_range_list[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+							}
+
 						}
 					}
 
@@ -289,14 +304,11 @@ class ProductsController extends Controller
 
 			}
 			
-			// echo '<pre>';
-			// echo '<br><br>';
-			// $ProductLevelList = [];
 			$product_color_choose = '';
 			if(empty($arr_color_img) && !empty($arr_color)){
 				$product_color_choose = $arr_color[0];
 			}
-			$price_range_list = [];
+			
 			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
 									,'product_image'=>(string)$itemInfo->MainPictureUrl
@@ -364,17 +376,83 @@ class ProductsController extends Controller
 			}
 			 
 			$itemInfo = $xmlObject->Result->Item;
-			
+			// \Log::info(print_r($itemInfo, true));
 			// print_r($itemInfo);exit;
+			$ProductLevelList = [];
+			$price_range_list = [];
 			$itemAttributes = array();
 			$arr_color_img = array();
 			$arr_color = array();
 			$arr_color_check = array();
 			$arr_size = array();
+
+			$price_range_list = [];
+			$cnt = 0;
+
+			if($itemInfo->QuantityRanges->Range){
+				foreach ($itemInfo->QuantityRanges->Range as $key => $value) {
+					// print_r($value);
+
+					if($cnt > 0){
+						$price_range_list[$cnt - 1]['max_qty'] = (string) $value->MinQuantity;
+					}
+
+					$price = [
+								'min_qty' => (string) $value->MinQuantity,
+								'max_qty' => -1,
+								'price' => (string) $value->Price->OriginalPrice,
+							];
+
+					$price_range_list[$cnt] = $price;
+
+					$cnt++;
+				}
+			}
+
+			$ProductLevelList = [];
+			foreach ($itemInfo->Attributes->ItemAttribute as $key => $value) {
+				$description = '';
+				if($value->PropertyName == 'specification' || strpos(strtolower($value->PropertyName), 'size') !== false){
+
+					$description = ((array) $value->Value)[0];
+					$ProductLevelList[] = ['vid' => (string) $value->Attributes()->Vid, 'description' => $description, 'quantity' => 0, 'price' => 0];
+				}
+				// print_r(($value));
+				
+			}
+
+			for($i = 0; $i < count($ProductLevelList); $i++){
+
+				foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $key => $value) {
+					$quantity = simpleXmlToArray($value)['Quantity'];
+					$price = simpleXmlToArray($value->Price)['OriginalPrice'];
+					$description_arr = $value->Configurators;
+					
+					$vid = '';
+					// $detail_arr = [];
+					foreach ($description_arr->ValuedConfigurator as $desc_key => $desc_value) {
+						$vid = (string) $desc_value['Vid'];
+					}
+
+					if($vid == $ProductLevelList[$i]['vid'] && $price > $ProductLevelList[$i]['price']){
+						// echo $description;
+						$ProductLevelList[$i]['price_vid'] = $vid;
+						$ProductLevelList[$i]['quantity'] = $quantity; 
+						$ProductLevelList[$i]['price'] = $price;
+						// $cnt++;
+					}
+				}
+
+			}
+
 			if (isset($itemInfo->Attributes->ItemAttribute)) {
 			    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 			       
-					if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
+					//if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight' || strtolower(trim($ItemAttribute->PropertyName)) == 'sort by color'){
+
+			    	// if(isset($ItemAttribute->PropertyName) && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
+
+			    	if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true' && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
@@ -396,15 +474,13 @@ class ProductsController extends Controller
 						$arr_color_check[] = $res;
 					 }
 					 
-					 else if(strtolower($ItemAttribute->PropertyName) == 'size'){
+					 else /*if(strtolower($ItemAttribute->PropertyName) == 'size')*/{
 					 	$arr_size[] = (string)$ItemAttribute->Value;
 					 }
 			    }
 			}
 			
 			$price_list_by_color = array();
-			// print_r($itemInfo->ConfiguredItems);
-			// exit;
 			if(!empty($arr_color_check)){
 
 				foreach ($arr_color_check as $key => $value) {
@@ -413,15 +489,18 @@ class ProductsController extends Controller
 
 						$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Vid;
 						if(isset($value['vid']) && $value['vid'] == $price_vid){
-							// echo  . "<br>";
-
-							// $res = [];
-							// $res['name'] = $value['name'];
-							// $res['price'] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
-							// $res['vid'] = $vid;
-							// $price_list_by_color[] = $res;
-
+							
 							$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+							$price_range_list[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+						}else{
+
+							$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Id;
+							if(isset($value['vid']) && $value['vid'] == $price_vid){
+
+								$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+								$price_range_list[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+							}
+
 						}
 					}
 
@@ -429,12 +508,6 @@ class ProductsController extends Controller
 
 			}
 
-			// print_r($price_list_by_color);
-			// exit;
-			// echo '<pre>';
-			// echo '<br><br>';
-			$ProductLevelList = [];
-			$price_range_list = [];
 			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
 									,'product_image'=>(string)$itemInfo->MainPictureUrl
@@ -495,7 +568,9 @@ class ProductsController extends Controller
 		}
 		 
 		$itemInfo = $xmlObject->Result->Item;
-		// print_r($itemInfo);exit;
+		// print_r($itemInfo);
+		// \Log::info(print_r($itemInfo, true));
+		//exit;
 		$price_range_list = [];
 		$cnt = 0;
 
@@ -519,21 +594,15 @@ class ProductsController extends Controller
 			}
 		}
 
-		// print_r($price_range_list);
-
-		// exit;
-
 		$ProductLevelList = [];
 		foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $key => $value) {
 			$quantity = simpleXmlToArray($value)['Quantity'];
 			$price = simpleXmlToArray($value->Price)['OriginalPrice'];
 			$description_arr = $value->Configurators;
-			// print_r($description_arr);
-			// $description = implode(' ', (array)$description_arr->Vid);
 			$description = '';
 			$detail_arr = [];
 			foreach ($description_arr->ValuedConfigurator as $desc_key => $desc_value) {
-				$detail_arr[]= $desc_value['Vid'];
+				$detail_arr[0] = $desc_value['Vid'];
 			}
 
 			$description = implode(' ', $detail_arr);
@@ -542,19 +611,19 @@ class ProductsController extends Controller
 				$description = $translate_description;
 			}
 
-			// echo $description;
 			$detail = ['quantity' => $quantity, 'price' => $price, 'description' => $description];
-			$ProductLevelList[] = $detail;
-			// print_r(($value));
-			// print_r(simpleXmlToArray($value->Price));
-			// print_r($value->Price->OriginalPrice[0]);
-			// print_r(simpleXmlToArray($value));
+				
+			// $arr = array(0 => array(id=>1,name=>"cat 1"),
+			//              1 => array(id=>2,name=>"cat 2"),
+			//              2 => array(id=>3,name=>"cat 1"));
+			$data_exists = $this->searchArrayKeyValue($ProductLevelList, 'description', $description);
+			// \Log::info($data_exists);
+			if(empty($data_exists)){
+				$ProductLevelList[] = $detail;
+			}
+
 		}
-		// $collection = collect($ProductLevelList);
-		// asort($ProductLevelList);
-		// $ProductLevelList = collect($collection)->sortBy('price')->reverse()->toArray();
-		// print_r($itemInfo->ConfiguredItems->OtapiConfiguredItem);
-		// exit;
+
 		$itemAttributes = array();
 		$arr_color_img = array();
 		$arr_color = array();
@@ -562,7 +631,9 @@ class ProductsController extends Controller
 		if (isset($itemInfo->Attributes->ItemAttribute)) {
 		    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 		       
-				if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'model' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
+				// if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'model' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
+		    	//if(isset($ItemAttribute->PropertyName) && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
+		    	if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true'&& strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
 				 	$color_val = (string)$ItemAttribute->Value;
 				 	if(isset($ItemAttribute->ImageUrl)){
 				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
@@ -573,7 +644,7 @@ class ProductsController extends Controller
 					$arr_color[] = $color_val;
 				 }
 				 
-				 else if(strtolower($ItemAttribute->PropertyName) == 'size'){
+				 else /*if(strtolower($ItemAttribute->PropertyName) == 'size')*/{
 				 	$arr_size[] = (string)$ItemAttribute->Value;
 				 }
 		    }
@@ -583,9 +654,6 @@ class ProductsController extends Controller
 		foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
 			$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
 		}
-		
-		// echo '<pre>';
-		// echo '<br><br>';
 		
 		$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 								,'product_original_name'=>(string)$itemInfo->Title
@@ -609,4 +677,23 @@ class ProductsController extends Controller
 
 		return $product_result;
     }
+
+    private function searchArrayKeyValue($array, $key, $value)
+	{
+	    $results = array();
+
+	    if (is_array($array)) {
+	        if (isset($array[$key]) && $array[$key] == $value) {
+	            $results[] = $array;
+	        }
+
+	        foreach ($array as $subarray) {
+	            $results = array_merge($results, $this->searchArrayKeyValue($subarray, $key, $value));
+	        }
+	    }
+
+	    return $results;
+	}
+
+	
 }

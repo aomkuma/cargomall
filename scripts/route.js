@@ -73,7 +73,7 @@ angular.module('app').config(function($routeProvider, $locationProvider) {
 	})
 
 	.when("/product-info/new", {
-        templateUrl : "views/product-info/main.html",
+        templateUrl : "views/product-info/new.html",
         controller : "ProductInfoNewController",
         resolve : {
 			loadMyCtrl : [ '$ocLazyLoad', function($ocLazyLoad) {

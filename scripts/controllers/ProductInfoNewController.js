@@ -211,8 +211,8 @@ angular.module('app').controller('ProductInfoNewController', function($scope, $c
       HTTPService.clientRequest('cart/update', params).then(function(result){
 
         if(result.data.STATUS == 'OK'){
-          // window.location.reload();
-          window.location.href = 'view-orders';
+          window.location.reload();
+          // window.location.href = 'view-orders';
         }
         
         IndexOverlayFactory.overlayHide();

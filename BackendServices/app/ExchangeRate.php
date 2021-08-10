@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
+
 class ExchangeRate extends Model
 {
     //
@@ -20,4 +23,9 @@ class ExchangeRate extends Model
     protected $fillable = [
         'id', 'exchange_rate', 'created_at', 'updated_at'
     ];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

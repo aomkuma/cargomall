@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
 
 class MoneyUse extends Model
 {
@@ -40,5 +41,10 @@ class MoneyUse extends Model
     public function orderTracking()
     {
         return $this->hasOne('App\OrderTracking','tracking_no','to_ref_id_2');
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

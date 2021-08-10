@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 class RefundHistory extends Model
 {
     //
@@ -20,4 +22,9 @@ class RefundHistory extends Model
     protected $fillable = [
         'id', 'user_id', 'refund_amount', 'refund_by', 'remark', 'created_at', 'updated_at'
     ];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

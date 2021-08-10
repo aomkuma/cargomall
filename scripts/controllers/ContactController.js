@@ -1,4 +1,5 @@
 angular.module('app').controller('ContactController', function($scope, $compile, $cookies, $filter, $state, HTTPService, IndexOverlayFactory) {
+        $scope.clearTimeout();
     IndexOverlayFactory.overlayShow();
     console.log('Hello ! Contact page');
 	$scope.$parent.menu_selected = 'contact';

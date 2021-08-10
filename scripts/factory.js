@@ -21,10 +21,19 @@ function returnErrorResponse(errResponse){
         if(errResponse.status == 401){
             alert( 'ไม่มีสิทธิ์เข้าใช้งานในหน้านี้' );
             window.location.replace("#/");
+        }else if(errResponse.status == 500){
+            
+            alert('ระบบเกิดข้อขัดข้อง กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง');//alert(errResponse.data.message);
+            // return false;
+            
+        }else if(errResponse.status == 524){
+            
+            alert('ระบบเกิดข้อขัดข้อง กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง');
+            // return false;
+            
         }else{
             alert( errorDesc );
         }
-        
     }
 
     console.error('Error while fetching specific Item', errResponse);

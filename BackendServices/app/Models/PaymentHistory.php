@@ -9,6 +9,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 /**
  * Class PaymentHistory
  * 
@@ -49,6 +51,11 @@ class PaymentHistory extends Model
     public function moneyTopup()
     {
         return $this->hasOne('App\MoneyTopup','id','reference_id');
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
     
 }

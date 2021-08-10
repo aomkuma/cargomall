@@ -19,10 +19,10 @@
 		</div>
 		<div class="row form-group">
 			<div class="col-md-9 col-sm-8 col-xs-12">
-				<input type="text" class="form-control" data-ng-model="link_url" focus-me="focusLinkURLInput"  placeholder="ค้นหาสินค้าจาก taobao, tmall, 1688 .." style="height: 40px;" data-ng-enter="getProduct(link_url)">
+				<input type="text" class="form-control" data-ng-model="link_url" focus-me="focusLinkURLInput"  placeholder="ค้นหาสินค้าจาก taobao, tmall, 1688 .." style="height: 40px;" data-ng-enter="getProductNewDesign(link_url)">
 			</div>
 			<div class="col-md-3 col-sm-4 col-xs-12">
-				<button class="btn btn-login btn-block" data-ng-click="getProduct(link_url)" data-ng-disabled="link_url == null || link_url == ''" style="height: 40px;"><i class="fas fa-search"></i> {{'SEARCH_FROM_LINK' | translate}}</button>
+				<button class="btn btn-login btn-block" data-ng-click="getProductNewDesign(link_url)" data-ng-disabled="link_url == null || link_url == ''" style="height: 40px;"><i class="fas fa-search"></i> {{'SEARCH_FROM_LINK' | translate}}</button>
 			</div>
 		</div>
 	</div>
@@ -41,6 +41,7 @@
 				<!-- <caption class="table-caption-head">รายการสินค้าทั้งหมดในตะกร้า</caption> -->
 				<tr class="default">
 					<th style="text-align: center;">ลำดับ</th>
+					<th style="text-align: center;">เลือกซื้อ</th>
 					<th style="text-align: center; width: 8%;">รูป</th>
 					<th style="text-align: center;">ชื่อสินค้า</th>
 					<th style="text-align: center; width: 16%;">สี  / สำรอง</th>
@@ -52,6 +53,7 @@
 				</tr>
 				<tr data-ng-repeat="product in ProductListStorage track by $index" style="font-size: 0.9em;">
 					<td>{{$index + 1}}</td>
+					<td><input type="checkbox" ng-model="product.selected"  ng-true-value="true" ng-false-value="false"  /></td>
 					<td><img data-ng-src="{{product.product_image}}" style="max-width: 100%;" /></td>
 					<td>
 						<a href="{{product.product_url}}" target="_blank">{{ (product.product_en_name == null || product.product_en_name == undefined)? product.product_original_name : product.product_en_name }}</a>
@@ -126,7 +128,7 @@
 				
 				<tfoot>
 					<tr>
-						<td colspan="7" align="right"><b style="font-size: 1.1em;">รวม</b></td>
+						<td colspan="8" align="right"><b style="font-size: 1.1em;">รวม</b></td>
 						<td align="right"><b style="font-size: 1.1em;">{{sumBaht | number:2}}</b></td>
 						<td>&nbsp;</td>
 					</tr>
@@ -138,8 +140,8 @@
 <div class="row form-group">
 	<div class="col-lg-12 text-center">
 		<!-- <button class="btn btn-default" data-ng-click="cancelOrder()">ยกเลิก</button> -->
-		<a href="product-info" class="btn btn-info">เลือกสินค้าเพิ่มเติม</a>
-		<a href="shipping-options" class="btn btn-primary" >ถัดไป</a>
+		<a href="product-info/new-design" class="btn btn-info">เลือกสินค้าเพิ่มเติม</a>
+		<button data-ng-click="checkSelectedItem()" class="btn btn-primary" >ถัดไป</button>
 		<br>
 		<br>
 	</div>

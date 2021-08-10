@@ -9,6 +9,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 /**
  * Class TrackingNoneOwner
  * 
@@ -72,6 +74,11 @@ class TrackingNoneOwner extends Model
     public function orderTrackingNotOwner()
     {
         return $this->hasOne('App\Models\OrderTrackingNotOwner','id','tracking_id');
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
     
 }

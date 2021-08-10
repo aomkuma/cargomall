@@ -1,7 +1,7 @@
 angular.module('app').controller('SearchController', function($scope, $compile, $cookies, $filter, $state, $routeParams, HTTPService, IndexOverlayFactory) {
     IndexOverlayFactory.overlayShow();
     console.log('Hello ! Palace page');
-	
+	    $scope.clearTimeout();
     $scope.$parent.menu_selected = 'Search';
     $scope.$parent.menu_selected_th = 'ค้นหา';
 

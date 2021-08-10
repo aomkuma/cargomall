@@ -1,7 +1,7 @@
 angular.module('app').controller('PageController', function($scope, $compile, $cookies, $filter, $state, $routeParams, HTTPService, IndexOverlayFactory) {
     IndexOverlayFactory.overlayShow();
     console.log('Hello ! About page');
-	
+	    $scope.clearTimeout();
     console.log($scope.DEFAULT_LANGUAGE);
     $scope.ID = $routeParams.id;
     $scope.$parent.menu_selected = $scope.ID;

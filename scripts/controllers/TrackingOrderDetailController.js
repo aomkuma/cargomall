@@ -11,6 +11,8 @@ angular.module('app').controller('TrackingOrderDetailController', function($scop
       return;
     }
 
+    $scope.clearTimeout();
+
     $scope.calcSum = function (){
         $scope.sumBaht = 0;
         angular.forEach($scope.ProductList, function(value, key) {

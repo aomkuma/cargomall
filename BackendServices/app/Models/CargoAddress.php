@@ -9,6 +9,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 /**
  * Class CargoAddress
  * 
@@ -36,4 +38,9 @@ class CargoAddress extends Model
 		'address',
 		'is_active'
 	];
+
+	protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

@@ -195,6 +195,14 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
    }
 
 
+  $scope.clearTimeout = function(){
+    var id = window.setTimeout(function() {}, 0);
+
+    while (id--) {
+        window.clearTimeout(id); // will do nothing if no timeout with id is present
+    }
+  }
+
   $scope.getThaiDateFromString = function(date){
       // $log.log(date);
       if(checkEmptyField(date)){
@@ -443,7 +451,12 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
             $scope.TotalProductPiece++;//parseInt($scope.ProductListStorage[i].product_qty);
           }
 
-          $scope.calcSum();
+          setTimeout(function(){
+            $scope.selectAll();
+            $scope.calcSum();
+            $scope.$apply();
+          },500);
+          
         }
 
         // sessionStorage.setItem('product_info' , JSON.stringify(result.data.DATA));
@@ -457,20 +470,55 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
   }
 
   $scope.calcSum = function (){
-        $scope.sumBaht = 0;
-        $scope.sumQty = 0;
-        angular.forEach($scope.product_list_storage, function(value, key) {
-            $scope.sumQty += value.product_qty;
-            // $log.log(value.product_size_choose);
-            if(parseFloat(value.product_promotion_price) > 0){
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
-            }else{
-                $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
-            }
-        });
-        $scope.sumBaht = parseFloat($scope.sumBaht.toFixed(2));
-        // $log.log($scope.MoneyBalance, $scope.sumBaht);
-    };
+    console.log('Calc Sum Price');
+    $scope.sumBaht = 0;
+    $scope.sumQty = 0;
+    angular.forEach($scope.ProductListStorage, function(value, key) {
+        $scope.sumQty += value.product_qty;
+        // $log.log(value.product_size_choose);
+        if(parseFloat(value.product_promotion_price) > 0){
+            $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_promotion_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
+        }else{
+            $scope.sumBaht = (parseFloat($scope.sumBaht) + ((parseFloat(value.product_normal_price) * parseFloat($scope.exchange_rate)) * parseFloat(value.product_qty)));
+        }
+    });
+    $scope.sumBaht = parseFloat($scope.sumBaht.toFixed(2));
+    
+    $log.log($scope.MoneyBalance, $scope.sumBaht);
+  };
+
+  $scope.selectAll = function(){
+    for(var i = 0; i < $scope.ProductListStorage.length; i++){
+      $scope.ProductListStorage[i]['selected'] = true;
+    }
+  }
+
+  $scope.checkSelectedItem = function(){
+    // alert(index);
+    console.log('checkSelectedItem');
+      var SelectedProduct = [];
+
+      for(var i = 0; i < $scope.ProductListStorage.length; i++){
+        if($scope.ProductListStorage[i].selected == true){
+          SelectedProduct.push($scope.ProductListStorage[i]);
+        }
+      }
+
+      $cookies.put('product_list_storage', JSON.stringify(SelectedProduct));
+
+      var params = {'cart_desc' : JSON.stringify(SelectedProduct)};
+      HTTPService.clientRequest('cart/update', params).then(function(result){
+
+        if(result.data.STATUS == 'OK'){
+          
+            window.location.href = 'shipping-options';
+          
+        }
+
+        IndexOverlayFactory.overlayHide();
+      });
+      
+    }
 
   $scope.getProduct = function(link_url){
 

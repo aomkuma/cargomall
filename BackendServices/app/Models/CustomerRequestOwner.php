@@ -1,3 +1,4 @@
+
 <?php
 
 /**
@@ -8,6 +9,8 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+
+use DateTimeInterface;
 
 /**
  * Class CustomerRequestOwner
@@ -42,5 +45,10 @@ class CustomerRequestOwner extends Model
 	public function customer()
     {
         return $this->hasOne('App\User','id','user_id');
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

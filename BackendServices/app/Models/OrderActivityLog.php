@@ -9,6 +9,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+use DateTimeInterface;
+
 /**
  * Class OrderActivityLog
  * 
@@ -39,4 +41,9 @@ class OrderActivityLog extends Model
 		'admin_id',
 		'admin_name'
 	];
+
+	protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

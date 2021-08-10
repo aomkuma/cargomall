@@ -1,5 +1,5 @@
 angular.module('app').controller('AdminTransportRateDetailController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $routeParams, $templateCache, $localStorage, $log, $location, HTTPService, IndexOverlayFactory) {
-	
+	    $scope.clearTimeout();
 	if(!checkEmptyField($scope.session_storage.user_data)){
       // alert('คุณไม่มีสิทธิ์ใช้งานเมนูนี้');
       window.location.replace('admin/signin');

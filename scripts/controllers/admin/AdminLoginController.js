@@ -1,5 +1,6 @@
 angular.module('app').controller('AdminLoginController',function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, $location, HTTPService, IndexOverlayFactory){
 	
+      $scope.clearTimeout();
 	$scope.Login = {'email':'','password':''};
 
     $scope.checkAdminLogin = function(loginObj){

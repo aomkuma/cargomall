@@ -1,7 +1,7 @@
 angular.module('app').controller('TrackingNoneOwnerController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, $location, HTTPService, IndexOverlayFactory) {
 	
 	
-
+    $scope.clearTimeout();
     $templateCache.removeAll();
 
     $scope.getList = function(){

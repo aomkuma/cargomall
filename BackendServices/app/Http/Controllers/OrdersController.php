@@ -885,15 +885,19 @@ class OrdersController extends Controller
         $file = Request::file();
         $AttachFile = $file['obj']['AttachFile'];
 
-        // $landing_path = $AttachFile->storeAs(
-        //             'order', 'order__'. date('YmdHis')  . '.' . $AttachFile->getClientOriginalExtension()
-        //         );
+        $excel_path = $AttachFile->storeAs(
+                    'order_excel', 'order__excel_'. date('YmdHis')  . '.' . $AttachFile->getClientOriginalExtension()
+                );
 
         // echo "Begin ";
-        Excel::import(new OrdersImport, $AttachFile);
+        exec('C:\xampp\php\php C:\xampp\htdocs\cargomall\BackendServices\artisan command:read_order_excel ' . $excel_path);
+
         // echo "Result ";
         // var_dump($arr);
         // exit;
+
+        $this->data_result['STATUS'] = 'ERROR';
+        $this->data_result['DATA'] = 'ระบบกำลังทำการอ่านข้อมูลไฟล์สินค้า กรุณาตรวจสอบข้อมูลอีกครั้งในอีก 5 นาที';
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 

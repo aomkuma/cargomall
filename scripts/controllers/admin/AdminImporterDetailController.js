@@ -1,5 +1,5 @@
 angular.module('app').controller('AdminImporterDetailController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $routeParams, $templateCache, $localStorage, $log, $location, HTTPService, IndexOverlayFactory) {
-	
+	    $scope.clearTimeout();
 	if(!checkEmptyField($scope.session_storage.user_data)){
       // alert('คุณไม่มีสิทธิ์ใช้งานเมนูนี้');
       window.location.replace('admin/signin');
@@ -64,19 +64,19 @@ angular.module('app').controller('AdminImporterDetailController', function($scop
                 $scope.Importer = result.data.DATA;
                 $scope.Customer = result.data.DATA.customer;
 
-                if(checkEmptyField($scope.Importer.china_arrival)){
-                  $scope.Importer.china_arrival = makeDateTime($scope.Importer.china_arrival);
-                  console.log($scope.Importer.china_arrival);
-                }
-                if(checkEmptyField($scope.Importer.china_departure)){
-                  $scope.Importer.china_departure = makeDateTime($scope.Importer.china_departure);
-                }
-                if(checkEmptyField($scope.Importer.thai_arrival)){
-                  $scope.Importer.thai_arrival = makeDateTime($scope.Importer.thai_arrival);
-                }
-                if(checkEmptyField($scope.Importer.thai_departure)){
-                  $scope.Importer.thai_departure = makeDateTime($scope.Importer.thai_departure);
-                }
+                // if(checkEmptyField($scope.Importer.china_arrival)){
+                //   $scope.Importer.china_arrival = makeDateTime($scope.Importer.china_arrival);
+                //   console.log($scope.Importer.china_arrival);
+                // }
+                // if(checkEmptyField($scope.Importer.china_departure)){
+                //   $scope.Importer.china_departure = makeDateTime($scope.Importer.china_departure);
+                // }
+                // if(checkEmptyField($scope.Importer.thai_arrival)){
+                //   $scope.Importer.thai_arrival = makeDateTime($scope.Importer.thai_arrival);
+                // }
+                // if(checkEmptyField($scope.Importer.thai_departure)){
+                //   $scope.Importer.thai_departure = makeDateTime($scope.Importer.thai_departure);
+                // }
                 $scope.loadTransportRateData();
                 
             }else{

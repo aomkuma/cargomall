@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
 
 class WithdrawnHistory extends Model
 {
@@ -20,4 +21,9 @@ class WithdrawnHistory extends Model
     protected $fillable = [
         'id', 'user_id', 'withdrawn_amount', 'withdrawn_by', 'remark', 'created_at', 'updated_at'
     ];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

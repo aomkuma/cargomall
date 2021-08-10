@@ -137,6 +137,14 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
                       {'id' : 'other' , 'value' : 'อื่นๆ'}
                     ];
 
+  $scope.clearTimeout = function(){
+    var id = window.setTimeout(function() {}, 0);
+
+    while (id--) {
+        window.clearTimeout(id); // will do nothing if no timeout with id is present
+    }
+  }
+
   $scope.getOrderStatus = function(order_status){
     for(var i = 0; i < $scope.ORDER_STATUS.length; i++){
       if(order_status == $scope.ORDER_STATUS[i].id){
