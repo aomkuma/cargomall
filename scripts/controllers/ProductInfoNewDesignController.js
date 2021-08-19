@@ -1,5 +1,5 @@
 angular.module('app').controller('ProductInfoNewDesignController', function($scope, $cookies, $filter, $state, $sce, $uibModal, $templateCache, $localStorage, $log, HTTPService, IndexOverlayFactory) {
-	//console.log('Hello !');
+  //console.log('Hello !');
     // $scope.DEFAULT_LANGUAGE = 'TH';
     $scope.clearTimeout();
     window.dataLayer = window.dataLayer || [];
@@ -61,12 +61,15 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
               var data = angular.copy($scope.ProductDetail);
               $scope.ListProductTable = [];
               $scope.ListProductTable.push(data);
+              $scope.ListProductTable[0]['product_color_img'] = LoopColor[i];
               $scope.ListProductTable[0]['product_color_img_choose'] = null;
               $scope.ListProductTable[0]['size'] = $scope.ProductDetail.ProductLevelList[loop].description;
               $scope.ListProductTable[0]['product_size_choose'] = $scope.ProductDetail.ProductLevelList[loop].description;
               $scope.ListProductTable[0]['product_qty'] = 1;
 
-              if(data.PriceRangeList.length > 0){
+              if($scope.ProductDetail.ProductLevelList[loop].price){
+                $scope.ListProductTable[0]['product_normal_price'] = parseFloat($scope.ProductDetail.ProductLevelList[loop].price);
+              }else if(data.PriceRangeList.length > 0){
                 $scope.ListProductTable[0]['product_normal_price'] = parseFloat(data.PriceRangeList[0].price);
               }else{
 
@@ -90,12 +93,15 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
 
               var data = angular.copy($scope.ProductDetail);
               $scope.ListProductTable.push(data);
+              $scope.ListProductTable[cnt_size]['product_color_img'] = LoopColor[i];
               $scope.ListProductTable[cnt_size]['product_color_img_choose'] = null;
               $scope.ListProductTable[cnt_size]['size'] = $scope.ProductDetail.ProductLevelList[loop].description;
               $scope.ListProductTable[cnt_size]['product_size_choose'] = $scope.ProductDetail.ProductLevelList[loop].description;
               $scope.ListProductTable[cnt_size]['product_qty'] = 1;
 
-              if(data.PriceRangeList.length > 0){
+              if($scope.ProductDetail.ProductLevelList[loop].price){
+                $scope.ListProductTable[cnt_size]['product_normal_price'] = parseFloat($scope.ProductDetail.ProductLevelList[loop].price);
+              }else if(data.PriceRangeList.length > 0){
                 $scope.ListProductTable[cnt_size]['product_normal_price'] = parseFloat(data.PriceRangeList[0].price);
               }else{
 
@@ -327,12 +333,18 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
         for(var i = 0; i < ListProductTable.length; i++){
 
           if(ListProductTable[i].product_color_img_choose != null){
+
+            if(ListProductTable[i].product_color_img.startsWith('http')){
+              ListProductTable[i].product_image = ListProductTable[i].product_color_img;
+            }
+
             if(ListProductTable[i].product_color_img_choose != '' && !ListProductTable[i].product_color_img_choose.startsWith('http')){
               ListProductTable[i].product_color_choose = angular.copy(ListProductTable[i].product_color_img_choose);
               ListProductTable[i].product_color_img_choose = '';
-            }else if(ListProductTable[i].product_color_img_choose != ''&& ListProductTable[i].product_color_img_choose.startsWith('http')){
-              ListProductTable[i].product_color_choose = '';
             }
+            // else {//if(ListProductTable[i].product_color_img_choose != ''&& ListProductTable[i].product_color_img_choose.startsWith('http')){
+              // ListProductTable[i].product_color_choose = '';
+            // }
 
             $scope.ProductDetailList.push(ListProductTable[i]);
 

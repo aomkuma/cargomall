@@ -613,16 +613,25 @@ class ProductsController extends Controller
 
 			$detail = ['quantity' => $quantity, 'price' => $price, 'description' => $description];
 				
-			// $arr = array(0 => array(id=>1,name=>"cat 1"),
-			//              1 => array(id=>2,name=>"cat 2"),
-			//              2 => array(id=>3,name=>"cat 1"));
 			$data_exists = $this->searchArrayKeyValue($ProductLevelList, 'description', $description);
 			// \Log::info($data_exists);
 			if(empty($data_exists)){
 				$ProductLevelList[] = $detail;
+			}else{
+
+				for($i = 0; $i < count($ProductLevelList); $i++){
+					if($ProductLevelList[$i]['description'] == $description){
+						$ProductLevelList[$i] = $detail;
+					}
+				}
+
 			}
 
 		}
+
+		usort($ProductLevelList, function($a, $b) {
+		    return $a['description'] <=> $b['description'];
+		});
 
 		$itemAttributes = array();
 		$arr_color_img = array();
