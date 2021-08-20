@@ -642,7 +642,11 @@ class ProductsController extends Controller
 		       
 				// if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'model' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
 		    	//if(isset($ItemAttribute->PropertyName) && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
-		    	if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true'&& strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
+		    	if(isset($ItemAttribute->IsConfigurator) && 
+		    		$ItemAttribute->IsConfigurator == 'true'&& 
+		    		strpos(strtolower($ItemAttribute->PropertyName), 'size') == false &&
+		    		strpos(strtolower($ItemAttribute->PropertyName), 'height') == false
+		    		){
 				 	$color_val = (string)$ItemAttribute->Value;
 				 	if(isset($ItemAttribute->ImageUrl)){
 				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
@@ -653,7 +657,8 @@ class ProductsController extends Controller
 					$arr_color[] = $color_val;
 				 }
 				 
-				 else /*if(strtolower($ItemAttribute->PropertyName) == 'size')*/{
+				 else if(strtolower($ItemAttribute->PropertyName) == 'size' || 
+				 		strpos(strtolower($ItemAttribute->PropertyName), 'height') !== false){
 				 	$arr_size[] = (string)$ItemAttribute->Value;
 				 }
 		    }
