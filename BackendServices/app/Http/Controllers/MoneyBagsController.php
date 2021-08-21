@@ -313,6 +313,12 @@ class MoneyBagsController extends Controller
         $Data['to_ref_id'] = trim($Data['to_ref_id']);
 
         $TotalPayThb = $Data['pay_amount_thb'];
+
+        if($TotalPayThb == 0){
+            $this->data_result['STATUS'] = 'ERROR';
+            $this->data_result['DATA'] = 'ยอดเงินที่ต้องการชำระเท่ากับ 0 กรุณาลองใหม่อีกครั้ง';
+            return $this->returnResponse(200, $this->data_result, response(), false);
+        }
         
         $SelectedPayBaht = $params['obj']['SelectedPayBaht'];
         $CurrentExchangeRate = $params['obj']['CurrentExchangeRate'];
