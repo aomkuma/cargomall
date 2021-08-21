@@ -326,6 +326,7 @@ class MoneyBagsController extends Controller
             }
             // Check balance
             $money_balance = checkAccountBalance($Data['user_id']);
+            \Log::info('Member money balance before pay : ' . $money_balance);
 
             if($money_balance < $Data['pay_amount_thb']){
 
@@ -1585,6 +1586,10 @@ class MoneyBagsController extends Controller
 
             $money_bag->balance = $money_bag->balance - $pay_amount_thb;
             $money_bag->save();
+
+            \Log::info('Member user_id : ' . $user_id);
+            \Log::info('Member pay_amount_thb : ' . $pay_amount_thb);
+            \Log::info('Member money balance after pay : ' . $money_bag->balance);
 
         }
 
