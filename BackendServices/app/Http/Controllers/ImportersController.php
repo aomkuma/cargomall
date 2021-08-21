@@ -115,8 +115,8 @@ class ImportersController extends Controller
                         $query->where('tracking_no' , $condition['tracking_no']);  
                     } 
                 })
-                ->orderBy('thai_arrival', 'DESC')
-                ->orderBy('updated_at', 'DESC')
+                // ->orderBy('thai_arrival', 'DESC')
+                ->orderBy('created_at', 'DESC')
                 ->get();
 
         $this->data_result['DATA'] = $list;
