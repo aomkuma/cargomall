@@ -146,7 +146,7 @@ class UsersController extends Controller
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                             $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
-                            $query->orWhere('mobile_no', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                            $query->orWhere('mobile_no', 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         }
                     })
                     ->count();
@@ -157,7 +157,7 @@ class UsersController extends Controller
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                             $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
-                            $query->orWhere('mobile_no', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
+                            $query->orWhere('mobile_no', 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         }
                     })
                     ->orderBy('created_at', 'DESC')
