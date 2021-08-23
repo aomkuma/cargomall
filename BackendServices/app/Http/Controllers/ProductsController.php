@@ -606,7 +606,7 @@ class ProductsController extends Controller
 			}
 
 			$description = implode(' ', $detail_arr);
-			$translate_description = $this->translateWord($description);
+			$translate_description = $description;//$this->translateWord($description);
 			if(!empty($translate_description)){
 				$description = $translate_description;
 			}
