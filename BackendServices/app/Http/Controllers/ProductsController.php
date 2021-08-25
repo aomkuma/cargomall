@@ -11,6 +11,8 @@ use App\CartSession;
 use JoggApp\GoogleTranslate\GoogleTranslate;
 use JoggApp\GoogleTranslate\GoogleTranslateClient;
 
+// use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class ProductsController extends Controller
 {
 
@@ -69,10 +71,22 @@ class ProductsController extends Controller
 
 	private function translateWord($keyword){
 		// return $keyword;
+		$keyword = trim($keyword);
+		$excep_keyword = ['L', 'Y', 'Z'];
+		if(in_array(strtoupper($keyword), $excep_keyword)){
+			return $keyword;
+		}
+
 		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyCNdgYB9ssHXpWCEWXTy8xwXsTwq7r8SX4', 'default_target_translation' => 'en']);
 		$trans = new GoogleTranslate($translateClient);
-		$result = $trans->justTranslate(trim($keyword), 'en');
-		\Log::info('Translate to : ' . $result);
+		$result = $trans->justTranslate(strtoupper($keyword), 'en');
+
+		// $tr = new GoogleTranslate(); // Translates to 'en' from auto-detected language by default
+		// $tr->setSource('en'); // Translate from English
+		// $tr->setSource('zh'); // Detect language automatically
+		// $tr->setTarget('en');
+		// $result = $tr->translate($keyword);
+		\Log::info($keyword . ' : translate to : ' . $result);
 		return trim($result);
     }
 

@@ -6,7 +6,7 @@ return [
       | The ISO 639-1 code of the language in lowercase to which the text will be translated to by default.
       |----------------------------------------------------------------------------------------------------
       */
-    'default_target_translation' => 'th',
+    'default_target_translation' => 'en',
 
     /*
       |-------------------------------------------------------------------------------
