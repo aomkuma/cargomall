@@ -72,6 +72,7 @@ class ProductsController extends Controller
 		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyCNdgYB9ssHXpWCEWXTy8xwXsTwq7r8SX4', 'default_target_translation' => 'en']);
 		$trans = new GoogleTranslate($translateClient);
 		$result = $trans->justTranslate($keyword, 'en');
+		\Log::info('Translate to : ' . $result);
 		return trim($result);
     }
 
@@ -606,7 +607,7 @@ class ProductsController extends Controller
 			}
 
 			$description = implode(' ', $detail_arr);
-			$translate_description = $description;//$this->translateWord($description);
+			$translate_description = $this->translateWord($description);
 			if(!empty($translate_description)){
 				$description = $translate_description;
 			}
