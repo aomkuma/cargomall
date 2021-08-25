@@ -71,7 +71,7 @@ class ProductsController extends Controller
 		// return $keyword;
 		$translateClient = new GoogleTranslateClient(['api_key' => 'AIzaSyCNdgYB9ssHXpWCEWXTy8xwXsTwq7r8SX4', 'default_target_translation' => 'en']);
 		$trans = new GoogleTranslate($translateClient);
-		$result = $trans->justTranslate($keyword, 'en');
+		$result = $trans->justTranslate(trim($keyword), 'en');
 		\Log::info('Translate to : ' . $result);
 		return trim($result);
     }
