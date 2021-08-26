@@ -56,15 +56,26 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
 
             var desc = $scope.ProductDetail.ProductLevelList[loop].description;//.split(" ");
             // console.log('index of : ' + desc[0].indexOf(color_list['name']));
-            if(/*color_list['name'] == null || */color_list['name'] == desc/*color_list['name'].toLowerCase().indexOf(desc.toLowerCase()) >= 0*/){
+            console.log(color_list['name'] + ' = ' + desc);
+            if(/*color_list['name'] == null || */color_list['name'] == desc || $scope.ProductDetail.IsHasItems == false/*color_list['name'].toLowerCase().indexOf(desc.toLowerCase()) >= 0*/){
 
+              // if($scope.ProductDetail.IsHasItems == false){
+              //   color_list['name'] = '';
+              // }
               var data = angular.copy($scope.ProductDetail);
               $scope.ListProductTable = [];
               $scope.ListProductTable.push(data);
               $scope.ListProductTable[0]['product_color_img'] = LoopColor[i];
               $scope.ListProductTable[0]['product_color_img_choose'] = null;
-              $scope.ListProductTable[0]['size'] = $scope.ProductDetail.ProductLevelList[loop].description;
-              $scope.ListProductTable[0]['product_size_choose'] = $scope.ProductDetail.ProductLevelList[loop].description;
+              $scope.ListProductTable[0]['product_color_choose'] = color_list['name'];
+              
+              if($scope.ProductDetail.IsHasItems){
+
+                $scope.ListProductTable[0]['size'] = $scope.ProductDetail.ProductLevelList[loop].description;
+                $scope.ListProductTable[0]['product_size_choose'] = $scope.ProductDetail.ProductLevelList[loop].description;
+                
+              }
+
               $scope.ListProductTable[0]['product_qty'] = 1;
 
               if($scope.ProductDetail.ProductLevelList[loop].price){
@@ -88,6 +99,9 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
               // cnt_size++;
               // break;
               loop = $scope.ProductDetail.ProductLevelList.length;
+
+              console.log('if => if');
+              // console.log($scope.ProductColorList);
          
             }else{
 
@@ -119,6 +133,9 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
               $scope.ListProductTable[cnt_size]['product_price_thb'] = parseFloat(($scope.ListProductTable[cnt_size]['product_normal_price'] * data.exchange_rate).toFixed(2));
               cnt_size++;
 
+              console.log('if => else');
+              
+
             }
 
             loop++;
@@ -128,8 +145,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
           color_list['item_list'] = angular.copy($scope.ListProductTable);
           $scope.ProductColorList.push(color_list);
 
-          console.log('if');
-          console.log($scope.ProductColorList);
+          
           // console.log($scope.ListProductTable);
 
         }else{
@@ -168,7 +184,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
         
       }
 
-
+      console.log($scope.ProductColorList);
 
 
       // if(color_list.length > 0){

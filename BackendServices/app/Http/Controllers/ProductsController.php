@@ -323,6 +323,8 @@ class ProductsController extends Controller
 			if(empty($arr_color_img) && !empty($arr_color)){
 				$product_color_choose = $arr_color[0];
 			}
+
+			$IsHasItems = true;
 			
 			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
@@ -339,6 +341,7 @@ class ProductsController extends Controller
 									,'product_color_choose'=>$product_color_choose
 									,'product_size_choose'=>empty($arr_size)?[]:$arr_size[0]
 									,'price_list_by_color'=>$price_list_by_color
+									,'IsHasItems'=>$IsHasItems
 									,'ProductLevelList' => $ProductLevelList
 									,'PriceRangeList' => $price_range_list
 									,'exchange_rate' =>getLastChinaRate()['exchange_rate']
@@ -467,7 +470,7 @@ class ProductsController extends Controller
 
 			    	// if(isset($ItemAttribute->PropertyName) && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
 
-			    	if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true' && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
+			    	if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true' && strpos(strtolower($ItemAttribute->PropertyName), 'size') === false){
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
 					 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
@@ -523,6 +526,8 @@ class ProductsController extends Controller
 
 			}
 
+			$IsHasItems = true;
+
 			$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 									,'product_original_name'=>(string)$itemInfo->Title
 									,'product_image'=>(string)$itemInfo->MainPictureUrl
@@ -538,6 +543,7 @@ class ProductsController extends Controller
 									,'product_color_choose'=>trim(empty($arr_color)?'':$arr_color[0])
 									,'product_size_choose'=>empty($arr_size)?[]:$arr_size[0]
 									,'price_list_by_color'=>$price_list_by_color
+									,'IsHasItems'=>$IsHasItems
 									,'ProductLevelList' => $ProductLevelList
 									,'PriceRangeList' => $price_range_list
 									,'exchange_rate' =>getLastChinaRate()['exchange_rate']
@@ -609,7 +615,46 @@ class ProductsController extends Controller
 			}
 		}
 
+		$itemAttributes = array();
+		$arr_color_img = array();
+		$arr_color = array();
+		$arr_size = array();
+		if (isset($itemInfo->Attributes->ItemAttribute)) {
+		    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
+		       
+				// if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'model' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
+		    	//if(isset($ItemAttribute->PropertyName) && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
+		    	if(isset($ItemAttribute->IsConfigurator) && 
+		    		$ItemAttribute->IsConfigurator == 'true' && 
+		    		strpos(strtolower($ItemAttribute->PropertyName), 'size') === false &&
+		    		strpos(strtolower($ItemAttribute->PropertyName), 'height') === false
+		    		){
+				 	$color_val = (string)$ItemAttribute->Value;
+				 	if(isset($ItemAttribute->ImageUrl) && !$ItemAttribute->IsMain){
+				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
+				 	}
+					if(isset($ItemAttribute->ValueAlias) && trim($ItemAttribute->ValueAlias) != ''){
+						$color_val = (string)$ItemAttribute->ValueAlias;
+					}
+
+					// \Log::info(strtolower($ItemAttribute->PropertyName) . ' = ' . $color_val);
+					$arr_color[] = $color_val;
+				 }
+				 
+				 else if(strtolower($ItemAttribute->PropertyName) == 'size' || 
+				 		strpos(strtolower($ItemAttribute->PropertyName), 'height') !== false){
+				 	$arr_size[] = (string)$ItemAttribute->Value;
+				 }
+		    }
+		}
+		
+		$price_list_by_color = array();
+		foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
+			$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
+		}
+
 		$ProductLevelList = [];
+		$IsHasItems = true;
 		foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $key => $value) {
 			$quantity = simpleXmlToArray($value)['Quantity'];
 			$price = simpleXmlToArray($value->Price)['OriginalPrice'];
@@ -642,47 +687,16 @@ class ProductsController extends Controller
 
 			}
 
+			// find vid in product color name if exist it is has no items
+			if(in_array($description, $arr_color)){
+				$IsHasItems = false;
+			}
+
 		}
 
 		usort($ProductLevelList, function($a, $b) {
 		    return $a['description'] <=> $b['description'];
 		});
-
-		$itemAttributes = array();
-		$arr_color_img = array();
-		$arr_color = array();
-		$arr_size = array();
-		if (isset($itemInfo->Attributes->ItemAttribute)) {
-		    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
-		       
-				// if(strtolower(trim($ItemAttribute->PropertyName)) == 'colour' || strtolower(trim($ItemAttribute->PropertyName)) == 'color classification' || strtolower(trim($ItemAttribute->PropertyName)) == 'primary color' || strtolower(trim($ItemAttribute->PropertyName)) == 'model' || strtolower(trim($ItemAttribute->PropertyName)) == 'taste' || strtolower(trim($ItemAttribute->PropertyName)) == 'net weight'){
-		    	//if(isset($ItemAttribute->PropertyName) && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
-		    	if(isset($ItemAttribute->IsConfigurator) && 
-		    		$ItemAttribute->IsConfigurator == 'true'&& 
-		    		strpos(strtolower($ItemAttribute->PropertyName), 'size') == false &&
-		    		strpos(strtolower($ItemAttribute->PropertyName), 'height') == false
-		    		){
-				 	$color_val = (string)$ItemAttribute->Value;
-				 	if(isset($ItemAttribute->ImageUrl)){
-				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
-				 	}
-					if(isset($ItemAttribute->ValueAlias) && trim($ItemAttribute->ValueAlias) != ''){
-						$color_val = (string)$ItemAttribute->ValueAlias;
-					}
-					$arr_color[] = $color_val;
-				 }
-				 
-				 else if(strtolower($ItemAttribute->PropertyName) == 'size' || 
-				 		strpos(strtolower($ItemAttribute->PropertyName), 'height') !== false){
-				 	$arr_size[] = (string)$ItemAttribute->Value;
-				 }
-		    }
-		}
-		
-		$price_list_by_color = array();
-		foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
-			$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
-		}
 		
 		$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 								,'product_original_name'=>(string)$itemInfo->Title
@@ -699,6 +713,7 @@ class ProductsController extends Controller
 								,'product_color_choose'=>trim(empty($arr_color)?'':$arr_color[0])
 								,'product_size_choose'=>empty($arr_size)?[]:$arr_size[0]
 								,'price_list_by_color'=>$price_list_by_color
+								,'IsHasItems'=>$IsHasItems
 								,'ProductLevelList' => $ProductLevelList
 								,'PriceRangeList' => $price_range_list
 								,'exchange_rate' =>getLastChinaRate()['exchange_rate']
