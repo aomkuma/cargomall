@@ -68,7 +68,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
               $scope.ListProductTable[0]['product_color_img'] = LoopColor[i];
               $scope.ListProductTable[0]['product_color_img_choose'] = null;
               $scope.ListProductTable[0]['product_color_choose'] = color_list['name'];
-              
+
               if($scope.ProductDetail.IsHasItems){
 
                 $scope.ListProductTable[0]['size'] = $scope.ProductDetail.ProductLevelList[loop].description;
@@ -352,6 +352,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
 
             if(ListProductTable[i].product_color_img.startsWith('http')){
               ListProductTable[i].product_image = ListProductTable[i].product_color_img;
+              ListProductTable[i].product_color_choose = '';
             }
 
             if(ListProductTable[i].product_color_img_choose != '' && !ListProductTable[i].product_color_img_choose.startsWith('http')){
