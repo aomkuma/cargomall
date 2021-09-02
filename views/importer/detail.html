@@ -77,7 +77,7 @@
 				หมายเหตุเพิ่มเติม (ลูกค้า)
 			</label>
 			<div class="col-md-4 col-sm-4 col-xs-12">
-				<textarea class="form-control" data-ng-model="Importer.remark_customer"></textarea>
+				<textarea class="form-control" data-ng-model="Importer.remark_customer" data-ng-disabled="Importer.importer_status > 3"></textarea>
 			</div>
 		</div>
 		<div class="row form-group">
