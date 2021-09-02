@@ -163,4 +163,5 @@ angular.module('app').controller('ImporterDetailController', function($scope, $c
     	$scope.loadTransportRateData();
     }
     
+    $scope.Importer = {'importer_status' : 1};
 });
