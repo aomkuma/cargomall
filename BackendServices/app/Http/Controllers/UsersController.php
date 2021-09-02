@@ -52,7 +52,7 @@ class UsersController extends Controller
             $data['firstname'] = $user['firstname'];
             $data['lastname'] = $user['lastname'];
 
-            Mail::to($data['email'])->send(new ForgotPassMail($data));
+            // Mail::to($data['email'])->send(new ForgotPassMail($data));
 
         }else{
             $this->data_result['STATUS'] = 'ERROR';
