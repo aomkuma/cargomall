@@ -25,7 +25,7 @@
 				<input class="form-control" data-ng-model="Importer.tracking_no" maxlength="50">
 			</div>
 			<div class="col-md-5 col-sm-5 col-xs-12">
-				<button class="btn btn-primary" data-ng-click="saveImporter(Importer)" data-ng-disabled="(Importer.tracking_no == null || Importer.tracking_no == '') || Importer.customer_address_id == null">บันทึก</button>
+				<button class="btn btn-primary" data-ng-click="saveImporter(Importer)" data-ng-disabled="(Importer.tracking_no == null || Importer.tracking_no == '') || Importer.customer_address_id == null" data-ng-show="Importer.importer_status < 4">บันทึก</button>
 				<a href="importer" class="btn btn-default">กลับหน้ารายการ</a>
 			</div>
 		</div>
