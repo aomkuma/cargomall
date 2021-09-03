@@ -590,7 +590,7 @@ class ProductsController extends Controller
 		 
 		$itemInfo = $xmlObject->Result->Item;
 		// print_r($itemInfo);
-		\Log::info(print_r($itemInfo, true));
+		// \Log::info(print_r($itemInfo, true));
 		//exit;
 		$price_range_list = [];
 		$cnt = 0;
