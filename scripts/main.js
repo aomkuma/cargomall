@@ -155,7 +155,7 @@ angular.module('app').controller('AppController', ['$cookies','$scope', '$filter
                       {'id' : 3, 'value' : 'ยกเลิกการแจ้งหาผเจ้าของ'}
                     ];
 
-  $scope.TRANSPORT_COMPANY = [{'id' : 'nim', 'value' : 'Nim Express'},
+  $scope.TRANSPORT_COMPANY = [{'id' : 'J&T', 'value' : 'J&T'},
                       {'id' : 'flash' , 'value' : 'Flash Express'},
                       // {'id' : 'kerry' , 'value' : 'Kerry'},
                       // {'id' : 'thailandpost' , 'value' : 'ไปรษณีย์ไทย (EMS)'},
