@@ -629,7 +629,7 @@ class ProductsController extends Controller
 		    		strpos(strtolower($ItemAttribute->PropertyName), 'size') === false &&
 		    		strpos(strtolower($ItemAttribute->PropertyName), 'height') === false
 		    		){
-				 	$color_val = (string)$ItemAttribute->Value;
+				 	$color_val = $this->translateWord((string)$ItemAttribute->OriginalValue);//(string)$ItemAttribute->Value;
 				 	if(isset($ItemAttribute->ImageUrl) && !$ItemAttribute->IsMain){
 				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
 				 	}
