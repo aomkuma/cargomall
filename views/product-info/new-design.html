@@ -71,7 +71,7 @@
 						<div class="col-md-9 col-sm-9 col-xs-12">{{(ProductDetail.product_en_name == null || ProductDetail.product_en_name == undefined)? ProductDetail.product_original_name:ProductDetail.product_en_name }}</div>
 					</div>
 
-					<div data-ng-show="ProductDetail.ProductLevelList.length > 0">
+					<div data-ng-show="ProductDetail.ProductLevelList.length > 0 && !ProductDetail.product_url.startsWith('https://item.taobao.com')">
 						<div class="row form-group">
 							<label class="col-md-4 col-sm-4 text-center" data-ng-repeat="price_range in ProductDetail.PriceRangeList track by $index" ng-init="range_index = $index" style="font-weight: lighter; color: red;">
 								{{ price_range.price }}
@@ -79,6 +79,17 @@
 								จำนวน : 
 								<span data-ng-show="ProductDetail.PriceRangeList.length > (range_index + 1)">{{price_range.min_qty}} - {{price_range.max_qty}}</span>
 								<span data-ng-show="ProductDetail.PriceRangeList.length == (range_index + 1)"> >= {{price_range.min_qty}}</span>
+							</label>
+						</div>
+					</div>
+					<div data-ng-show="ProductDetail.product_url.startsWith('https://item.taobao.com')">
+						<div class="row form-group">
+							<div class="col-md-12 text-center"><h4>ราคา</h4></div>
+						</div>
+						<div class="row form-group">
+							<label class="col-md-12 col-sm-12 text-center" style="font-weight: lighter; color: red;">
+								{{ ProductDetail.PriceRangeList[0] }} - {{ProductDetail.PriceRangeList[1]}}
+								
 							</label>
 						</div>
 					</div>

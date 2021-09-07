@@ -196,7 +196,7 @@ class ProductsController extends Controller
 				}
 			}
 			
-			// \Log::info(print_r($itemInfo, true));
+			\Log::info(print_r($itemInfo, true));
 			// exit;
 			$ProductLevelList = [];
 			foreach ($itemInfo->Attributes->ItemAttribute as $key => $value) {
@@ -250,7 +250,7 @@ class ProductsController extends Controller
 
 			       	// if(isset($ItemAttribute->PropertyName) && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
 
-			       	if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true' && strpos(strtolower($ItemAttribute->PropertyName), 'size') == false){
+			       	if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true' && strpos(strtolower($ItemAttribute->PropertyName), 'size') === false){
 
 					 	$color_val = (string)$ItemAttribute->Value;
 					 	if(isset($ItemAttribute->ImageUrl)){
@@ -299,14 +299,14 @@ class ProductsController extends Controller
 					foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $OtapiConfiguredItem) {
 
 						$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Vid;
-						if($value['vid'] == $price_vid){
+						if($value['vid'] == $price_vid && !in_array((string)$OtapiConfiguredItem->Price->OriginalPrice, $price_list_by_color)){
 
 							$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
 							$price_range_list[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
 						}else{
 
 							$price_vid = (string)$OtapiConfiguredItem->Configurators->ValuedConfigurator->Attributes()->Id;
-							if($value['vid'] == $price_vid){
+							if($value['vid'] == $price_vid && !in_array((string)$OtapiConfiguredItem->Price->OriginalPrice, $price_list_by_color)){
 								
 								$price_list_by_color[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
 								$price_range_list[] = (string)$OtapiConfiguredItem->Price->OriginalPrice;
@@ -322,6 +322,14 @@ class ProductsController extends Controller
 			$product_color_choose = '';
 			if(empty($arr_color_img) && !empty($arr_color)){
 				$product_color_choose = $arr_color[0];
+			}
+
+			usort($price_range_list, function($a, $b) {
+			    return $a > $b;
+			});
+
+			if(count($price_range_list) > 2){
+				$price_range_list = [$price_range_list[0], $price_range_list[count($price_range_list) - 1]];
 			}
 
 			$IsHasItems = true;

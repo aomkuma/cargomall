@@ -79,11 +79,13 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
               $scope.ListProductTable[0]['product_qty'] = 1;
 
               if($scope.ProductDetail.ProductLevelList[loop].price){
+                console.log('in ProductLevelList[loop]');
                 $scope.ListProductTable[0]['product_normal_price'] = parseFloat($scope.ProductDetail.ProductLevelList[loop].price);
               }else if(data.PriceRangeList.length > 0){
+                console.log('in PriceRangeList');
                 $scope.ListProductTable[0]['product_normal_price'] = parseFloat(data.PriceRangeList[0].price);
               }else{
-
+                console.log('in price_list_by_color');
                 $scope.ListProductTable[0]['product_normal_price'] = parseFloat(data.price_list_by_color[i]);
 
               }  
@@ -114,11 +116,13 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
               $scope.ListProductTable[cnt_size]['product_qty'] = 1;
 
               if($scope.ProductDetail.ProductLevelList[loop].price){
+                console.log('in ProductLevelList[loop]');
                 $scope.ListProductTable[cnt_size]['product_normal_price'] = parseFloat($scope.ProductDetail.ProductLevelList[loop].price);
               }else if(data.PriceRangeList.length > 0){
+                console.log('in PriceRangeList');
                 $scope.ListProductTable[cnt_size]['product_normal_price'] = parseFloat(data.PriceRangeList[0].price);
               }else{
-
+                console.log('in price_list_by_color');
                 $scope.ListProductTable[cnt_size]['product_normal_price'] = parseFloat(data.price_list_by_color[i]);
 
               }  
