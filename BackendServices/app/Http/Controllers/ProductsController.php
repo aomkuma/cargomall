@@ -324,11 +324,14 @@ class ProductsController extends Controller
 				$product_color_choose = $arr_color[0];
 			}
 
-			usort($price_range_list, function($a, $b) {
-			    return $a > $b;
-			});
+			
 
 			if(count($price_range_list) > 2){
+
+				usort($price_range_list, function($a, $b) {
+				    return $a > $b;
+				});
+					
 				$price_range_list = [$price_range_list[0], $price_range_list[count($price_range_list) - 1]];
 			}
 
