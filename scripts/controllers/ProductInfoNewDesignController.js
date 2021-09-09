@@ -239,6 +239,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
 
         var data = angular.copy($scope.ProductDetail);
         $scope.ListProductTable.push(data);
+        $scope.ListProductTable[0]['product_color_img'] = $scope.ProductDetail.product_image;
         $scope.ListProductTable[0]['product_color_img_choose'] = null;
         $scope.ListProductTable[0]['size'] =null
         $scope.ListProductTable[0]['product_size_choose'] = null;
