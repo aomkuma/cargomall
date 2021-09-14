@@ -46,14 +46,10 @@
 		<div class="panel panel-default">
 		<div class="panel-heading" style="font-size: 1.3em; background-color: #FF6C6C; color: #FFFFFF;"><b>{{ 'SEARCH_RESULT_TXT' | translate }}</b></div>
 		  <div class="panel-body" style="font-size: 1em;">
-		  	<div class="row">
-		  		<div class="col-md-4">
-		  			<img ng-src="{{ProductDetail.product_image}}" border="0" style=" border:#999 1px solid; width: 100%;">
-		  		</div>
-		  		<div class="col-md-8">
-		  			<div class="row form-group">
-						<label class="col-md-3 col-sm-4 col-xs-12" style="text-align: left;">{{ 'LINK_URL_TXT' | translate}}</label>
-						<div class="col-md-9" style="white-space: -moz-pre-wrap !important; 
+		  	<div class="row form-group">
+						
+						<div class="col-md-12 col-sm-12 col-xs-12 text-muted" style="font-weight :bolder;">{{(ProductDetail.product_en_name == null || ProductDetail.product_en_name == undefined)? ProductDetail.product_original_name:ProductDetail.product_en_name }}</div>
+						<div class="col-md-12" style="white-space: -moz-pre-wrap !important; 
 						white-space: -pre-wrap;      
 						white-space: -o-pre-wrap;    
 						white-space: pre-wrap;       
@@ -64,12 +60,30 @@
 							<a href="{{ProductDetail.product_url}}" target="_blank">{{ProductDetail.product_url}}</a>
 						</div>
 					</div>
-					<div class="row form-group">
-						<label class="col-md-3 col-sm-4 col-xs-12" style="text-align: left;">{{ 'PRODUCT_NAME_TXT' | translate}}</label>
-						<div class="col-md-9 col-sm-9 col-xs-12">{{(ProductDetail.product_en_name == null || ProductDetail.product_en_name == undefined)? ProductDetail.product_original_name:ProductDetail.product_en_name }}</div>
+		  	<div class="row">
+		  		<div class="col-md-4">
+		  			<img ng-src="{{ProductDetail.product_image}}" border="0" style=" border:#999 1px solid; width: 100%;">
+		  		</div>
+		  		<div class="col-md-8">
+
+		  			<div class="row form-group">
+		  				<div class="row form-group">
+								<label class="col-md-4 col-sm-4 text-center" data-ng-repeat="price_range in ProductDetail.PriceRangeList track by $index" ng-init="range_index = $index" style="font-weight: lighter;">
+									{{ price_range.price }}
+									<br>
+									จำนวน : 
+									<span data-ng-show="ProductDetail.PriceRangeList.length > (range_index + 1)">{{price_range.min_qty}} - {{price_range.max_qty}}</span>
+									<span data-ng-show="ProductDetail.PriceRangeList.length == (range_index + 1)"> >= {{price_range.min_qty}}</span>
+								</label>
+							</div>
+		  			</div>
+		  			<div class="row form-group">
+						<!-- <label class="col-md-3 col-sm-4 col-xs-12" style="text-align: left;">{{ 'LINK_URL_TXT' | translate}}</label> -->
+						
 					</div>
+					
 					<div class="row form-group" ng-show="ProductDetail.product_color_img.length > 0">
-						<label class="col-md-3 form-control-static" style="text-align: left;">{{ 'COLOR_TXT' | translate}}
+						<label class="col-md-3 form-control-static text-muted" style="text-align: left;">{{ 'COLOR_TXT' | translate}}
 						</label>
 						<div class="col-md-9">
 							<label class="col-md-3" style="min-height: 100px;" ng-repeat="color_img in ProductDetail.product_color_img track by $index" >
@@ -79,34 +93,46 @@
 							</label>
 						</div>
 					</div>
-					<div class="row form-group" ng-show="ProductDetail.product_color_img.length == 0 || ProductDetail.product_color_img.length == null">
-						<label class="col-md-3 form-control-static" style="text-align: left;">{{ 'COLOR_TXT' | translate}}</label>
+					<div class="row form-group" ng-show="ProductDetail.product_color.length > 0 && (ProductDetail.product_color_img.length == 0 || ProductDetail.product_color_img.length == null)">
+
+						<label class="col-md-3 form-control-static text-muted" style="text-align: left;">{{ 'COLOR_TXT' | translate}}</label>
 						<div class="col-md-9">
-							<label class="col-md-3" ng-repeat="color in ProductDetail.product_color track by $index"" style="min-height: 100px;">
+							<div class="btn-group">
+								<label ng-repeat="color in ProductDetail.product_color track by $index" class="btn btn-default btn-checkbox" ng-model="ProductDetail.product_color_choose" uib-btn-radio="color" ng-checked="$index==0" ng-value="color" data-ng-click="checkPriceByColor($index)" >{{color}}</label>
+					    </div>
+							<!-- <label class="col-md-3" ng-repeat="color in ProductDetail.product_color track by $index"" style="min-height: 100px;">
 								<div class="input-group" style="font-size: 1em; font-weight: lighter;">
 								<input type="radio" name="color" ng-model="ProductDetail.product_color_choose" ng-checked="$index==0" ng-value="color" data-ng-click="checkPriceByColor($index)" /> {{color}}
 								</div>
-							</label>
+							</label> -->
 						</div>
 					</div>
 					<div class="row form-group" ng-show="ProductDetail.product_size.length > 0">
-						<label class="col-md-3" style="text-align: left;">{{ 'SIZE_TXT' | translate}}</label>
+						<label class="col-md-3 text-muted" style="text-align: left;">{{ 'SIZE_TXT' | translate}}</label>
 						<div class="col-md-9">
-							<label class="col-md-2" ng-repeat="size in ProductDetail.product_size track by $index"" >
+							<div class="btn-group">
+								<label ng-repeat="size in ProductDetail.product_size track by $index" class="btn btn-default btn-checkbox" ng-model="ProductDetail.product_size_choose" uib-btn-radio="size" ng-checked="$index==0" ng-value="size" data-ng-click="changePriceBySize($index)" >{{size}}</label>
+							</div>
+							<!-- <label class="col-md-2" ng-repeat="size in ProductDetail.product_size track by $index"" >
 								<div class="input-group" style="font-size: 1em; font-weight: lighter;">
 								<input type="radio" name="size" ng-model="ProductDetail.product_size_choose" ng-checked="$index==0" ng-value="size" ng-click="changePriceBySize($index)" /> {{size}}
 								</div>
-							</label>
+							</label> -->
 						</div>
 					</div>
 					<div class="row form-group">
-						<label class="col-md-3" style="text-align: left;">{{ 'AMOUNT_TXT' | translate}}</label>
-						<div class="col-md-2">
-							<input type="number" ng-value="ProductDetail.product_qty" ng-model="ProductDetail.product_qty" class="form-control input-sm" data-ng-keyup="checkPriceLength(ProductDetail.product_qty)" required="true">
+						<label class="col-md-3 text-muted" style="text-align: left;">{{ 'AMOUNT_TXT' | translate}}</label>
+						<div class="col-md-3">
+							<div class="input-group">
+							  <span class="input-group-addon" data-ng-click="changeMainAmount('decrease')" style="cursor: pointer;">-</span>
+							  <input type="number" ng-value="ProductDetail.product_qty" ng-model="ProductDetail.product_qty" class="form-control input-sm" data-ng-keyup="checkPriceLength(ProductDetail, ProductDetail.product_qty)" required="true">
+							  <span class="input-group-addon" data-ng-click="changeMainAmount('increase')" style="cursor: pointer;">+</span>
+							</div>
+							
 						</div>
 					</div>
 					<div class="row form-group">
-						<label class="col-md-3" style="text-align: left;">{{ 'PRICE_PER_UNIT_TXT' | translate}}</label>
+						<label class="col-md-3 text-muted" style="text-align: left;">{{ 'PRICE_PER_UNIT_TXT' | translate}}</label>
 						<div class="col-md-9" data-ng-show="ProductDetail.ProductLevelList.length == 0">
 							<div class="input-group">
 						      <span class="input-group-addon" style="width: 200px; text-align: left; font-size: 0.9em;">
@@ -124,15 +150,7 @@
 						</div>
 
 						<div class="col-md-9" data-ng-show="ProductDetail.ProductLevelList.length > 0">
-							<div class="row form-group">
-								<label class="col-md-4 col-sm-4 text-center" data-ng-repeat="price_range in ProductDetail.PriceRangeList track by $index" ng-init="range_index = $index" style="font-weight: lighter;">
-									{{ price_range.price }}
-									<br>
-									จำนวน : 
-									<span data-ng-show="ProductDetail.PriceRangeList.length > (range_index + 1)">{{price_range.min_qty}} - {{price_range.max_qty}}</span>
-									<span data-ng-show="ProductDetail.PriceRangeList.length == (range_index + 1)"> >= {{price_range.min_qty}}</span>
-								</label>
-							</div>
+							
 							<div class="row form-group">
 								<div class="col-md-12">
 									<div class="input-group">
@@ -176,7 +194,7 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label class="col-md-3" style="text-align: left;">{{ 'EXCHANGERATE_PRICE_TXT' | translate}}</label>
+						<label class="col-md-3 text-muted" style="text-align: left;">{{ 'EXCHANGERATE_PRICE_TXT' | translate}}</label>
 						<div class="col-md-3">
 							<span ng-class="{'text-line-through' : ProductDetail.product_promotion_price > 0 }">{{(ProductDetail.product_normal_price * exchange_rate) | number:2}} THB</span>
 							<br>
@@ -184,15 +202,15 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label class="col-md-3" style="text-align: left;">{{ 'TOTAL_TXT' | translate}}</label>
-						<div class="col-md-6">
+						<label class="col-md-3 text-muted" style="text-align: left;">{{ 'TOTAL_TXT' | translate}}</label>
+						<div class="col-md-6" style="color : #ED2224;">
 							<span ng-class="{'text-line-through' : ProductDetail.product_promotion_price > 0 }"><b>{{ProductDetail.product_normal_price * ProductDetail.product_qty | number:2}} RMB ({{(ProductDetail.product_normal_price * exchange_rate) * ProductDetail.product_qty | number:2}} THB)</b></span>
 							<br>
 							<span ng-show="ProductDetail.product_promotion_price > 0"><b>{{ProductDetail.product_promotion_price * ProductDetail.product_qty | number:2}} RMB ({{(ProductDetail.product_promotion_price * exchange_rate) * ProductDetail.product_qty | number:2}} THB)</b></span>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label class="col-md-3" style="text-align: left;">{{ 'REMARK_TXT' | translate}}</label>
+						<label class="col-md-3 text-muted" style="text-align: left;">{{ 'REMARK_TXT' | translate}}</label>
 						<div class="col-md-6">
 							<textarea class="form-control" ng-model="ProductDetail.remark"></textarea>
 						</div>

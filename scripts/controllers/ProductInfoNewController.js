@@ -266,4 +266,20 @@ angular.module('app').controller('ProductInfoNewController', function($scope, $c
         });
     }
 
+    $scope.changeAmount = function(qty, type){
+      if(type == 'decrease'){
+        return qt = qty + 1;
+      }else{
+        return qty = qty - 1;
+      }
+    }
+
+    $scope.changeMainAmount = function(type){
+      if(type == 'decrease'){
+        $scope.ProductDetail.product_qty = $scope.ProductDetail.product_qty - 1;
+      }else{
+        $scope.ProductDetail.product_qty = $scope.ProductDetail.product_qty + 1;
+      }
+    }
+
 });

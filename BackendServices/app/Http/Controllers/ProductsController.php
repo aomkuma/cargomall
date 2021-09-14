@@ -282,7 +282,7 @@ class ProductsController extends Controller
 						$arr_color_check[] = $res;
 					 }
 					 
-					 else /*if(strtolower($ItemAttribute->PropertyName) == 'size')*/{
+					 else if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true') /*if(strtolower($ItemAttribute->PropertyName) == 'size')*/{
 					 	$arr_size[] = (string)$ItemAttribute->Value;
 					 }
 			    }
@@ -506,7 +506,7 @@ class ProductsController extends Controller
 						$arr_color_check[] = $res;
 					 }
 					 
-					 else /*if(strtolower($ItemAttribute->PropertyName) == 'size')*/{
+					 else if(isset($ItemAttribute->IsConfigurator) && $ItemAttribute->IsConfigurator == 'true') /*if(strtolower($ItemAttribute->PropertyName) == 'size')*/{
 					 	$arr_size[] = (string)$ItemAttribute->Value;
 					 }
 			    }
@@ -711,6 +711,11 @@ class ProductsController extends Controller
 		usort($ProductLevelList, function($a, $b) {
 		    return $a['description'] <=> $b['description'];
 		});
+
+		$product_normal_price = floatval($itemInfo->Price->OriginalPrice);
+		if(count($price_range_list) > 0){
+			$product_normal_price = $price_range_list[0]['price'];
+		}
 		
 		$product_result = array('product_url'=>(string)$itemInfo->ExternalItemUrl
 								,'product_original_name'=>(string)$itemInfo->Title
@@ -719,7 +724,7 @@ class ProductsController extends Controller
 								,'product_color'=>$arr_color
 								,'product_size'=>$arr_size
 								,'product_qty'=>1
-								,'product_normal_price'=>floatval($itemInfo->Price->OriginalPrice)
+								,'product_normal_price'=>$product_normal_price
 								,'product_currency_displayname'=>'¥'
 								,'product_promotion_price'=>0
 								,'merchant_name'=>$itemInfo->VendorName

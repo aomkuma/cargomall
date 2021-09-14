@@ -156,6 +156,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
             var data = angular.copy($scope.ProductDetail);
             var cnt_size = 0;
             $scope.ListProductTable.push(data);
+            $scope.ListProductTable[cnt_size]['product_color_img'] = LoopColor[i];
             $scope.ListProductTable[cnt_size].product_color_img_display = $scope.ProductDetail.product_color_img[i];
             $scope.ListProductTable[cnt_size].product_color_display = $scope.ProductDetail.product_color[i];
             $scope.ListProductTable[cnt_size].product_color_img_choose = null;
@@ -204,6 +205,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
           while (loop < $scope.ProductDetail.ProductLevelList.length){
             var data = angular.copy($scope.ProductDetail);
             $scope.ListProductTable.push(data);
+            $scope.ListProductTable[0]['product_color_img'] = $scope.ProductDetail.product_image;
             $scope.ListProductTable[cnt_size]['product_color_img_choose'] = null;
             $scope.ListProductTable[cnt_size]['size'] = $scope.ProductDetail.ProductLevelList[loop].description;
             $scope.ListProductTable[cnt_size]['product_size_choose'] = $scope.ProductDetail.ProductLevelList[loop].description;
