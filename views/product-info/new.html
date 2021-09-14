@@ -68,8 +68,8 @@
 
 		  			<div class="row form-group">
 		  				<div class="row form-group">
-								<label class="col-md-4 col-sm-4 text-center" data-ng-repeat="price_range in ProductDetail.PriceRangeList track by $index" ng-init="range_index = $index" style="font-weight: lighter;">
-									{{ price_range.price }}
+								<label class="col-md-4 col-sm-4 text-center" data-ng-repeat="price_range in ProductDetail.PriceRangeList track by $index" ng-init="range_index = $index" style="font-weight: lighter; color : #ED2224;">
+									¥ {{ price_range.price }}
 									<br>
 									จำนวน : 
 									<span data-ng-show="ProductDetail.PriceRangeList.length > (range_index + 1)">{{price_range.min_qty}} - {{price_range.max_qty}}</span>
