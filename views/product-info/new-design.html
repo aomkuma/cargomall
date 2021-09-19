@@ -119,13 +119,15 @@
 					
 
 					<div class="row form-group">
-						<div class="col-md-6 table-responsive" data-ng-repeat="main_item in ProductColorList track by $index" data-ng-show="main_item.item_list.length > 0">
+						<div class="col-md-6 table-responsive" 
+						data-ng-repeat="main_item in ProductColorList track by $index" 
+						ng-init="mainIndex = $index" 
+						data-ng-show="main_item.item_list.length > 0">
 							<div class="row">
 								<div class=" col-md-3">
 									<img ng-src="{{main_item.img}}" border="0" style="max-width: 110px; border:#999 1px solid" alt="{{main_item.name}}" ng-show="main_item.img.startsWith('http')" />
 												<span ng-show="!main_item.img.startsWith('http')" >{{main_item.img}}</span>
 												<br>
-												
 								</div>
 								<div class=" col-md-9">
 									<table class="table table-bordered">
@@ -147,7 +149,10 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr data-ng-repeat="item in main_item.item_list track by $index" ng-init="firstIndex = $index" data-ng-class="{'selected-product' : item.product_color_img_choose != null}">
+											<tr data-ng-repeat="item in main_item.item_list track by $index" 
+											ng-init="firstIndex = $index" 
+											data-ng-show="item.prod_id == undefind || item.prod_id == ProductDetail.product_color[mainIndex]"
+											data-ng-class="{'selected-product' : item.product_color_img_choose != null}">
 												<!-- <td>{{firstIndex + 1}}</td> -->
 												<td data-ng-show="item.product_color_img_display != null">
 													<input type="checkbox" ng-model="item.product_color_img_choose"  ng-true-value="'{{item.product_color_img_display}}'" ng-false-value="null"  />

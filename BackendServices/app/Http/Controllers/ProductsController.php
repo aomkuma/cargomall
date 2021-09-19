@@ -675,8 +675,17 @@ class ProductsController extends Controller
 			$description_arr = $value->Configurators;
 			$description = '';
 			$detail_arr = [];
+			$prod_id = null;
+			$__cnt = 0;
 			foreach ($description_arr->ValuedConfigurator as $desc_key => $desc_value) {
-				$detail_arr[0] = $desc_value['Vid'];
+				// \Log::info($__cnt . ' :- ' . $desc_value['Vid']);
+				if($__cnt == 0){
+					$prod_id = $this->translateWord($desc_value['Vid']);
+				}else{
+					$detail_arr[0] = $desc_value['Vid'];	
+				}
+				
+				$__cnt++;
 			}
 
 			$description = implode(' ', $detail_arr);
@@ -685,21 +694,21 @@ class ProductsController extends Controller
 				$description = $translate_description;
 			}
 
-			$detail = ['quantity' => $quantity, 'price' => $price, 'description' => $description];
+			$detail = ['prod_id' => $prod_id, 'quantity' => $quantity, 'price' => $price, 'description' => $description];
 				
-			$data_exists = $this->searchArrayKeyValue($ProductLevelList, 'description', $description);
+			// $data_exists = $this->searchArrayKeyValue($ProductLevelList, 'description', $description);
 			// \Log::info($data_exists);
-			if(empty($data_exists)){
+			// if(empty($data_exists)){
 				$ProductLevelList[] = $detail;
-			}else{
+			// }else{
 
-				for($i = 0; $i < count($ProductLevelList); $i++){
-					if($ProductLevelList[$i]['description'] == $description){
-						$ProductLevelList[$i] = $detail;
-					}
-				}
+			// 	for($i = 0; $i < count($ProductLevelList); $i++){
+			// 		if($ProductLevelList[$i]['description'] == $description){
+			// 			$ProductLevelList[$i] = $detail;
+			// 		}
+			// 	}
 
-			}
+			// }
 
 			// find vid in product color name if exist it is has no items
 			if(in_array($description, $arr_color)){

@@ -12,7 +12,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
     // console.log($scope.exchange_rate);
     $scope.ProductDetail = sessionStorage.getItem('product_info');
     // $scope.ProductListStorages = angular.fromJson($localStorage.product_list_storage);
-    console.log($scope.ProductDetail);
+    
     $scope.ListProductTable = [];
     $scope.checkPriceByColor = function(index){
 
@@ -65,6 +65,10 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
               var data = angular.copy($scope.ProductDetail);
               $scope.ListProductTable = [];
               $scope.ListProductTable.push(data);
+
+              if(checkEmptyField($scope.ProductDetail.ProductLevelList[loop].prod_id)){
+                $scope.ListProductTable[0]['prod_id'] = $scope.ProductDetail.ProductLevelList[loop].prod_id;
+              }
               $scope.ListProductTable[0]['product_color_img'] = LoopColor[i];
               $scope.ListProductTable[0]['product_color_img_choose'] = null;
               $scope.ListProductTable[0]['product_color_choose'] = color_list['name'];
@@ -109,6 +113,10 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
 
               var data = angular.copy($scope.ProductDetail);
               $scope.ListProductTable.push(data);
+
+              if(checkEmptyField($scope.ProductDetail.ProductLevelList[loop].prod_id)){
+                $scope.ListProductTable[cnt_size]['prod_id'] = $scope.ProductDetail.ProductLevelList[loop].prod_id;
+              }
               $scope.ListProductTable[cnt_size]['product_color_img'] = LoopColor[i];
               $scope.ListProductTable[cnt_size]['product_color_img_choose'] = null;
               $scope.ListProductTable[cnt_size]['size'] = $scope.ProductDetail.ProductLevelList[loop].description;
@@ -156,6 +164,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
             var data = angular.copy($scope.ProductDetail);
             var cnt_size = 0;
             $scope.ListProductTable.push(data);
+            // $scope.ListProductTable[cnt_size]['prod_id'] = null;
             $scope.ListProductTable[cnt_size]['product_color_img'] = LoopColor[i];
             $scope.ListProductTable[cnt_size].product_color_img_display = $scope.ProductDetail.product_color_img[i];
             $scope.ListProductTable[cnt_size].product_color_display = $scope.ProductDetail.product_color[i];
@@ -205,7 +214,11 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
           while (loop < $scope.ProductDetail.ProductLevelList.length){
             var data = angular.copy($scope.ProductDetail);
             $scope.ListProductTable.push(data);
-            $scope.ListProductTable[0]['product_color_img'] = $scope.ProductDetail.product_image;
+
+            if(checkEmptyField($scope.ProductDetail.ProductLevelList[loop].prod_id)){
+              $scope.ListProductTable[cnt_size]['prod_id'] = $scope.ProductDetail.ProductLevelList[loop].prod_id;
+            }
+            $scope.ListProductTable[cnt_size]['product_color_img'] = $scope.ProductDetail.product_image;
             $scope.ListProductTable[cnt_size]['product_color_img_choose'] = null;
             $scope.ListProductTable[cnt_size]['size'] = $scope.ProductDetail.ProductLevelList[loop].description;
             $scope.ListProductTable[cnt_size]['product_size_choose'] = $scope.ProductDetail.ProductLevelList[loop].description;
@@ -241,6 +254,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
 
         var data = angular.copy($scope.ProductDetail);
         $scope.ListProductTable.push(data);
+        $scope.ListProductTable[0]['prod_id'] = $scope.ProductDetail.ProductLevelList[0].prod_id;
         $scope.ListProductTable[0]['product_color_img'] = $scope.ProductDetail.product_image;
         $scope.ListProductTable[0]['product_color_img_choose'] = null;
         $scope.ListProductTable[0]['size'] =null
@@ -449,5 +463,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
           IndexOverlayFactory.overlayHide();
         });
     }
+
+    console.log($scope.ProductDetail);
 
 });
