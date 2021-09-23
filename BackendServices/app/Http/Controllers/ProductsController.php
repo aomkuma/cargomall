@@ -156,7 +156,7 @@ class ProductsController extends Controller
 			$result = curl_exec($curl);
 			if ($result === FALSE) {
 				$RETURN_DATA['STATUS'] = 'ERROR';
-				$RETURN_DATA['MSG'] = 'Service error: ' . curl_error($curl);
+				$RETURN_DATA['MSG'] = 'API Service Error 1 : ' . curl_error($curl);
 				return $RETURN_DATA;
 			    // echo json_encode($RETURN_DATA);die();
 			}
@@ -166,7 +166,7 @@ class ProductsController extends Controller
 			 
 			if ((string)$xmlObject->ErrorCode !== 'Ok') {
 				$RETURN_DATA['STATUS'] = 'ERROR';
-				$RETURN_DATA['MSG'] = "Error: " . $xmlObject->ErrorDescription;
+				$RETURN_DATA['MSG'] = "API Service Error 1 : " . $xmlObject->ErrorDescription;
 				return $RETURN_DATA;
 			    // echo json_encode($RETURN_DATA);die();
 			}
@@ -587,7 +587,7 @@ class ProductsController extends Controller
 		$result = curl_exec($curl);
 		if ($result === FALSE) {
 			$RETURN_DATA['STATUS'] = 'ERROR';
-			$RETURN_DATA['MSG'] = 'Service error: ' . curl_error($curl);
+			$RETURN_DATA['MSG'] = 'API Service Error 1 : ' . curl_error($curl);
 			return $RETURN_DATA;
 		    // echo json_encode($RETURN_DATA);die();
 		}
@@ -597,7 +597,7 @@ class ProductsController extends Controller
 		 
 		if ((string)$xmlObject->ErrorCode !== 'Ok') {
 			$RETURN_DATA['STATUS'] = 'ERROR';
-			$RETURN_DATA['MSG'] = "Error: " . $xmlObject->ErrorDescription;
+			$RETURN_DATA['MSG'] = "API Service Error 1 : " . $xmlObject->ErrorDescription;
 			return $RETURN_DATA;
 		    // echo json_encode($RETURN_DATA);die();
 		}
@@ -632,6 +632,7 @@ class ProductsController extends Controller
 		$itemAttributes = array();
 		$arr_color_img = array();
 		$arr_color = array();
+		$arr_original_color = array();
 		$arr_size = array();
 		if (isset($itemInfo->Attributes->ItemAttribute)) {
 		    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
@@ -643,7 +644,8 @@ class ProductsController extends Controller
 		    		strpos(strtolower($ItemAttribute->PropertyName), 'size') === false &&
 		    		strpos(strtolower($ItemAttribute->PropertyName), 'height') === false
 		    		){
-				 	$color_val = $this->translateWord((string)$ItemAttribute->OriginalValue);//(string)$ItemAttribute->Value;
+		    		$arr_original_color[] = (string)$ItemAttribute->OriginalValue;
+				 	$color_val = trim($this->translateWord((string)$ItemAttribute->OriginalValue));//(string)$ItemAttribute->Value;
 				 	if(isset($ItemAttribute->ImageUrl) && !$ItemAttribute->IsMain){
 				 		$arr_color_img[] = (string)$ItemAttribute->ImageUrl; 
 				 	}
@@ -669,57 +671,75 @@ class ProductsController extends Controller
 
 		$ProductLevelList = [];
 		$IsHasItems = true;
-		foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $key => $value) {
-			$quantity = simpleXmlToArray($value)['Quantity'];
-			$price = simpleXmlToArray($value->Price)['OriginalPrice'];
-			$description_arr = $value->Configurators;
-			$description = '';
-			$detail_arr = [];
-			$prod_id = null;
-			$__cnt = 0;
-			foreach ($description_arr->ValuedConfigurator as $desc_key => $desc_value) {
-				// \Log::info($__cnt . ' :- ' . $desc_value['Vid']);
-				if($__cnt == 0){
-					$prod_id = $this->translateWord($desc_value['Vid']);
-				}else{
-					$detail_arr[0] = $desc_value['Vid'];	
+
+		foreach($arr_original_color as $k => $v){
+
+			foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $key => $value) {
+
+
+
+				if($value->Configurators->ValuedConfigurator[0]['Vid'] == $v){
+
+					\Log::info('V = ' . $v);
+					\Log::info('Vid = ' . $value->Configurators->ValuedConfigurator[0]['Vid']);
+
+					$quantity = simpleXmlToArray($value)['Quantity'];
+					$price = simpleXmlToArray($value->Price)['OriginalPrice'];
+					$description_arr = $value->Configurators;
+					$description = '';
+					$detail_arr = [];
+					$prod_id = null;
+					$__cnt = 0;
+					foreach ($description_arr->ValuedConfigurator as $desc_key => $desc_value) {
+						// \Log::info($__cnt . ' :- ' . $desc_value['Vid']);
+						if($__cnt == 0){
+							$prod_id = trim($this->translateWord($desc_value['Vid']));
+						}else{
+							$detail_arr[0] = $desc_value['Vid'];	
+						}
+						
+						$__cnt++;
+					}
+
+					$description = implode(' ', $detail_arr);
+					$translate_description = trim($this->translateWord($description));
+					if(!empty($translate_description)){
+						$description = $translate_description;
+					}
+
+					$detail = ['prod_id' => $prod_id, 'quantity' => $quantity, 'price' => $price, 'description' => $description];
+						
+					// $data_exists = $this->searchArrayKeyValue($ProductLevelList, 'description', $description);
+					// \Log::info($data_exists);
+					// if(empty($data_exists)){
+					$ProductLevelList[] = $detail;
+					// }else{
+
+					// 	for($i = 0; $i < count($ProductLevelList); $i++){
+					// 		if($ProductLevelList[$i]['description'] == $description){
+					// 			$ProductLevelList[$i] = $detail;
+					// 		}
+					// 	}
+
+					// }
+
+					// find vid in product color name if exist it is has no items
+					if(in_array($prod_id, $arr_color)){
+						$IsHasItems = false;
+					}
 				}
-				
-				$__cnt++;
-			}
 
-			$description = implode(' ', $detail_arr);
-			$translate_description = $this->translateWord($description);
-			if(!empty($translate_description)){
-				$description = $translate_description;
-			}
-
-			$detail = ['prod_id' => $prod_id, 'quantity' => $quantity, 'price' => $price, 'description' => $description];
-				
-			// $data_exists = $this->searchArrayKeyValue($ProductLevelList, 'description', $description);
-			// \Log::info($data_exists);
-			// if(empty($data_exists)){
-				$ProductLevelList[] = $detail;
-			// }else{
-
-			// 	for($i = 0; $i < count($ProductLevelList); $i++){
-			// 		if($ProductLevelList[$i]['description'] == $description){
-			// 			$ProductLevelList[$i] = $detail;
-			// 		}
-			// 	}
-
-			// }
-
-			// find vid in product color name if exist it is has no items
-			if(in_array($description, $arr_color)){
-				$IsHasItems = false;
 			}
 
 		}
 
-		usort($ProductLevelList, function($a, $b) {
-		    return $a['description'] <=> $b['description'];
-		});
+		// usort($ProductLevelList, function($a, $b) {
+		//     return $a['prod_id'] <=> $b['prod_id'];
+		// });
+
+		// usort($ProductLevelList, function($a, $b) {
+		//     return $a['prod_id'] <=> $b['prod_id'];
+		// });
 
 		$product_normal_price = floatval($itemInfo->Price->OriginalPrice);
 		if(count($price_range_list) > 0){
