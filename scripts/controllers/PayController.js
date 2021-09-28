@@ -281,15 +281,24 @@ angular.module('app').controller('PayController', function($scope, $cookies, $fi
         
           $scope.PaySuccess = true;
           
-          setTimeout(function(){
-            // window.location.replace('');
-            $scope.PaySuccess = false;
-            $scope.Pay.to_ref_id = null;
-            if($scope.Pay.pay_type == 2){
-              $scope.Pay.to_ref_id_2 = null;
-            }
-            $scope.checkPayType();
-          }, 3000);
+          if($scope.Pay.pay_type != 4){
+            
+            setTimeout(function(){
+              
+              $scope.PaySuccess = false;
+              $scope.Pay.to_ref_id = null;
+              if($scope.Pay.pay_type == 2){
+                $scope.Pay.to_ref_id_2 = null;
+              }
+              $scope.checkPayType();
+            }, 3000);
+
+          }else{
+
+            setTimeout(function(){
+              window.location.replace('');
+            }, 3000);
+          }
           
         }else{
           var alertMsg = result.data.DATA;
