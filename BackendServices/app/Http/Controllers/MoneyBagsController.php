@@ -761,9 +761,17 @@ class MoneyBagsController extends Controller
                             $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         }
 
+                    })
+
+                    ->where(function($query) use ($condition){
+
                         if(isset($condition['topup_status']) &&  !empty($condition['topup_status'])){
                             $query->where('topup_status', $condition['topup_status']);
                         }
+                    })
+
+                    ->where(function($query) use ($condition){
+
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
                             $query->where('money_topup.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -781,9 +789,16 @@ class MoneyBagsController extends Controller
                             $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         }
 
+                    })
+
+                    ->where(function($query) use ($condition){
+
                         if(isset($condition['topup_status']) &&  !empty($condition['topup_status'])){
                             $query->where('topup_status', $condition['topup_status']);
                         }
+                    })
+
+                    ->where(function($query) use ($condition){
 
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
@@ -1003,14 +1018,26 @@ class MoneyBagsController extends Controller
                                 $query->where('user_id', $condition['user_id']);
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
                             if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                                 $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                                 $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
                                 $query->where('pay_type', $condition['pay_type']);
                             }
+                            
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                                 $condition['created_at'] = getDateFromString($condition['created_at']);
                                 $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1029,14 +1056,26 @@ class MoneyBagsController extends Controller
                                 $query->where('user_id', $condition['user_id']);
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
                             if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                                 $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                                 $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
                                 $query->where('pay_type', $condition['pay_type']);
                             }
+                            
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                                 $condition['created_at'] = getDateFromString($condition['created_at']);
                                 $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1056,14 +1095,26 @@ class MoneyBagsController extends Controller
                                 $query->where('user_id', $condition['user_id']);
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                                 $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                                 $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
                                 $query->where('pay_type', $condition['pay_type']);
                             }
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                                 $condition['created_at'] = getDateFromString($condition['created_at']);
                                 $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1081,14 +1132,26 @@ class MoneyBagsController extends Controller
                                 $query->where('user_id', $condition['user_id']);
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                                 $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                                 $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
                                 $query->where('pay_type', $condition['pay_type']);
                             }
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                                 $condition['created_at'] = getDateFromString($condition['created_at']);
                                 $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1108,14 +1171,26 @@ class MoneyBagsController extends Controller
                                 $query->where('user_id', $condition['user_id']);
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                                 $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                                 $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
                                 $query->where('pay_type', $condition['pay_type']);
                             }
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                                 $condition['created_at'] = getDateFromString($condition['created_at']);
                                 $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1135,14 +1210,26 @@ class MoneyBagsController extends Controller
                                 $query->where('user_id', $condition['user_id']);
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                                 $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                                 $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                             }
 
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['pay_type']) &&  !empty($condition['pay_type'])){
                                 $query->where('pay_type', $condition['pay_type']);
                             }
+                        })
+
+                        ->where(function($query) use ($condition){
+                            
                             if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                                 $condition['created_at'] = getDateFromString($condition['created_at']);
                                 $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1187,14 +1274,26 @@ class MoneyBagsController extends Controller
                             $query->where('user_id', $condition['user_id']);
                         }
 
+                    })
+
+                    ->where(function($query) use ($condition){
+                        
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                             $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         }
 
+                    })
+
+                    ->where(function($query) use ($condition){
+                        
                         if(isset($condition['pay_status']) &&  !empty($condition['pay_status'])){
                             $query->where('pay_status', $condition['pay_status']);
                         }
+                    })
+
+                    ->where(function($query) use ($condition){
+                        
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
                             $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1211,14 +1310,26 @@ class MoneyBagsController extends Controller
                             $query->where('user_id', $condition['user_id']);
                         }
 
+                    })
+
+                    ->where(function($query) use ($condition){
+                        
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                             $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         }
 
+                    })
+
+                    ->where(function($query) use ($condition){
+                        
                         if(isset($condition['pay_status']) &&  !empty($condition['pay_status'])){
                             $query->where('pay_status', $condition['pay_status']);
                         }
+                    })
+
+                    ->where(function($query) use ($condition){
+                        
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
                             $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1262,14 +1373,22 @@ class MoneyBagsController extends Controller
                             $query->where('user_id', $condition['user_id']);
                         }
 
+                    })
+
+                    ->where(function($query) use ($condition){
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                             $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         }
+                    })
 
+                    ->where(function($query) use ($condition){
                         if(isset($condition['pay_status']) &&  !empty($condition['pay_status'])){
                             $query->where('pay_status', $condition['pay_status']);
-                        }
+                        }                    })
+
+                    ->where(function($query) use ($condition){
+                        
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
                             $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
@@ -1286,14 +1405,22 @@ class MoneyBagsController extends Controller
                             $query->where('user_id', $condition['user_id']);
                         }
 
+                    })
+
+                    ->where(function($query) use ($condition){
                         if(isset($condition['keyword']) &&  !empty($condition['keyword'])){
                             $query->where('user_code', 'LIKE', DB::raw("'" . $condition['keyword'] . "%'"));
                             $query->orWhere( DB::raw("CONCAT(firstname , ' ', lastname)"), 'LIKE', DB::raw("'%" . $condition['keyword'] . "%'"));
                         }
+                    })
 
+                    ->where(function($query) use ($condition){
                         if(isset($condition['pay_status']) &&  !empty($condition['pay_status'])){
                             $query->where('pay_status', $condition['pay_status']);
-                        }
+                        }                    })
+
+                    ->where(function($query) use ($condition){
+                        
                         if(isset($condition['created_at']) &&  !empty($condition['created_at'])){
                             $condition['created_at'] = getDateFromString($condition['created_at']);
                             $query->where('money_use.created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
