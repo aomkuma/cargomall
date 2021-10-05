@@ -196,7 +196,7 @@ class ProductsController extends Controller
 				}
 			}
 			
-			\Log::info(print_r($itemInfo, true));
+			// \Log::info(print_r($itemInfo, true));
 			// exit;
 			$ProductLevelList = [];
 			foreach ($itemInfo->Attributes->ItemAttribute as $key => $value) {
