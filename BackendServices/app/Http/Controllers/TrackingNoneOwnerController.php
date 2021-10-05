@@ -17,7 +17,7 @@ class TrackingNoneOwnerController extends Controller
     public function getList(Request $request){
 
     	$params = $request->all();
-        $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
+        // $user_data = json_decode( base64_decode($params['user_session']['user_data']) , true);
         $condition = $params['obj']['condition'];
 
         $list = TrackingNoneOwner::with('orderTrackingNotOwner')
