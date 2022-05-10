@@ -311,7 +311,8 @@ class MoneyBagsController extends Controller
         $Data = $params['obj']['Data'];
         $Data['user_id'] = ''.$Data['user_id'];
         $Data['to_ref_id'] = trim($Data['to_ref_id']);
-
+        \Log::info('Member pay money..');
+        \Log::info($Data);
         $TotalPayThb = $Data['pay_amount_thb'];
 
         if($TotalPayThb == 0){

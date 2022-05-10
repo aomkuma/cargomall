@@ -113,6 +113,7 @@ angular.module('app').controller('MemberDashboardController', function($scope, $
     $scope.calcCbm = function(){
       if($scope.Importer.width && $scope.Importer.longs && $scope.Importer.height){
         $scope.Importer.cbm = (parseFloat($scope.Importer.width) * parseFloat($scope.Importer.longs) * parseFloat($scope.Importer.height)) / 1000000;
+        $scope.Importer.cbm = parseFloat($scope.Importer.cbm.toFixed(3));
         // alert($scope.Importer.cbm);
         $scope.calcPrice();
       }

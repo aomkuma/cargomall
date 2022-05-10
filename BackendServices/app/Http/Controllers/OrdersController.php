@@ -180,7 +180,7 @@ class OrdersController extends Controller
                         $query->where('created_at', 'LIKE', DB::raw("'" . $condition['created_at'] . "%'"));
                     }
                 })
-                ->orderBy('created_at', 'DESC')
+                ->orderBy('updated_at', 'DESC')
                 ->skip($skip)
                 ->take($limit)
                 ->get();
@@ -257,7 +257,19 @@ class OrdersController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-        $this->data_result['DATA'] = $list;
+        if($list){
+            $list = $list->toArray();
+        }
+
+        $DataList = [];
+        foreach($list as $k => $v){
+            $total_thai_transport_cost = OrderTracking::where('order_id', $v['id'])->sum('transport_cost_thai');
+            $v['order_desc']['total_china_transport_cost'] = floatval($v['order_desc']['total_china_transport_cost']);
+            $v['transport_company_cost'] = $total_thai_transport_cost;
+            $DataList[] = $v;
+        }
+
+        $this->data_result['DATA'] = $DataList;
 
         return $this->returnResponse(200, $this->data_result, response(), false);
 

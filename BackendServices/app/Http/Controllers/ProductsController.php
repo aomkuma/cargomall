@@ -86,7 +86,7 @@ class ProductsController extends Controller
 		// $tr->setSource('zh'); // Detect language automatically
 		// $tr->setTarget('en');
 		// $result = $tr->translate($keyword);
-		\Log::info($keyword . ' : translate to : ' . $result);
+		// \Log::info($keyword . ' : translate to : ' . $result);
 		return trim($result);
     }
 
@@ -634,6 +634,7 @@ class ProductsController extends Controller
 		$arr_color = array();
 		$arr_original_color = array();
 		$arr_size = array();
+		$loop = 100;
 		if (isset($itemInfo->Attributes->ItemAttribute)) {
 		    foreach ($itemInfo->Attributes->ItemAttribute as $ItemAttribute) {
 		       
@@ -661,6 +662,12 @@ class ProductsController extends Controller
 				 		strpos(strtolower($ItemAttribute->PropertyName), 'height') !== false){
 				 	$arr_size[] = (string)$ItemAttribute->Value;
 				 }
+
+				 $loop++;
+				 if($loop == 100){
+				 	break;
+				 }
+
 		    }
 		}
 		
@@ -673,15 +680,16 @@ class ProductsController extends Controller
 		$IsHasItems = true;
 
 		foreach($arr_original_color as $k => $v){
-
+			\Log::info('Total OtapiConfiguredItem : ' . count($itemInfo->ConfiguredItems->OtapiConfiguredItem));
+			$loop = 0;
 			foreach ($itemInfo->ConfiguredItems->OtapiConfiguredItem as $key => $value) {
 
 
 
 				if($value->Configurators->ValuedConfigurator[0]['Vid'] == $v){
 
-					\Log::info('V = ' . $v);
-					\Log::info('Vid = ' . $value->Configurators->ValuedConfigurator[0]['Vid']);
+					// \Log::info('V = ' . $v);
+					// \Log::info('Vid = ' . $value->Configurators->ValuedConfigurator[0]['Vid']);
 
 					$quantity = simpleXmlToArray($value)['Quantity'];
 					$price = simpleXmlToArray($value->Price)['OriginalPrice'];
@@ -729,6 +737,10 @@ class ProductsController extends Controller
 					}
 				}
 
+				$loop++;
+				if($loop == 20){
+					break;
+				}
 			}
 
 		}
@@ -766,7 +778,7 @@ class ProductsController extends Controller
 								,'PriceRangeList' => $price_range_list
 								,'exchange_rate' =>getLastChinaRate()['exchange_rate']
 							);
-
+		\Log::info($product_result);
 		return $product_result;
     }
 

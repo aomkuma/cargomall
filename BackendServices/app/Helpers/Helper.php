@@ -87,15 +87,15 @@
         \Log::info($result);
         if (!is_object($xml))
         {
-            \Log::error($xml->send->send->uuid);
+            \Log::error('SMS to ' .$to. ' ERROR : ' . $xml->send->send->uuid);
             return array( FALSE, 'Respond error');
         } else {
             if ($xml->send->status == 'success')
             {
-            	\Log::info($xml->send->send->uuid);
+            	\Log::info('SMS to ' .$to. ' SUCCESS : ' . $xml->send->send->uuid);
                 return array( TRUE, $xml->send->uuid);
             } else {
-            	\Log::error($xml->send->message);
+            	\Log::error('SMS to ' .$to. ' ERROR : ' . $xml->send->message);
                 return array( FALSE, $xml->send->message);
             }
         }

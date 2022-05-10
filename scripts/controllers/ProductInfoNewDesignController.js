@@ -12,7 +12,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
     // console.log($scope.exchange_rate);
     $scope.ProductDetail = sessionStorage.getItem('product_info');
     // $scope.ProductListStorages = angular.fromJson($localStorage.product_list_storage);
-    
+    console.log($scope.ProductDetail);
     $scope.ListProductTable = [];
     $scope.checkPriceByColor = function(index){
 
@@ -339,7 +339,7 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
 
           var data = angular.copy($scope.ProductDetail);
           $scope.ListProductTable.push(data);
-          $scope.ListProductTable[0]['prod_id'] = $scope.ProductDetail.ProductLevelList[0].prod_id;
+          $scope.ListProductTable[0]['prod_id'] = null;
           $scope.ListProductTable[0]['product_color_img'] = $scope.ProductDetail.product_image;
           $scope.ListProductTable[0]['product_color_img_choose'] = null;
           $scope.ListProductTable[0]['size'] =null
@@ -552,6 +552,6 @@ angular.module('app').controller('ProductInfoNewDesignController', function($sco
         });
     }
 
-    console.log($scope.ProductDetail);
+    
 
 });

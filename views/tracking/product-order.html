@@ -97,12 +97,18 @@
 							<b>อัตราแลกเปลี่ยน</b> : {{ data.order_desc.china_ex_rate | number:2 }}<br>
 						</td>
 						<td>
+							<b>ค่าขนส่งในจีน</b> : <span class="label label-danger">{{data.order_desc.total_china_transport_cost}}</span>
+						</td>
+						<td>
 							<b>บริษัทขนส่งในไทย</b> : 
 							<select class="form-control" data-ng-model="data.transport_company" data-ng-options="data.id as data.value for data in TRANSPORT_COMPANY" data-ng-blur="updateTransportCompany(data)">
 								<option value="">กรุณาเลือก..</option>
 							</select>
 							<input class="form-control" type="text" data-ng-model="data.transport_company_other" data-ng-show="data.transport_company == 'other'" data-ng-blur="updateTransportCompany(data)">
-							<b>ค่าขนส่ง</b> : <span class="label label-danger">{{data.order_desc.total_china_transport_cost + data.order_desc.transport_company_cost}}</span>
+							<b>ค่าขนส่งในไทย</b> : <span class="label label-danger">{{data.transport_company_cost}}</span>
+						</td>
+						<td>
+							<b>ค่าขนส่งรวม</b> : <span class="label label-danger">{{data.order_desc.total_china_transport_cost + data.transport_company_cost}}</span>
 						</td>
 						<td class="text-center">
 							<a href="{{data.order_details[0].product_original_url}}" target="_blank"><img src="{{data.order_details[0].product_thumbail_path}}" style="height: 100px;"></a>
